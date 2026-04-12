@@ -1,0 +1,1690 @@
+Investigación Operativa
+Grado En Ingeniería en Sistemas de Telecomunicación
+Grado en Ingeniería en Tecnologías de la Telecomunicación
+Grado en Ingeniería en Telemática
+Javier Quintero & Almudena Buelta
+Diapositivas – Material docente en abierto de la Universidad Rey Juan Carlos
+Repositorio Institucional de la Universidad Rey Juan Carlos (BURJC Digital)
+https://burjcdigital.urjc.es/home
+2025 – 2026 v1.02.02
+Copyright © 2026. Algunos derechos reservados. Este trabajo se distribuye
+bajo la licencia “Creative Commons Attribution – Share alike”
+Temario
+0 Introducción a IO
+1 Programación lineal con variable continua
+2 Programación Entera
+3 Problemas de transporte y asignación
+4 Modelos de optimización de redes
+5 Administración de proyectos con PERT/CPM
+6 Programación no lineal
+7 Teoría de colas
+Javier Quintero 1 / 323
+Introducción a la Investigación Operativa
+Para esta parte se emplean como referencia principal los textos [Hillier and Lieberman, 2015], [Taha, 2012] y
+[Boyd and Vandenberghe, 2004].
+La Investigación Operativa, conocida también como Operational Research o Management Science, es una disciplina
+científica orientada al apoyo de la toma de decisiones mediante la aplicación de métodos analíticos avanzados. Su
+objetivo fundamental es proporcionar soluciones racionales y óptimas a problemas complejos relacionados con la
+asignación eficiente de recursos escasos en sistemas organizativos.
+Origen
+El origen histórico de la Investigación Operativa se sitúa en el contexto de la Segunda Guerra Mundial, cuando las
+administraciones militares británica y estadounidense recurrieron a grupos interdisciplinarios de científicos
+–matemáticos, físicos, ingenieros y estadísticos– con el fin de mejorar la planificación y ejecución de operaciones
+militares. Estos equipos fueron encargados de analizar problemas estratégicos y tácticos tales como la asignación de
+radares, la optimización de convoyes, la defensa aérea o la gestión de inventarios de armamento, empleando por primera
+vez modelos matemáticos y métodos cuantitativos de manera sistemática.
+Javier Quintero Introducción a la Investigación Operativa 2 / 323
+Orígenes de la Investigación Operativa
+Evolución
+• Este surgimiento no fue un hecho aislado, sino que estuvo estrechamente ligado al aumento progresivo de la
+complejidad organizativa derivada de la Revolución Industrial. El crecimiento sostenido de empresas, instituciones
+y redes de transporte incrementó de forma notable la dificultad asociada a la gestión de recursos humanos,
+materiales y financieros, poniendo de manifiesto la necesidad de enfoques científicos para la toma de decisiones.
+• El notable éxito alcanzado por los equipos de Investigación Operativa durante la guerra impulsó su rápida
+expansión en el ámbito civil tras el conflicto. Durante la década de 1950 se produjo la consolidación formal de la
+disciplina con la creación de sociedades científicas especializadas, entre las que destaca la Operational Research
+Society, fundada en el Reino Unido y considerada la sociedad científica más antigua dedicada específicamente a
+este campo.
+• El desarrollo y la difusión de la Investigación Operativa se vieron además favorecidos por varios factores
+tecnológicos y metodológicos clave. En primer lugar, la disponibilidad de técnicas matemáticas adecuadas al nivel
+de desarrollo científico de la época permitió formular modelos cada vez más realistas. En segundo lugar, la
+revolución informática facilitó la realización de cálculos complejos que, hasta entonces, resultaban inabordables.
+Finalmente, la aparición de los ordenadores personales contribuyó decisivamente a la generalización de estas
+técnicas, haciéndolas accesibles a empresas y organizaciones de todos los tamaños.
+Javier Quintero Introducción a la Investigación Operativa 3 / 323
+Orígenes de la Investigación Operativa
+Evolución
+• En este contexto resulta especialmente relevante la figura de George B. Dantzig (1913–2005), creador del método
+Simplex, uno de los algoritmos más influyentes para la resolución de problemas de programación lineal. Este
+método constituyó un hito fundamental en la consolidación de la Investigación Operativa como disciplina aplicada,
+al proporcionar una herramienta eficiente para resolver problemas reales de gran escala.
+• La estrecha relación entre la evolución de la Investigación Operativa y el desarrollo de la computación queda
+ilustrada por ejemplos históricos concretos, como la llegada en 1959 del IBM 560 Magnetic Drum Calculator a
+España, adquirido por RENFE para la gestión de líneas ferroviarias. Este hecho pone de manifiesto cómo los
+primeros sistemas informáticos fueron empleados de forma temprana para resolver problemas logísticos y de
+planificación, ámbitos naturales de aplicación de la Investigación Operativa.
+• En síntesis, la Investigación Operativa surge de la confluencia entre necesidades prácticas de decisión, avances
+científicos y progreso tecnológico. Desde sus orígenes militares hasta su consolidación como herramienta esencial
+en sectores como el transporte, la logística, la construcción o las telecomunicaciones, la disciplina ha mantenido
+como rasgo distintivo una visión global y organizativa, orientada a optimizar el funcionamiento del sistema en su
+conjunto y no únicamente de sus componentes individuales.
+Javier Quintero Introducción a la Investigación Operativa 4 / 323
+Naturaleza de la Investigación Operativa
+Objetivo de la IO
+• La Investigación Operativa es una disciplina orientada al análisis, gestión y coordinación de actividades dentro de
+una organización, con el objetivo de mejorar su funcionamiento global. Sus ámbitos de aplicación son muy amplios
+e incluyen, entre otros, el transporte y la logística, la construcción, las telecomunicaciones, la producción
+industrial, la energía y los servicios. En todos estos contextos, la Investigación Operativa proporciona un marco
+metodológico para abordar problemas complejos de decisión en los que intervienen múltiples variables,
+restricciones y objetivos potencialmente contrapuestos.
+• Desde un punto de vista metodológico, la Investigación Operativa se caracteriza por un enfoque sistemático y
+estructurado, que permite transformar situaciones reales, a menudo poco definidas y de gran complejidad, en
+problemas susceptibles de ser analizados mediante modelos matemáticos. Este enfoque no persigue únicamente la
+obtención de soluciones factibles, sino la identificación de soluciones óptimas o cuasi óptimas que mejoren de
+forma cuantificable el desempeño del sistema considerado.
+Javier Quintero Introducción a la Investigación Operativa 5 / 323
+Naturaleza de la Investigación Operativa
+El desarrollo de un estudio de Investigación Operativa suele organizarse en una serie de fases bien definidas, que, aunque
+se presentan de forma secuencial, deben entenderse como parte de un proceso iterativo:
+1. Observación y formulación del problema. Esta fase inicial consiste en el análisis detallado de la situación real,
+la identificación de los objetivos del sistema y la recopilación de los datos relevantes. Una correcta formulación del
+problema es esencial, ya que determina en gran medida la utilidad y validez de los resultados posteriores.
+2. Construcción del modelo matemático. A partir de la formulación del problema, se desarrolla un modelo matemático
+que represente de forma simplificada pero suficientemente realista el sistema bajo estudio. Este modelo debe cap-
+turar los elementos esenciales del problema, como las variables de decisión, las restricciones y la función objetivo,
+de modo que las conclusiones obtenidas sean aplicables a la situación real.
+3. Fase experimental y validación. El modelo propuesto se somete a pruebas mediante datos reales o simulados con
+el fin de verificar su coherencia y su capacidad para reproducir el comportamiento del sistema. En esta etapa pueden
+detectarse deficiencias que requieran modificar las hipótesis iniciales o ajustar el modelo, lo que pone de manifiesto
+el carácter iterativo del proceso.
+4. Obtención de la solución óptima. Una vez validado el modelo, se aplican las técnicas analíticas o computacionales
+adecuadas para identificar la mejor solución entre las múltiples alternativas posibles. Esta solución debe interpretarse
+en el contexto del problema original y servir de apoyo a la toma de decisiones.
+Javier Quintero Introducción a la Investigación Operativa 6 / 323
+Naturaleza de la Investigación Operativa
+• Un aspecto fundamental de la Investigación Operativa es la adopción de una perspectiva organizativa. A diferencia
+de enfoques parciales que optimizan únicamente componentes individuales de un sistema, la Investigación
+Operativa busca resolver los conflictos de interés entre las distintas partes de una organización, de modo que la
+decisión final sea la más conveniente para el sistema en su conjunto.
+• Esta visión global es especialmente relevante en entornos complejos, donde las decisiones locales pueden tener
+efectos adversos a nivel global.
+• En consecuencia, la Investigación Operativa no debe entenderse únicamente como un conjunto de técnicas
+matemáticas, sino como una forma de abordar los problemas de decisión desde una perspectiva integradora,
+rigurosa y orientada a la mejora continua del desempeño organizativo.
+Javier Quintero Introducción a la Investigación Operativa 7 / 323
+Panorama del enfoque de modelado en investigación de operaciones
+El enfoque de modelado constituye el núcleo metodológico de la Investigación Operativa y define su forma característica
+de abordar problemas complejos de toma de decisiones. Este enfoque se basa en la construcción y el análisis de modelos
+que representan, de manera simplificada pero rigurosa, sistemas reales en los que intervienen múltiples variables,
+restricciones y objetivos. El propósito fundamental del modelado es proporcionar una base racional que permita evaluar
+alternativas y apoyar decisiones de forma objetiva y coherente.
+Un estudio de Investigación Operativa no debe entenderse como un ejercicio puramente matemático, sino como un
+proceso integral que combina análisis cuantitativo, conocimiento del sistema real y juicio profesional. En la práctica, el
+desarrollo de modelos matemáticos es solo una parte del trabajo total, y su utilidad depende en gran medida de la correcta
+formulación del problema, de la validez de los supuestos adoptados y de la adecuada interpretación de los resultados.
+El proceso de modelado en Investigación Operativa suele estructurarse en una serie de etapas interrelacionadas, que no
+deben considerarse estrictamente secuenciales, sino como fases de un proceso iterativo y dinámico:
+Javier Quintero Introducción a la Investigación Operativa 8 / 323
+Enfoque de un problema de IO
+1. Definición del problema: El punto de partida es la identificación clara del problema que se desea resolver, así
+como de los objetivos que se persiguen. Esta fase requiere comprender el contexto organizativo en el que se toma la
+decisión, delimitar el alcance del estudio y determinar los criterios de desempeño relevantes.
+2. Recolección y análisis de datos: Una vez definido el problema, se recopilan los datos necesarios para describir el
+sistema. Estos datos pueden proceder de registros históricos, mediciones directas, estimaciones o hipótesis
+razonables. Su calidad y fiabilidad son determinantes para la validez del modelo.
+3. Formulación del modelo: En esta etapa se construye un modelo matemático que represente los aspectos
+esenciales del problema real. El modelo incluye variables de decisión, parámetros, restricciones y una función
+objetivo que refleja los objetivos del sistema. La formulación implica un compromiso entre realismo y simplicidad,
+ya que un modelo excesivamente complejo puede resultar intratable, mientras que uno demasiado simple puede
+carecer de utilidad práctica.
+4. Obtención de soluciones: Una vez formulado el modelo, se emplean métodos analíticos o algoritmos
+computacionales para obtener soluciones. En muchos casos existen múltiples soluciones factibles, por lo que el
+análisis se orienta a identificar aquellas que optimizan el criterio establecido en la función objetivo.
+5. Validación y análisis del modelo: Las soluciones obtenidas deben evaluarse para comprobar que el modelo
+representa adecuadamente el sistema real. Esto puede implicar comparar los resultados con datos observados,
+realizar análisis de sensibilidad o modificar los supuestos iniciales. Si el modelo no resulta satisfactorio, es
+necesario reformularlo y repetir el proceso.
+Javier Quintero Introducción a la Investigación Operativa 9 / 323
+Enfoque de un problema de IO
+6. Implementación y seguimiento: La etapa final consiste en aplicar los resultados del estudio al problema real. La
+implementación puede requerir ajustes organizativos, tecnológicos o operativos, así como un seguimiento posterior
+para verificar que los beneficios esperados se materializan en la práctica.
+Un rasgo esencial del enfoque de modelado en Investigación Operativa es su orientación global. Las deci-
+siones se analizan desde la perspectiva del sistema completo, y no únicamente desde el punto de vista de sus
+componentes individuales. Este enfoque permite identificar y resolver conflictos entre objetivos parciales,
+garantizando que la solución adoptada sea la más adecuada para el conjunto de la organización.
+Conclusión
+En conclusión, el enfoque de modelado proporciona un marco sistemático para analizar problemas
+complejos de decisión, integrando modelos matemáticos, datos y criterios organizativos. Su correcta
+aplicación permite transformar situaciones reales difíciles de gestionar en problemas estructurados, cuyas
+soluciones ofrecen un apoyo sólido y cuantificable a la toma de decisiones en ingeniería y gestión.
+Observación
+Para una discusión más ampliada del tema de esta sección remitimos al lector al Capítulo 2
+de [Hillier and Lieberman, 2015].
+Javier Quintero Introducción a la Investigación Operativa 10 / 323
+Algoritmos y paquetes de Investigación Operativa
+La aplicación práctica de la Investigación Operativa se apoya de manera fundamental en el desarrollo de algoritmos eficientes y en el
+uso de paquetes de software especializados. Los algoritmos constituyen procedimientos sistemáticos diseñados para resolver modelos
+matemáticos asociados a problemas de decisión, garantizando, cuando es posible, la obtención de soluciones óptimas en un tiempo
+computacional razonable.
+A lo largo de la evolución de la disciplina se han desarrollado numerosos algoritmos específicos, como métodos para programación
+lineal, entera y no lineal, algoritmos para problemas de redes, modelos de colas y métodos de simulación. La elección del algoritmo
+adecuado depende tanto de la naturaleza del problema como de su tamaño y complejidad, siendo habitual recurrir a aproximaciones
+heurísticas o metaheurísticas cuando los métodos exactos resultan computacionalmente inviables.
+El uso de paquetes de Investigación Operativa permite implementar estos algoritmos sin necesidad de desarrollarlos desde cero,
+facilitando su aplicación en entornos reales. Estos paquetes integran rutinas de optimización, herramientas de análisis y capacidades de
+gestión de datos, lo que los convierte en instrumentos esenciales tanto en el ámbito académico como en el profesional. No obstante, el
+uso efectivo de estas herramientas requiere una comprensión sólida de los modelos y algoritmos subyacentes, ya que el software debe
+entenderse como un apoyo al análisis y no como un sustituto del razonamiento científico propio de la disciplina.
+Observación
+Los programas que permiten el acceso e implementación de diferentes algoritmos para la resolución de modelos de
+optimización se conocen con solvers.
+Javier Quintero Introducción a la Investigación Operativa 11 / 323
+Paquetes de software no comerciales y de acceso libre
+• OR-Tools – Conjunto de herramientas de optimización de código abierto desarrollado por Google, que incluye solvers para
+programación lineal y entera, además de herramientas para problemas de rutas y redes.
+• GLPK (GNU Linear Programming Kit) – Biblioteca libre para programación lineal y programación entera mixta, ampliamente
+utilizada en entornos académicos y compatible con muchos lenguajes y entornos de modelado.
+• CBC (COIN-OR Branch and Cut) – Solver de programación lineal entera mixta parte del proyecto COIN-OR, adecuado para
+problemas de tamaño pequeño y mediano.
+• SCIP – Sistema de optimización de código abierto capaz de resolver problemas combinatorios y de programación entera, con
+interfaces para múltiples lenguajes.
+• Pyomo – Lenguaje de modelado basado en Python para definir y resolver aplicaciones de optimización estructurada, que soporta
+una amplia variedad de tipos de problemas, desde lineales hasta no lineales y estocásticos.
+• JuMP – Lenguaje de modelado algebraico embebido en Julia que facilita la declaración de variables, restricciones y funciones
+objetivo para múltiples clases de problemas de optimización.
+• SimPy – Marco de simulación de eventos discretos basado en Python que permite modelar sistemas dinámicos, colas y procesos
+estocásticos en tiempo discreto.
+• OpenModelica – Entorno libre para modelado, simulación y análisis de sistemas dinámicos complejos, útil para problemas de
+simulación y control en Ingeniería.
+• PyORlib – Biblioteca Python de acceso abierto diseñada para explorar conceptos de investigación operativa y probar distintos
+métodos de optimización de forma sencilla.
+• COIN-OR Optimization Suite – Conjunto de herramientas interoperables que incluye múltiples solvers y utilidades para
+programación lineal, entera, no lineal y otros métodos de optimización.
+Javier Quintero Introducción a la Investigación Operativa 12 / 323
+Paquetes libres y de acceso abierto
+Para este curso se emplearán de manera específica dos solvers:
+• Optimization Toolbox: Módulo de optimización de Matlab, licenciado en los ordenadores de campus.
+• Pyomo solver for Windows: Herramienta de código abierto desarrollada para Windows, disponible en Aula Virtual,
+bajo la pestaña de Recursos. Este solver está basado en Pyomo y fue desarrollado específicamente para los fines de
+este curso. Más información y ayuda en Apéndice B.
+Además en los Apéndices F y E se ofrecen instrucciones para la implementación de modelos de optimización
+en Python y Excel, como alternativas a las herramientas oficiales del curso.
+Javier Quintero Introducción a la Investigación Operativa 13 / 323
+La investigación Operativa dentro de la optimización matemática
+Introducción
+La Investigación Operativa desempeña un papel esencial en la Ingeniería de Telecomunicaciones, donde el
+diseño de redes eficientes, la gestión de recursos y la planificación de servicios dependen, en gran medida, de
+la resolución de problemas matemáticos de decisión. En términos generales, la Investigación Operativa se
+define como el proceso de determinar la mejor solución dentro de un conjunto de alternativas factibles, de
+acuerdo con un objetivo específico, como minimizar la latencia en la transmisión de datos, maximizar el
+ancho de banda disponible o reducir los costes de despliegue de infraestructura.
+Javier Quintero Introducción a la Investigación Operativa 14 / 323
+La Investigación Operativa se enmarca dentro de la disciplina matemática de Optimización. Los problemas
+abordados, desde un punto de vista puramente matemático, pueden clasificarse en diversas categorías:
+• Programación Lineal: Problemas en los que tanto la función objetivo como las restricciones son lineales.
+Ejemplos incluyen la asignación de recursos en redes de telecomunicaciones o la planificación de capacidad en
+sistemas de transmisión.
+• Programación No Lineal: Problemas que involucran funciones objetivo o restricciones no lineales, frecuentes en
+el diseño de antenas, optimización de potencia en sistemas inalámbricos o control de interferencias en redes.
+• Programación Entera y Mixta: Problemas en los que algunas o todas las variables deben tomar valores enteros.
+Son comunes en la planificación de rutas en redes IP, asignación de canales en sistemas móviles o ubicación óptima
+de estaciones base.
+• Optimización con Restricciones: Problemas que incluyen limitaciones físicas, regulatorias o de calidad de
+servicio, por ejemplo, garantizar que la latencia no supere ciertos umbrales en redes críticas.
+• Optimización sin Restricciones: Problemas sin restricciones explícitas, que suelen aparecer en estimación de
+parámetros o ajuste de modelos en algoritmos de aprendizaje aplicados a telecomunicaciones.
+• Optimización Dinámica: Problemas donde las decisiones evolucionan en el tiempo, relevantes para la gestión de
+tráfico en redes, control de congestión o planificación de despliegue de infraestructura.
+• Optimización Estocástica: Problemas que incorporan incertidumbre, como variabilidad en la demanda de tráfico,
+fluctuaciones en la calidad del canal o comportamiento impredecible de usuarios.
+Javier Quintero Introducción a la Investigación Operativa 15 / 323
+La investigación Operativa dentro de la optimización matemática
+Protocolo de resolución de problemas A lo largo de este curso estudiaremos los diferentes tipos de problemas abordados
+por la Investigación Operativa, aprenderemos las herramientas matemáticas necesarias para su formulación y resolución,
+y exploraremos aplicaciones que impactan directamente en la práctica profesional de la Ingeniería de
+Telecomunicaciones.
+Cuando existe una decisión que requiere obtener el mejor resultado posible, decimos que estamos frente a un problema
+de Investigación Operativa. Surgen entonces varias preguntas: ¿Cómo definir qué significa “el mejor resultado”? ¿Dónde
+reside el poder de decisión? ¿Son válidas todas las soluciones en el contexto dado? Resolver un problema de
+Investigación Operativa implica seguir cuatro pasos fundamentales, que denominaremos a partir de ahora el protocolo:
+Javier Quintero Introducción a la Investigación Operativa 16 / 323
+La investigación Operativa dentro de la optimización matemática
+Problema
+(en lenguaje natural)
+Problema
+(en lenguaje matemático)
+Solución
+(en lenguaje matemático)
+Solución
+(en lenguaje natural)
+Modelación
+Matemática
+Resolución matemática
+Interpretación en
+lenguaje natural
+Figura 1: Protocolo de solución de problemas de Investigación Operativa
+Javier Quintero Introducción a la Investigación Operativa 17 / 323
+La investigación Operativa dentro de la optimización matemática
+Como ingenieros, podemos encontrarnos con una pregunta (un problema expresado en lenguaje natural) y buscamos una
+respuesta (una solución igualmente en lenguaje natural). En este curso estudiaremos el proceso que permite obtener dicha
+respuesta mediante técnicas matemáticas avanzadas, concluyendo con una solución clara y directa al problema original.
+El objetivo principal de esta asignatura es proporcionar al estudiante las herramientas necesarias para afrontar este
+proceso en un entorno profesional, sirviendo como apoyo al responsable de la toma de decisiones para que pueda partir
+de un problema y llegar a una respuesta sin necesidad de involucrarse en los detalles matemáticos internos.
+Javier Quintero Introducción a la Investigación Operativa 18 / 323
+Modelos de Optimización
+Por simplicidad, en este curso nos centraremos en problemas deterministas, es decir, aquellos en los que todos los
+parámetros del modelo son conocidos y no dependen de factores incontrolables. La formulación matemática de un
+problema determinista en Investigación Operativa se expresa de la siguiente manera:
+min
+x
+f (x)
+s.t. gi(x)≤ 0, i = 1, . . . ,m,
+hj(x) = 0, j = 1, . . . ,p,
+x ∈ Rn
+(1)
+Al conjunto de ecuaciones 1 le llamaremos modelos de optimización. Sus elementos son
+Elementos del modelo de optimización
+• Dirección: min para problemas de minimización y max para problemas de maximización. Por defecto, asumimos
+un problema de minimización en la forma estándar.
+• Variables de decisión x ∈ Rn: las cantidades desconocidas que deben determinarse. Cada componente xk
+representa una variable controlable, como la asignación de ancho de banda, la potencia de transmisión o la
+inclusión de nodos en una red. La dimensión n corresponde al número de variables de decisión.
+Javier Quintero Introducción a la Investigación Operativa 19 / 323
+Modelos de Optimización
+Elementos del modelo de optimización
+• Función objetivo f (x): la función que se desea minimizar (o maximizar). Cuantifica el criterio de rendimiento, por
+ejemplo, minimizar la latencia, minimizar el consumo energético o maximizar la capacidad de la red.
+• Región factible F : el conjunto de todos los x que satisfacen las restricciones:
+F = {x ∈ Rn | gi(x)≤ 0, hj(x) = 0}.
+Solo las soluciones dentro de F son válidas; a estas soluciones válidas las denominamos soluciones factibles, y el
+conjunto de todas ellas se denomina región factible.
+• Solución factible: Cualquier punto x ∈F .
+• Solución no factible: Cualquier punto x /∈F .
+• Solución óptima: Un punto x∗ ∈F que satisface f (x∗)≤ f (x) para todo x ∈ X. En caso de un problema de
+maximización, esta caracterización cambia a f (x∗)≥ f (x).
+• Restricción activa: Una restricción activa es aquella que se cumple en igualdad. Por ejemplo, considere la
+desigualdad f1 : 2x1 +3x2 ≤ 5; la solución x∗ = (1,1) satisface la desigualdad en igualdad, porque 2(1)+3(1) = 5.
+Decimos que la restricción f1 está activa en x∗.
+Javier Quintero Introducción a la Investigación Operativa 20 / 323
+Modelos de Optimización
+Observación
+• Por simplicidad, la forma estándar de un problema de Investigación Operativa se escribe como un problema de
+minimización. Un problema de maximización puede transformarse en uno de minimización considerando que
+max
+x
+f (x) =−min
+x
+−f (x).
+• Para las restricciones de desigualdad asumimos como forma estándar gi(x)≤ 0, dado que la condición g(x)≥ 0 es
+equivalente a −g(x)≤ 0.
+• La región factible debe ser cerrada, es decir, las restricciones deben incluir las fronteras. Si una frontera de la
+región no está incluida, el problema puede no tener solución.
+• Si la región factible es no acotada, es decir, no puede contenerse en ningún círculo de radio finito, entonces
+decimos que la región factible es no acotada. Véase el Ejemplo 1.
+Javier Quintero Introducción a la Investigación Operativa 21 / 323
+Ejemplo (Región No Acotada)
+Considere la siguiente región factible determinada por las desigualdades,
+0≤ x1 ≤ 4,
+0≤ x2
+que corresponde a la Figura 2. Esta región factible es no acotada.
+Figura 2: Región factible no acotada de un problema de optimización bidimensional
+Javier Quintero Introducción a la Investigación Operativa 22 / 323
+Caracterización de la Solución Óptima de un Problema
+La “solución óptima” de un problema de optimización debe almacenar la siguiente información:
+• Valor Óptimo z∗ = f (x∗), el valor mínimo de la función objetivo, que se alcanza en el punto de la
+• Solución Óptima x∗ ∈F , el cual es el vector que hace que el valor de la función objetivo sea mínimo y, al mismo
+tiempo, pertenece a la región factible.
+Ejemplo
+Considere el siguiente problema de optimización
+max 2x1 + x2
+s.t. x1 + x2 ≤ 2
+x1,x2 ≥ 0
+Este es un problema de programación lineal porque tanto la función objetivo como todas las restricciones
+son funciones lineales. Los elementos son:
+• Variables de decisión: x1,x2 ∈ Rn
+• Función Objetivo: z = f (x1,x2) = 2x1 + x2
+Javier Quintero Introducción a la Investigación Operativa 23 / 323
+Caracterización de la Solución Óptima de un Problema
+Ejemplo
+• Restricciones de Desigualdad: x1 + x2 ≤ 2
+• Restricciones de dominio o de no-negatividad: x1,x2 ≥ 0
+• Región Factible: La combinación en R2 de las restricciones anteriores:
+F = {(x1,x2) ∈ R2 : x1 + x2 ≤ 2,x1 ≥ 0,x2 ≥ 0}
+que corresponde con la Figura 3
+Observa que esta región factible está acotada. En casos con más de dos variables, una representación gráfica
+no siempre es útil ni posible. La solución de este problema es el par x∗ = (x∗1,x
+∗
+2) = (2,1) con valor óptimo
+z∗ = f (x∗1,x
+∗
+2) = 5. Más detalles sobre cómo resolver este tipo de problemas se presentan en el Capítulo 2.
+Javier Quintero Introducción a la Investigación Operativa 24 / 323
+Caracterización de la Solución Óptima de un Problema
+Figura 3: Región factible de un problema de optimización en dos dimensiones
+Javier Quintero Introducción a la Investigación Operativa 25 / 323
+Considera el siguiente problema de optimización:
+min
+x∈Rn
+f (x)
+s.t. gi(x)≤ 0, i = 1, . . . ,m,
+hj(x) = 0, j = 1, . . . ,p.
+Proposición
+La solución óptima x∗ se caracteriza por las siguientes propiedades:
+1. Factibilidad: La solución debe pertenecer al conjunto factible
+F = {x ∈ Rn | gi(x)≤ 0, hj(x) = 0}.
+Si no existe tal punto, se dice que el problema es infactible.
+2. Optimalidad: Una solución óptima x∗ satisface
+f (x∗)≤ f (x), ∀x ∈F .
+Si la desigualdad es estricta, la solución es única.
+Javier Quintero Introducción a la Investigación Operativa 26 / 323
+Caracterización de la Solución Óptima de un Problema
+Proposición
+3. Tipos de optimalidad:
+• Óptimo global: la mejor solución en todo el conjunto factible.
+• Óptimo local: la mejor solución solo en una vecindad de x∗.
+En problemas convexos, todo óptimo local también es global; en problemas no convexos pueden existir
+múltiples óptimos locales.
+1. Condiciones de optimalidad: Para problemas suaves, las soluciones óptimas se caracterizan mediante
+las condiciones de Karush–Kuhn–Tucker (KKT). Más detalles en la Subsección 6.
+2. Calidad de la solución: En la práctica, los algoritmos numéricos pueden devolver soluciones aproxi-
+madas.
+• ε-optimalidad: la solución está dentro de una tolerancia respecto al óptimo verdadero.
+• Tolerancia en restricciones: la factibilidad se satisface dentro de un pequeño error numérico.
+Javier Quintero Introducción a la Investigación Operativa 27 / 323
+Clasificación de problemas de optimización
+En este curso vamos a estudiar problemas dentro de la taxonomía mostrada en la Figura 4. Los problemas se
+clasifican según la naturaleza matemática de los elementos del modelo involucrados.
+Optimización
+Convexo
+No convexo
+Estocástica
+Con restricciones
+Sin restricciones
+Programación Lineal
+Programación No Lineal
+Continuo
+Discreto
+Programación Entera
+Programación Mixta Entera
+Optimización de Redes
+Figura 4: Taxonomía simplificada de los problemas de investigación operativa; para una taxonomía más detallada,
+consulte este sitio.
+Javier Quintero Introducción a la Investigación Operativa 28 / 323
+Los problemas de investigación operativa pueden clasificarse según las propiedades matemáticas de la función objetivo
+f (x) y la región factible F . Estas características determinan tanto la dificultad del problema como los tipos de
+algoritmos que pueden aplicarse para resolverlo.
+1. Problemas lineales vs. no lineales
+• Programación Lineal (LP): tanto la función objetivo como las restricciones son lineales. Estos problemas están
+bien estudiados y pueden resolverse de manera eficiente mediante métodos como el algoritmo Simplex o los
+métodos de Punto Interior. Véase el Capítulo 2.
+• Programación No Lineal (NLP): al menos una de las funciones, ya sea la función objetivo o las restricciones, es
+no lineal. Estos problemas pueden ser significativamente más complejos, especialmente si son no convexos. Véase
+el Capítulo 7.
+2. Problemas convexos vs. no convexos
+• Optimización convexa: la función objetivo es convexa y el conjunto factible es un conjunto convexo. Cualquier
+óptimo local es también óptimo global, lo que hace que estos problemas sean tratables con sólidas garantías
+teóricas. De hecho, la solución de un problema convexo está garantizada de existir y ser única.
+• Optimización no convexa: la función objetivo o la región factible es no convexa. Estos problemas pueden tener
+múltiples mínimos locales, y encontrar el óptimo global puede ser computacionalmente difícil o incluso intratable.
+Javier Quintero Introducción a la Investigación Operativa 29 / 323
+Ejemplo
+La función objetivo en el siguiente problema es no convexa, véase la Figura 5
+minf (x) = x4−3x2 +2
+x ∈ R
+Figura 5: Función objetivo no convexa en dos dimensiones.
+• La función objetivo f (x) es un polinomio cuártico con múltiples mínimos locales y un mínimo global.
+• Esta no convexidad implica que las técnicas estándar de optimización convexa no pueden garantizar
+encontrar el óptimo global.
+Javier Quintero Introducción a la Investigación Operativa 30 / 323
+Clasificación de problemas de optimización
+Observación
+Una función no convexa es aquella cuya segunda derivada no mantiene signo constante. Esto conduce a la existencia de
+puntos de inflexión y, por tanto, a la presencia de múltiples extremos locales. En la literatura, esto también se conoce
+como funciones multimodales y representa un problema complejo para abordar con técnicas clásicas de optimización.
+3. Problemas discretos vs. continuos
+• Optimización continua: las variables de decisión x pueden tomar cualquier valor real dentro del
+conjunto factible.
+• Optimización discreta: las variables de decisión están restringidas a valores discretos (por ejemplo,
+enteros o binarios). Estos problemas surgen con frecuencia en aplicaciones de planificación, asignación
+y diseño.
+• Optimización mixta-entera (MIP/MINLP): algunas variables son continuas mientras que otras están
+restringidas a valores discretos, combinando la complejidad de ambos mundos. Estos son los problemas
+más comunes en aplicaciones reales.
+Javier Quintero Introducción a la Investigación Operativa 31 / 323
+Clasificación de problemas de optimización
+4. Problemas con restricciones vs. sin restricciones
+• Optimización sin restricciones: no existen restricciones explícitas; la región factible es todo el espacio
+Rn. Estos problemas suelen ser más simples de analizar y resolver. Véase el Ejemplo 4.
+• Optimización con restricciones: la región factible está limitada por igualdades y/o desigualdades.
+Estas restricciones representan limitaciones físicas, operativas o tecnológicas en aplicaciones reales.
+Véase la Figura 3.
+De los cursos de cálculo multivariable tenemos las herramientas para tratar problemas convexos y continuos. Aplicando
+simplemente las pruebas de primera y segunda derivada, podemos encontrar fácilmente los valores óptimos de cualquier
+problema que sea dos veces derivable. Por lo tanto, vamos a comenzar con el caso más sencillo de optimización convexa,
+según la naturaleza de los elementos del modelo: el Problema de Programación Lineal (LP).
+Javier Quintero Introducción a la Investigación Operativa 32 / 323
+§I. Programación lineal con variable continua
+▶ Modelos de programación lineal. Elementos.
+▶ Ejemplo prototipo.
+▶ Solución de problemas LP.
+• Método analítico. Algoritmo Símplex
+• Método gráfico.
+• Solvers de Matlab.
+▶ Análisis post-óptimo. Precios sombra.
+Introducción
+La programación lineal (LP) constituye una de las clases más fundamentales y ampliamente estudiadas dentro de los
+problemas de optimización. Su relevancia radica tanto en su aplicabilidad práctica como en la sólida teoría matemática
+que sirve de base para métodos de optimización más generales. Los modelos de programación lineal se emplean de
+manera extensa en diversas áreas de la ingeniería, incluyendo las telecomunicaciones, así como en economía y ciencias
+de la gestión. Entre las aplicaciones típicas se incluyen:
+• Asignación de Recursos: determinar la distribución óptima de recursos limitados entre actividades que compiten
+entre sí, como ancho de banda, potencia de transmisión o canales de comunicación.
+• Planificación de Redes: optimizar costes, capacidad y rendimiento en el diseño y operación de redes de
+telecomunicaciones, sujetos a restricciones de tráfico y calidad de servicio.
+• Transporte y Logística de Datos: minimizar costes de enrutamiento y transmisión cumpliendo requisitos de
+demanda y disponibilidad de enlaces.
+• Gestión de Infraestructura: optimizar la asignación de equipos, frecuencias y recursos en sistemas de
+comunicación para garantizar eficiencia y fiabilidad.
+Objetivo
+En este capítulo se estudia el problema de LP, los elementos que conforman un modelo lineal, los métodos de solución,
+las interpretaciones geométricas y las particularidades que hacen que este modelo sea tan relevante en el ámbito de la
+optimización aplicada a las telecomunicaciones.
+Javier Quintero Programación lineal con variable continua 33 / 323
+Definición (Modelo de Programación Lineal)
+Un problema de Programación Lineal (LP) es un problema de optimización en el que tanto la función objetivo como las restricciones
+son lineales en las variables de decisión. Formalmente, la forma estándar (matricial o canónica) de un problema de programación lineal
+se expresa como:
+min
+x
+z = c1x1 + c2x2 + · · ·+ cnxn
+s.a. a11x1 +a12x2 + · · ·+a1nxn ≤ b1
+a21x1 +a22x2 + · · ·+a2nxn ≤ b2
+...
+am1x1 +am2x2 + · · ·+amnxn ≤ bm
+x1,x2, . . . ,xn ≥ 0
+⇔
+min
+x
+z = ctx
+s.a. Ax≤ b
+x≥ 0
+(2)
+donde:
+• x = (x1,x2, . . . ,xn)
+t es el vector de variables de decisión.
+• c = (c1,c2, . . . ,cn)
+t ∈ Rn es el vector de coeficientes de la función objetivo (vector de costes).
+• (aij) = A ∈ Rm×n es la matriz de coeficientes de las m restricciones:
+A =
+
+a11 a12 · · · a1n
+a21 a22 · · · a2n
+. . .
+am1 am2 · · · amn
+
+• b = (b1,b2, . . . ,bm)
+t ∈ Rm es el vector de términos independientes en las restricciones (vector de recursos).
+• El conjunto de restricciones x≥ 0⇒ x1,x2, . . . ,xn ≥ 0 se conoce como restricciones de no negatividad.
+Javier Quintero Programación lineal con variable continua 34 / 323
+Modelos de programación lineal. Elementos de un problema LP
+Observación
+• La función objetivo ctx es lineal en las variables de decisión.
+• La región factible, definida por las desigualdades lineales y las restricciones de no negatividad, es un poliedro
+convexo.
+• Cualquier solución óptima, si existe, se encuentra en un vértice de la región factible.
+Ejemplo (Asignación de Producción)
+Una empresa tecnológica ha decidido ampliar su catálogo de productos avanzados en el ámbito de las
+telecomunicaciones, incorporando dos nuevos dispositivos:
+• Producto 1: un módulo de transmisión que requiere un bastidor metálico y ensamblaje final.
+• Producto 2: un kit de diagnóstico de red que requiere una carcasa de polímero y ensamblaje final.
+La empresa dispone de tres instalaciones especializadas organizadas de la siguiente manera:
+• Instalación 1 fabrica componentes y bastidores metálicos,
+• Instalación 2 produce partes de polímero y compuestos,
+• Instalación 3 se encarga del ensamblaje y pruebas finales de los dispositivos de telecomunicaciones.
+Javier Quintero Programación lineal con variable continua 35 / 323
+Ejemplo prototipo de problema LP
+Ejemplo (Asignación de Producción)
+Los requisitos de producción son los siguientes:
+• El Producto 1 consume capacidad de las Instalaciones 1 y 3,
+• El Producto 2 consume capacidad de las Instalaciones 2 y 3.
+Cada producto se fabricará en lotes de 20 unidades. La tasa de producción será el número de lotes
+producidos por semana que satisfacen las restricciones. Los lotes pueden producirse de manera fraccionada.
+Javier Quintero Programación lineal con variable continua 36 / 323
+Ejemplo (Asignación de Producción)
+Para formular cuidadosamente el modelo matemático, se han estimado, Tabla 1, los siguientes datos:
+• el número de horas de producción disponibles por semana en cada instalación para estos dos nuevos
+productos,
+• el número de horas de producción requeridas por lote de cada producto en cada instalación,
+• el beneficio por lote de cada producto.
+Tabla 1: Datos de Ejemplo 6
+Instalación
+Tiempo de producción
+por lote (horas) Tiempo disponible
+por semana (horas)Producto
+1 2
+1 1 0 4
+2 0 2 12
+3 3 2 18
+Beneficio por lote $3,000 $5,000
+El problema consiste en determinar los niveles óptimos de producción semanal de los dos productos, es
+decir, cuánto fabricar de cada uno para:
+• maximizar el beneficio de la empresa,
+• sujeto a las restricciones impuestas por las capacidades de producción disponibles en las tres
+instalaciones.
+Javier Quintero Programación lineal con variable continua 37 / 323
+Ejemplo (Asignación de Producción)
+• Para resolver este problema, activamos el protocolo de la Figura 1. Tenemos un problema en lenguaje
+natural, por lo que el primer paso es extraer los datos para elaborar un modelo como (2).
+• Primero, observamos que la decisión se centra en los niveles de producción, es decir, el número de
+dispositivos de cada tipo que la empresa fabrica. Por tanto, declaramos las siguientes variables xi:
+número de lotes del producto i que la empresa produce cada semana, para i = 1,2. El problema indica
+que pueden producirse lotes fraccionados, pero no pueden ser negativos, por lo tanto, x1,x2 ≥ 0.
+Además, el beneficio depende directamente del número de lotes producidos, es decir:
+beneficio = 3000x1 +5000x2.
+Dado que el objetivo es maximizar el beneficio, la función objetivo se expresa como:
+z = 3x1 +5x2
+en miles de dólares.
+Javier Quintero Programación lineal con variable continua 38 / 323
+Ejemplo (Asignación de Producción)
+Existen varias restricciones de producción asociadas a los recursos disponibles, en este caso el tiempo de
+producción en cada instalación. Por ejemplo, en la instalación 1 hay 4 horas disponibles por semana, y dado
+que cada lote del producto 1 consume una hora, la restricción correspondiente es x1 ≤ 4. Las otras
+instalaciones generan restricciones adicionales: 2x2 ≤ 12 y 3x1 +2x2 ≤ 18, respectivamente.
+Una vez extraída toda la información, estamos listos para el segundo paso del protocolo 1. Escribimos esta
+información en lenguaje matemático utilizando la forma estándar proporcionada en (2):
+max
+x
+z = 3x1 +5x2
+s.a. x1 ≤ 4
+2x2 ≤ 12
+3x1 +2x2 ≤ 18
+x1,x2 ≥ 0
+Javier Quintero Programación lineal con variable continua 39 / 323
+Hipótesis de un problema LP
+Existen varias suposiciones que hacen viable un modelo de programación lineal (LP):
+1. Proporcionalidad. Esta suposición implica que:
+a. la contribución de cada actividad al valor de la función objetivo Z es proporcional al nivel de dicha actividad,
+y
+b. la contribución de cada actividad a cada restricción funcional es proporcional al nivel de dicha actividad.
+c. Ejemplo: El coste total de transmisión es proporcional al número de enlaces activados en una red. Si se
+duplican los enlaces, se duplica el coste.
+2. Aditividad. Esta suposición implica que toda función en un modelo de programación lineal se expresa como la
+suma de las contribuciones individuales de las respectivas actividades. Ejemplo: El consumo total de ancho de
+banda en una red es la suma del ancho de banda utilizado por cada conexión individual.
+3. Divisibilidad. Esta suposición implica que las variables de decisión en un modelo de programación lineal pueden
+tomar cualquier valor, incluyendo valores no enteros. Ejemplo:La asignación de potencia en un sistema de
+transmisión puede realizarse en valores fraccionarios, por ejemplo, asignar 2.5 W a un canal.
+4. Certeza. Se asume que los valores asignados a cada parámetro en un modelo de programación lineal son conocidos
+y permanecen constantes. Ejemplo: Se asume que la demanda de tráfico y la capacidad de los enlaces son
+conocidas y constantes durante el periodo de planificación.
+Javier Quintero Programación lineal con variable continua 40 / 323
+Programación lineal con variable continua
+Observación
+Estas suposiciones son fundamentales para la tratabilidad matemática de la programación lineal. Garantizan que las
+relaciones en el modelo permanezcan lineales, lo que permite aplicar métodos de solución eficientes como el algoritmo
+símplex. Sin embargo, en aplicaciones reales, una o más de estas suposiciones pueden no cumplirse estrictamente. Por
+ejemplo, las variables de decisión pueden necesitar tomar valores enteros, los parámetros pueden involucrar
+incertidumbre o las relaciones pueden ser no lineales. En tales casos, se requieren extensiones de la programación lineal,
+como la programación entera, la programación no lineal o la programación estocástica, para modelar el problema con
+mayor precisión.
+Javier Quintero Programación lineal con variable continua 41 / 323
+Solución de problemas de programación lineal
+Un problema lineal es por definición un problema convexo. Un problema convexo garantiza la existencia de
+una solución óptima única. En el caso de problemas lineales, el principio de optimalidad en los vértices nos
+permite encontrar dicha solución de manera directa.
+Definición (Solución en Vértice)
+Se denomina solución en vértice a una solución del problema (2) que se obtiene como la intersección de dos
+restricciones. Es decir, x+ es una solución en vértice si y solo si
+x+ ∈ {gi}∩{gj}∩F
+donde gi,gj son dos restricciones del problema (1).
+Teorema (Optimalidad en Vértices)
+Un problema de programación lineal (LP) con variables continuas y región factible acotada satisface:
+• la solución óptima se encuentra en el vértice con mejor valor de la función objetivo, o
+• si dos vértices tienen el mismo valor de la función objetivo, entonces el problema tiene infinitas
+soluciones situadas en el segmento que une ambos vértices.
+Javier Quintero Programación lineal con variable continua 42 / 323
+Método Analítico: Algoritmo Símplex
+Ejemplo (Soluciones en Vértices)
+Retomemos el Ejemplo 6. Utilizando Geogebra podemos graficar la región factible como en la Figura 6:
+Figura 6: Región factible del Ejemplo 6
+Javier Quintero Programación lineal con variable continua 43 / 323
+Método Analítico: Algoritmo Símplex
+Ejemplo (Soluciones en Vértices)
+Dado que la región es acotada, según el Teorema 12, la solución óptima se encuentra en los vértices de la
+región. Calculamos los vértices mediante la intersección de las restricciones y evaluamos cada punto en la
+función objetivo:
+x z
+(0,0) 0
+(4,0) 12
+(4,3) 27
+(2,6) 36
+(0,6) 30
+Javier Quintero Programación lineal con variable continua 44 / 323
+Método Analítico: Algoritmo Símplex
+Ejemplo
+Este problema es de maximización, por lo tanto, dado que (2,6) devuelve el valor máximo de la función
+objetivo, concluimos que esta es la solución óptima.
+Finalmente, cerramos el último paso del protocolo 1, expresando la solución en los mismos términos del
+problema, es decir, traducimos la solución matemática a lenguaje natural:
+“El nivel óptimo de producción semanal es fabricar 2 lotes del producto 1 y 6 lotes del producto 2, para
+maximizar el beneficio a $36 mil dólares.”
+Obsérvese que en esta respuesta se resume el objetivo principal del problema: nivel de producción semanal
+para beneficio máximo, utilizando las unidades correspondientes.
+Javier Quintero Programación lineal con variable continua 45 / 323
+Solución de problemas de programación lineal
+Este ejemplo ilustra cómo aplicar el método analítico a un problema bidimensional.
+Algorithm 1 Método Analítico
+1: Aplicar únicamente si la región factible es acotada.
+2: Encontrar el conjunto V de vértices factibles mediante la intersección {gi}∩{gj} para todo i = 1, . . . ,m+
+n, donde gi para i = m+1, . . . ,n+m corresponde a las últimas n restricciones de no negatividad.
+3: Para cada vi ∈ V , calcular f (vi).
+4: La solución óptima corresponde al menor (mayor) valor z∗ = f (v∗i ) en un problema de minimización
+(maximización).
+Javier Quintero Programación lineal con variable continua 46 / 323
+Solución de problemas de programación lineal
+Este principio está detrás del algoritmo Símplex. El algoritmo Símplex es
+uno de los métodos más famosos en optimización. Fue desarrollado en 1947
+por George Dantzig, quien trabajaba en problemas de planificación para la
+Fuerza Aérea de los EE.UU. Desde entonces, se ha convertido en un pilar de
+la investigación operativa y se ha aplicado en innumerables campos, desde
+ingeniería y economía hasta telecomunicaciones.
+La idea principal detrás del algoritmo es simple pero poderosa: en un prob-
+lema de programación lineal, las soluciones factibles forman una figura ge-
+ométrica llamada politopo (un polígono multidimensional). Dantzig de-
+mostró que la solución óptima siempre se encuentra en uno de los vér-
+tices de este politopo. En lugar de verificar todos los puntos posibles, el
+algoritmo Símplex se desplaza inteligentemente de vértice en vértice, mejo-
+rando la solución en cada paso, hasta alcanzar la mejor. Figura 7: George B.
+Dantzig (1913–2005)
+Creador del método
+SÍMPLEX
+Javier Quintero Programación lineal con variable continua 47 / 323
+Solución de problemas de programación lineal
+Algunas características importantes del método Símplex
+• Proporciona no solo la solución óptima, sino también información sobre la sensibilidad del modelo (cómo afectan
+los cambios en recursos o coeficientes al resultado).
+• En la práctica, es extremadamente eficiente, aunque en teoría puede requerir tiempo exponencial en el peor caso.
+• Sentó las bases de la optimización moderna e inspiró muchas extensiones, como el Símplex Revisado y el Símplex
+Dual.
+Hoy en día, incluso con algoritmos más recientes (como los Métodos de Punto Interior), el método Símplex sigue
+siendo ampliamente utilizado debido a su eficiencia práctica, robustez e interpretabilidad.
+Javier Quintero Programación lineal con variable continua 48 / 323
+Ejemplo (Soluciones infinitas)
+Consideremos el siguiente problema de optimización:
+max x1 + x2
+s.a. x1 + x2 ≤ 2
+x1,x2 ≥ 0
+La región factible tiene tres vértices:
+x z
+(0,0) 0
+(2,0) 2
+(0,2) 2
+Obsérvese cómo el valor de la función objetivo coincide en dos vértices. Esto significa, según el Teorema 12,
+que las soluciones óptimas se encuentran en el segmento que une ambos vértices, es decir, el segmento:
+x∗(λ ) = λ (2,0)+(1−λ )(0,2)
+para λ ∈ [0,1], y z∗ = 2. Dado que para cada valor de λ existe una solución diferente, concluimos que este
+problema tiene infinitas soluciones.
+Javier Quintero Programación lineal con variable continua 49 / 323
+Método gráfico. Curvas de nivel
+¿Qué significa geométricamente el principio de optimalidad (Teorema 12)? Añadamos una curva de nivel que
+represente la función objetivo a la región factible del Ejemplo 6. Para ello, utilizamos la calculadora gráfica
+Geogebra (ver más en el Apéndice C). Para esta sección, los gráficos pueden consultarse aquí.
+Algorithm 2 Método Gráfico
+1: Aplicar únicamente a problemas bidimensionales.
+2: Graficar la región factible mediante la intersección de todas las restricciones.
+3: if la región factible no está vacía then
+4: Crear una curva de nivel correspondiente a la función objetivo.
+5: Disminuir (problema de minimización) o aumentar (problema de maximización) el nivel de la curva
+hasta que toque el último punto factible posible.
+6: La solución óptima corresponde al menor (mayor) valor de la curva de nivel en un problema de
+minimización (maximización). La solución x∗ es el último punto factible que toca la curva de nivel.
+7: elseEl problema es infactible
+8: end if
+Javier Quintero Programación lineal con variable continua 50 / 323
+Método gráfico. Curvas de nivel
+Ejemplo (Encontrar la asignación óptima de producción mediante el método gráfico)
+El gráfico izquierdo en la Figura 8 corresponde al paso inicial del método gráfico descrito anteriormente. La
+línea verde es la curva de nivel correspondiente a la función objetivo. En el gráfico derecho se observa cómo,
+al aumentar (es un problema de maximización) el valor de la curva de nivel, encontramos la solución óptima
+en x∗ = (2,6) (el último punto factible) para z∗ = 36 (el valor de la curva de nivel).
+Figura 8: Método gráfico aplicado al Ejemplo 6
+Javier Quintero Programación lineal con variable continua 51 / 323
+Ejemplo (Soluciones infinitas)
+Existen casos en los que la función objetivo es paralela a alguna de las fronteras del politopo de la región
+factible, ver Figura 9. En tales casos, tendremos soluciones óptimas infinitas, como se muestra en el Ejemplo
+16. Para visualizar la región y la implementación del método gráfico, consulte este gráfico en Geogebra.
+Figura 9: Método gráfico aplicado al Ejemplo 16
+Javier Quintero Programación lineal con variable continua 52 / 323
+Matlab Optimization Toolbox: linprog
+Hasta ahora, el método presentado en esta sección permite resolver problemas pequeños y bidimensionales.
+Sabemos que, en la práctica, la mayoría de los problemas son mucho más grandes que eso. Por lo tanto,
+introducimos dos solucionadores computacionales para abordar esta limitación. Comenzaremos con el solver
+de Matlab para problemas lineales.
+Importante (La plantilla de Matlab no estará disponible durante los exámenes)
+Durante los exámenes se empleará como optimizador única y exclusivamente los módulos de Matlab descritos en clase.
+La plantilla de Aula Virtual no estará disponible, por lo que un conocimiento de la sintaxis y los comandos básicos para
+la resolución del problema mediante un script de Matlab será requerido.
+Para resolver un problema de programación lineal se empleará la función de Matlab conocida como linprog,
+se puede consultar su configuración en Mathworks, o escribiendo help linprog en la consola de Matlab.
+Para más información consultar Apéndice G.
+La función linprog resuelve los problemas LP con variable continua, esto es, el problema tiene que ser lineal,
+y las variables tienen permitido asumir valores no-enteros. La lista de argumentos se resume en la Tabla 2.
+Javier Quintero Programación lineal con variable continua 53 / 323
+Programación lineal con variable continua
+Tabla 2: Entradas/salidas de la función linprog en MATLAB
+Entrada / Salida Descripción Tipo / Valores
+Entradas
+f Vector de coeficientes de la función objetivo Vector columna
+A Matriz de coeficientes de desigualdades lineales Matriz m×n (opcional)
+b Vector de términos independientes de desigualdades Vector columna (opcional)
+Aeq Matriz de coeficientes de ecuaciones lineales Matriz p×n (opcional)
+beq Vector de términos independientes de ecuaciones lineales Vector columna (opcional)
+lb Vector de límites inferiores de las variables Vector columna (opcional)
+ub Vector de límites superiores de las variables Vector columna (opcional)
+x0 Vector inicial de la solución Vector columna (opcional)
+Salidas
+x Vector solución óptima que satisface las restricciones Vector columna
+fval Valor de la función objetivo en la solución óptima Escalar
+exitflag Indica el resultado de la optimización Escalar entero
+output Información detallada del solver (iteraciones, tiempo, etc.) Estructura
+lambda Multiplicadores de Lagrange asociados a las restricciones lineales Estructura (si aplica)
+Javier Quintero Programación lineal con variable continua 54 / 323
+Programación lineal con variable continua
+En el Código 1 se ejemplifica el uso de la función linprog para la resolución del Ejemplo 6. Nótese que
+linprog solamente acepta problemas de mínimo, con restricciones de menor o igual; problemas en forma
+canónica, por lo que se debe cambiar el sentido de la desigualdad y considerar el opuesto de la función
+objetivo. Ver código 1.
+Javier Quintero Programación lineal con variable continua 55 / 323
+Solución de problemas de programación lineal
+1 % vector de costes
+2 f = -[3 5];
+3 %vector de recursos
+4 b = [4 12 18];
+5 %cotas
+6 ub = []; %superior
+7 lb = zeros (1,2); % inferior
+8 %matriz de restricciones
+9 %x1,x2
+10 A = [ 1 0;
+11 0 2;
+12 3 2];
+13 %igualdades
+14 Aeq = []; beq= [];
+15 %optimizar
+16 [x,fval] = linprog(f,A,b,Aeq ,beq ,lb,ub)
+17 %imprimir resultados
+18 x
+19 -fval
+Código 1: Ejemplo de uso función linprog
+Nótese que la solución coincide con las soluciones anteriores.
+Javier Quintero Programación lineal con variable continua 56 / 323
+Solución de problemas de programación lineal
+Este software se presenta como material complementario del curso para usuarios de Windows, y consiste
+simplemente en una codificación de Pyomo para ejecutarse en ordenadores personales con Windows. Está
+disponible en Aula Virtual.
+Esta solución es una interfaz gráfica sencilla (GUI) que contiene varios paquetes y solucionadores de Pyomo.
+Su uso es intuitivo y sigue las mismas instrucciones que el script de Pyomo. Más información en el Apéndice
+B.
+Importante (Pyomo solver no estará disponible para su uso en exámenes)
+El solver de Pyomo no estará disponible durante los exámenes. Durante los exámenes se empleará como optimizador
+única y exclusivamente los módulos de Matlab descritos en el curso.
+Javier Quintero Programación lineal con variable continua 57 / 323
+Ejemplo (Resolviendo el problema de asignación de producción)
+Recordemos el Ejemplo 6. La GUI de este solucionador solicita los elementos básicos del problema.
+Introduciendo cada uno en el área correspondiente, como se muestra en la Figura 10, obtenemos el resultado
+deseado.
+Figura 10: Resolución del Ejemplo 6 con el solucionador para Windows
+Javier Quintero Programación lineal con variable continua 58 / 323
+Análisis post-óptimo: Precios sombra
+Análisis post-óptimo
+El análisis post-óptimo es un análisis what-if que realizamos después de encontrar la solución óptima. Este análisis
+responde a preguntas sobre cuán sólida y/o robusta es la solución actual, y qué acciones debemos llevar a cabo para
+mejorarla. También es una herramienta para estimar el impacto de incluir nuevas variables o mejorar/limitar recursos en
+el modelo.
+Para realizar el análisis post-óptimo, introducimos cambios en los parámetros del modelo uno por uno, manteniendo el
+resto constante. Este análisis nos permite estimar con alta precisión cómo afectan los cambios a la solución actual sin
+necesidad de resolver un nuevo modelo.
+En este curso nos centraremos en la obtención y significado práctico de los precios sombra.
+Javier Quintero Programación lineal con variable continua 59 / 323
+Precios sombra
+Consideremos un problema como (2), con solución óptima x∗, valor óptimo z∗ y coeficiente del lado derecho
+(RHS) b, al que denominamos LP. Consideremos un problema asociado L̂Pi, con solución óptima x̂∗, valor
+óptimo ẑ∗ y vector RHS b̂i = (b1, . . . ,bi +1, . . . ,bn).
+Definición (Precio Sombra)
+El precio sombra si correspondiente a la i-ésima restricción cuantifica la mejora marginal en la función
+objetivo z∗ resultante de un incremento unitario en bi. Sea ẑ∗ la solución del problema donde b̂i = bi +1,
+entonces:
+ẑ∗ = z∗+ si
+Si s∗i = 0, entonces los cambios en bi no afectan el valor óptimo de la función objetivo.
+Javier Quintero Programación lineal con variable continua 60 / 323
+Análisis post-óptimo: Precios sombra
+Observación
+• Los cambios en bi se denotan como ∆bi, es decir, b̂i−bi = ∆bi.
+• El precio sombra si asociado al coeficiente bi, de la restricción i = 1, . . . ,m contiene la información acerca de
+cuánto cambia la función objetivo si el coeficiente bi se incrementa en una unidad.
+• Si si = 0, esto significa que aumentar el recurso i no mejora la solución, y por lo tanto el recurso no es crítico.
+• Si si ̸= 0, se tiene que el recurso i es crítico y que aumentarlo en una unidad cambia el valor óptimo del problema.
+Ejemplo (Precios sombra de Ejemplo 6)
+Para obtener los precios sombra se extrae la información dual que brinda linprog almacenda en la
+estructura lambda. Ver Código 2.
+Javier Quintero Programación lineal con variable continua 61 / 323
+Análisis post-óptimo: Precios sombra
+1 f = -[3 5]; % vector de costes
+2 b = [4 12 18]; %vector RHS de recursos
+3 lb = zeros (1,2); % cota inferior
+4 %matriz de restricciones
+5 %x1,x2
+6 A = [ 1 0;
+7 0 2;
+8 3 2];
+9 %optimizar
+10 [x,fval ,exitflag ,output ,lambda] = linprog(f,A,b,[],[],lb)
+11 %imprimir resultados
+12 x
+13 -fval
+14 [lambda.ineqlin;lambda.lower]
+Código 2: Extracción de precios sombra
+Javier Quintero Programación lineal con variable continua 62 / 323
+Programación lineal con variable continua
+La información de lambda se extrae de la estructura. Como en este caso contamos con desigualdades de
+recursos (b), se emplea lambda.ineqlin para acceder a los precios sombra.
+De acuerdo a la información obtenida, se tiene que
+s = (0,1.5,1)
+Esto significa que:
+• s1 = 0, se refiere a la desigualdad x1 ≤ 4. Si se aumenta la disponibilidad de horas semanales en la planta
+1, las ganancias no mejoran. Luego concluimos que el tiempo en disponible en la planta 1 no es un
+recurso crítico.
+• s2 = 1.5, se refiere a la desigualdad x2 ≤ 12. Si se aumenta la disponibilidad de horas semanales en la
+planta 2, de 12 a 13, las ganancias aumentarán en 1.5 unidades, de 36 a 37.5. Por lo tanto, las horas en
+la planta 2 son un recurso crítico.
+• s3 = 1, se refiere a la desigualdad 3x1 + 2x2 ≤ 18. Si se aumenta la disponibilidad de horas semanales
+en la planta 3, de 18 a 19, las ganancias aumentarán en 1 unidad, de 36 a 37. Por lo tanto, las horas en la
+planta 3 son un recurso crítico.
+Javier Quintero Programación lineal con variable continua 63 / 323
+§II. Programación Entera
+▶ Modelos de programación entera puros y mixtos.
+▶ Solución numérica.
+▶ Modelación con variables binarias.
+• Condicionales y pre-requisitos
+• Implicaciones lógicas.
+• Inclusión de restricciones.
+• Acotación.
+• Costes fijos.
+Modelo de Programación Lineal Entera. Modelos Puros y Mixtos
+La Programación Lineal Entera (ILP) es una extensión fundamental de la Programación Lineal (LP) en la que algunas
+o todas las variables de decisión deben tomar valores enteros. Este tipo de modelado es esencial cuando se abordan
+problemas que implican decisiones discretas, como planificación de horarios, ubicación de instalaciones o diseño de
+redes. Particularmente en aplicaciones de telecomunicaciones, esto incluye determinar el número de enlaces, asignación
+de canales o planificación de nodos en una red.
+Definición (Problema de Programación Lineal Entera)
+La forma general de un problema de ILP puede escribirse como:
+min cT x
+s.a. Ax≤ b,
+x ∈ Zn (si todas las variables son enteras).
+(3)
+Donde:
+• x = (x1,x2, . . . ,xn) es el vector de variables de decisión.
+• cT x es la función objetivo lineal.
+• Ax≤ b representa el sistema de restricciones lineales.
+• La condición de integralidad exige que algunas o todas las variables pertenezcan al conjunto de enteros.
+Javier Quintero Programación Entera 64 / 323
+Observación
+Nótese que Z+ = Z∩{x > 0}, es decir, x es un entero estrictamente positivo, excluyendo el cero. Sin embargo, para los
+fines de este curso, dado que las regiones factibles deben ser cerradas, cuando nos referimos a Z+, incluiremos el cero,
+es decir, redefinimos Z+ = {x≥ 0}∩Z.
+En un modelo entero puro, todas las variables de decisión deben tomar valores enteros, mientras que en un modelo
+mixto (MILP), solo un subconjunto de las variables son enteras y las demás permanecen continuas.
+Los modelos ILP y MILP son más complejos de resolver que los modelos LP, ya que las restricciones de integralidad
+hacen que la región factible deje de ser convexa. Para resolver estos problemas de manera eficiente se emplean
+algoritmos especializados como branch-and-bound, branch-and-cut y cutting planes.
+En la práctica, ¿cómo resolver un problema ILP? Primero, veamos qué ocurre si tratamos este problema como un
+problema LP, con el siguiente ejemplo:
+Ejemplo
+Consideremos el siguiente problema de optimización:
+max z = 5x1 +3x2
+s.a. −1.4x1 + x2 ≤ 2,
+3x1 + x2 ≤ 12,
+x1,x2 ≥ 0,
+x1,x2 ∈ Z.Javier Quintero Programación Entera 65 / 323
+Ejemplo
+Para resolver este problema, relajamos la condición que obliga a las variables a ser enteras. Trabajamos con el problema
+relajado:
+max z = 5x1 +3x2
+s.a. −1.4x1 + x2 ≤ 2,
+3x1 + x2 ≤ 12,
+x1,x2 ≥ 0.
+Aplicando el método analítico y encontrando los vértices de la región factible, obtenemos la siguiente tabla:
+x z
+(0,0) 0
+(0,2) 6
+(4,0) 20
+(2.25,5.18) 26.91
+Concluimos que la solución óptima del problema relajado es x∗ = (2.25,5.18) para z∗ = 26.91. También podemos
+aplicar el método gráfico y obtener el mismo resultado, ver Figura 11 izquierda.
+Javier Quintero Programación Entera 66 / 323
+Figura 11: Problema relajado vs. problema entero
+Ejemplo
+Sin embargo, las soluciones deseadas deben ser enteras, por lo que aplicar los métodos anteriores ya no es válido.
+Volviendo al problema original, debemos considerar únicamente los puntos dentro de la región factible con coordenadas
+enteras, ver Figura 11 derecha. Ahora, aumentamos el valor de las curvas de nivel de la función objetivo hasta alcanzar el
+último punto factible con coordenadas enteras. De esta manera, concluimos que la solución óptima del problema entero
+es x∗ = (3,3) con z∗ = 24.
+Javier Quintero Programación Entera 67 / 323
+Modelo de Programación Lineal Entera. Modelos Puros y Mixtos
+Definición (Problema Relajado)
+Consideremos el problema entero (ILP) (3). Llamamos Problema Relajado (RLP) al problema asociado:
+min cTx
+s.a. Ax≤ b,
+x≥ 0.
+(4)
+En otras palabras, relajamos la condición que restringe las variables a ser enteras.
+Javier Quintero Programación Entera 68 / 323
+Proposición (ILP versus RLP)
+Relación entre soluciones:
+• En general, la solución del ILP y la del RLP no son iguales.
+• No es correcto calcular la solución del ILP como una aproximación al punto entero más cercano de la solución del
+RLP.
+• El único caso en el que ambas soluciones coinciden es cuando la matriz de restricciones es unimodular.
+Relación entre regiones factibles:
+• La región factible del ILP siempre es más pequeña que la del RLP, es decir, contiene menos soluciones.
+• La región factible del ILP es un subconjunto de la región factible del RLP; todas las soluciones del ILP son también
+soluciones del RLP.
+• La solución del ILP no está obligada a encontrarse en la frontera de la región factible (no existe una frontera
+continua).
+Relación entre soluciones óptimas:
+• Dado que la región factible del ILP es un subconjunto de la del RLP, la solución del RLP, z∗LP, siempre es mejor que
+la solución del ILP, z∗IP, proporcionando así una cota:
+• Minimización: z∗IP ≥ z∗LP,
+• Maximización: z∗IP ≤ z∗LP.
+Javier Quintero Programación Entera 69 / 323
+Modelo de Programación Lineal Entera. Modelos Puros y Mixtos
+Para algunos problemas puede ser útil considerar solo un subconjunto de variables como enteras y permitir
+que el resto sean continuas. A estos problemas los denominamos Problemas de Programación Entera
+Mixta.
+Definición (Problema de Programación Entera Mixta)
+Decimos que un problema LP es un problema de programación entera mixta si un subconjunto de las
+variables está restringido a ser entero, es decir:
+min cT
+1 x1 + cT
+2 x2
+s.a. Ax≤ b,
+x2 ∈ Z.
+(5)
+En otras palabras, relajamos la condición que restringe todas las variables a ser enteras.
+Javier Quintero Programación Entera 70 / 323
+Modelo de Programación Lineal Entera. Modelos Puros y Mixtos
+¿Cómo resolver un problema entero? Para resolver un problema entero en este curso, utilizamos software:
+• Matlab intlinprog: de manera análoga a la solución de problemas lineales de variable continua, Mat-
+lab implementa la función intlinprog para la resolución de ILP y MILP. Más información acerca de
+estas funciones puede ser consultada en Mathworks o escribiendo help intlinprog en la consola de
+Matlab. Para más información consultar Apéndice G.
+• Pyomo Solver: podemos especificar el dominio de las variables eligiendo la opción
+NonNegativeIntegers/NonPositiveIntegers/Integers en el menú contextual "Domain", más de-
+talles en el Apéndice B. Al establecer esta opción, todas las variables se consideran enteras, por lo que
+no es posible resolver MILP.
+Javier Quintero Programación Entera 71 / 323
+Modelo de Programación Lineal Entera. Modelos Puros y Mixtos
+Tabla 3: Entradas y salidas de la función intlinprog en MATLAB
+Entrada / Salida Descripción Tipo / Valores
+Entradas
+f Vector de coeficientes de la función objetivo Vector columna
+intcon Índices de las variables que deben ser enteras Vector de enteros
+A Matriz de coeficientes de desigualdades lineales Matriz m×n (opcional)
+b Vector de términos independientes de desigualdades Vector columna (opcional)
+Aeq Matriz de coeficientes de ecuaciones lineales Matriz p×n (opcional)
+beq Vector de términos independientes de ecuaciones lineales Vector columna (opcional)
+lb Vector de límites inferiores de las variables Vector columna (opcional)
+ub Vector de límites superiores de las variables Vector columna (opcional)
+x0 Vector inicial de la solución Vector columna (opcional)
+Salidas
+x Vector solución óptima que satisface las restricciones Vector columna
+fval Valor de la función objetivo en la solución óptima Escalar
+exitflag Indica el resultado de la optimización Escalar entero
+output Información detallada del solver (iteraciones, tiempo, etc.) Estructura
+lambda Multiplicadores de Lagrange asociados a las restricciones lineales Estructura (si aplica)
+Javier Quintero Programación Entera 72 / 323
+Modelo de Programación Lineal Entera. Modelos Puros y Mixtos
+Ejemplo
+Para resolver el ejemplo anterior empleamos el código 3.
+1 %intlinprog example
+2 f = [-5; -3]; % Cambiado de signo (max -> min)
+3 A = [-1.4 1;
+4 3 1];
+5 b = [2;
+6 12];
+7 intcon = [1 2]; % Ambas variables son enteras
+8 lb = [0; 0]; % x1 , x2 >= 0
+9 ub = []; % Sin cotas superiores explicitas
+10 [x_opt , fval] = intlinprog(f, intcon , A, b, [], [], lb, ub);
+11 z_opt = -fval % Volvemos a cambiar el signo
+12 x_opt
+Código 3: Código para Ejemplo 23
+Javier Quintero Programación Entera 73 / 323
+Modelado de Problemas con Variables Binarias
+En ocasiones necesitamos modelar una decisión de tipo sí/no; en tales casos utilizamos variables binarias.
+Definición (Variable Binaria)
+Se denomina variable binaria o variable 0-1 a una variable entera cuyos únicos valores posibles son 0 o 1, es
+decir:
+xj =
+{
+1, si la condición j se cumple,
+0, en caso contrario.
+Javier Quintero Programación Entera 74 / 323
+Ejemplo (Uso de variables binarias)
+Una empresa tecnológica está considerando la activación de la producción de cuatro tipos de dispositivos de telecomunicaciones: A, B,
+C y D, para el próximo año. La producción de los dispositivos A, B, C y D implica:
+• un coste fijo asociado a la puesta en marcha de la línea de producción (en EUR), y
+• un requerimiento de horas de trabajo por unidad producida.
+La tabla resume el coste fijo, la mano de obra requerida por unidad y el beneficio esperado por unidad:
+Dispositivo Coste Fijo (EUR) Mano de obra por unidad (horas) Beneficio por unidad (EUR)
+A 14500 10 50
+B 10000 15 60
+C 8000 5 55
+D 9000 14 80
+La empresa dispone de 20 000 horas de mano de obra en esta temporada y se requiere que:
+I. si se activa la producción de B, no se puede activar la producción de D,
+II. si se activa la producción de A, entonces al menos C o D también deben activarse,
+III. al menos una línea de producción debe ser activada,
+IV. se debe producir C o D,
+Para cada tipo de producción, si se activa, la empresa se compromete a producir un mínimo de 1000, 1500, 3000 y 2000 unidades de los
+dispositivos A, B, C y D, respectivamente. Formule el modelo de programación matemática que permita a la empresa planificar su
+producción anual, con el objetivo de maximizar su beneficio total.
+Javier Quintero Programación Entera 75 / 323
+Modelado de Problemas con Variables Binarias
+Ejemplo
+En este problema, debemos tomar dos tipos de decisiones: decidir si se activa una línea de producción y el
+nivel de producción de cada tipo de producto. La primera decisión es binaria (sí/no), y la segunda representa
+simplemente cuántas unidades de cada producto se producen. Por lo tanto, podemos utilizar como variables
+de decisión:
+• xj: unidades del producto j, donde j ∈ I = A,B,C,D, y xj ∈ Z+ para todo j ∈ I; y
+• yi =
+{
+1, si la línea de producción i está activada,
+0, en caso contrario
+para i ∈ I.
+Obsérvese que usamos I como nuestro conjunto índice y declaramos la activación de las líneas de
+producción como una variable binaria.
+Javier Quintero Programación Entera 76 / 323
+Modelado de Problemas con Variables Binarias
+Proposición
+Condicionales y Prerrequisitos
+1. j es condicional respecto a i. Para completar j, i debe completarse:
+xj− xi ≤ 0 (xj = 1⇒ xi = 1)
+2. i es un pre-requisito para j:
+xi− xj = 0 (xi⇔ xj)
+3. i y j son mutuamente excluyentes (no pueden ser ambos iguales a 1 simultáneamente):
+xi + xj ≤ 1
+Javier Quintero Programación Entera 77 / 323
+Modelado de Problemas con Variables Binarias
+Ejemplo
+[]
+1. Para llevar a cabo el proyecto 5, el proyecto 2 debe completarse primero: x5 ≤ x2.
+2. Los materiales se compran (actividad i) solo si la tarea correspondiente es seleccionada: xj− xi = 0.
+3. Los ítems 4 y 2 no pueden seleccionarse al mismo tiempo: x4 + x2 ≤ 1.
+Esto significa que, volviendo al Ejemplo 30, la condición “si se activa la producción de B, no se puede activar
+la producción de D” se escribe como
+yB + yD ≤ 1
+porque ambos no pueden ser iguales a 1 simultáneamente. Esto conduce a un conjunto más general de
+selección de k actividades de entre n.
+Javier Quintero Programación Entera 78 / 323
+Modelado de Problemas con Variables Binarias
+Proposición (Número de Actividades a Completar)
+1. Completar como máximo k actividades de entre n: ∑
+i∈I
+xi ≤ k
+2. Completar al menos k actividades de entre n: ∑
+i∈I
+xi ≥ k
+3. Completar exactamente k actividades de entre n: ∑
+i∈I
+xi = k
+Ejemplo
+1. De 5 miembros, seleccionar como máximo 2: x1 + x2 + x3 + x4 + x5 ≤ 2.
+2. De 5 ítems, tomar al menos 3: x1 + x2 + x3 + x4 + x5 ≥ 3.
+3. De 5 proyectos, completar exactamente 2: x1 + x2 + x3 + x4 + x5 = 2.
+Esto significa que, volviendo al Ejemplo 30, la condición “al menos una línea de producción debe ser activada” se escribe
+como
+yA + yB + yC + yD ≥ 1
+porque al menos una de ellas debe ser igual a 1.
+Javier Quintero Programación Entera 79 / 323
+Modelado de Problemas con Variables Binarias
+Proposición (Inclusión de Restricciones OR)
+El modelo debe incluir una de dos restricciones, g1(x)≤ b1 o g2(x)≤ b2. Se introduce una nueva variable binaria δ para
+representar la no activación de una restricción, y las restricciones se incluyen como
+g1(x)≤ b1 +M1δ
+g2(x)≤ b2 +M2(1−δ )
+Las constantes M1, M2 deben elegirse lo suficientemente grandes para trivializar la restricción no activada (típicamente
+una constante positiva muy grande).
+Ejemplo
+Suponga que para viajar de A a B, se debe tardar menos de 10 minutos o pagar menos de 2 C por transporte. Sea g1(x) el
+tiempo de viaje y g2(x) el coste de viaje. Entonces el modelo incluiría:
+g1(x)≤ 10+M1δ
+g2(x)≤ 2+M2(1−δ )
+con la elección adecuada de M. Nótese que si δ = 0, la restricción de tiempo de viaje está activa; si δ = 1, la restricción
+de coste está activa.
+Javier Quintero Programación Entera 80 / 323
+Implicaciones Lógicas
+Esto es particularmente útil cuando se enfrenta al tipo de restricción P⇒ Q, donde P y Q son proposiciones. Volviendo
+al Ejemplo 30, la condición «si se activa la producción de A, entonces al menos C o D también deben activarse» significa
+P: producción de A activada, yA = 1 implica Q: al menos C o D activadas, yC = 1 o yD = 1.
+Para modelar este tipo de implicaciones, las reducimos a implicaciones OR usando la siguiente equivalencia
+lógica
+(P⇒ Q)⇔ (¬P∨Q) (6)
+donde ¬ significa la negación de P y ∨ significa OR (al menos una de las condiciones se cumple). Una vez
+obtenida la proposición OR, procedemos a usar el mecanismo OR como antes.
+¿Cómo aplicar esto a variables binarias?
+Ejemplo (Implicación lógica)
+La condición “si se activa la producción de A, entonces al menos C o D también deben activarse” significa P:
+producción de A activada, yA = 1 implica Q: al menos C o D activadas, yC = 1 o yD = 1. Esto es
+yA = 1 ⇒ yC = 1 o yD = 1.
+Como trabajamos con variables binarias, la condición yA = 1 es equivalente a yA ≥ 1.
+Javier Quintero Programación Entera 81 / 323
+Ejemplo (Implicación lógica)
+Por otro lado, la condición yC = 1 o yD = 1 es equivalente a la restricción yC + yD ≥ 1. Así, el esquema P⇒ Q se convierte en
+yA ≥ 1⇒ yC + yD ≥ 1.
+La negación de P sería ¬P = (yA ≤ 0), por lo que según la ecuación (6) obtenemos la relación OR
+yA ≤ 0 o yC + yD ≥ 1
+Use la Proposición 80 para concluir que la relación OR anterior puede incluirse en nuestro modelo como dos restricciones relacionadas
+mediante una nueva variable binaria
+δ =
+{
+1, si la primera restricción está activada
+0, si la segunda restricción está activada
+como
+yA ≤M1δ
+yC + yD ≥ 1+M2(1−δ )
+eligiendo el valor adecuado de M1 y M2. Nótese que si δ = 0, activamos la primera restricción, lo que significa que la segunda debe ser
+trivial. Trivializar restricciones que involucran variables binarias es simple: basta elegir una condición que siempre se cumpla. Por
+ejemplo, yC + yD ≥ 0, o cualquier número negativo, así que sea 1+M2 ≤ 0, lo que implica que M2 ≤−1, por lo tanto cualquier valor
+menor que −1 es adecuado para M2.
+Repita el mismo razonamiento para M1. Sea δ = 1, entonces la segunda restricción está activada y la primera debe ser trivial. Para ello,
+elija M1 ≥ 1. Así, las restricciones resultan
+yA ≤ δ
+yC + yD ≥ δ
+Javier Quintero Programación Entera 82 / 323
+Modelado de Problemas con Variables Binarias
+Observación
+Del último ejemplo surge una pregunta natural: ¿Se pueden combinar las dos restricciones anteriores en una sola? En
+este caso la respuesta es sí. Sin embargo, en general no se recomienda. Considere el contraejemplo “si yA = 1 y yB = 1
+implica yC = 1”. Usando el mecanismo anterior, obtenemos las restricciones
+yA + yB ≤ 1+δ
+yC ≥ δ
+Si unimos estas dos restricciones obtenemos yA + yB ≤ 1+ yC, lo que permite el caso yA = 1, yB = 0 y yC = 1, que no es
+factible.
+Javier Quintero Programación Entera 83 / 323
+Modelado de Problemas con Variables Binarias
+Proposición (Inclusión de K de N restricciones)
+El modelo debe incluir K de N restricciones del tipo gj(x)≤ bj, para j = 1, . . . ,N. Se introduce una nueva
+variable binaria δj para representar la no activación de cada restricción, y las restricciones se incluyen como
+g1(x)≤ b1 +M1δ1
+g2(x)≤ b2 +M2δ2
+...
+gN(x)≤ bN +MNδN
+con
+N
+∑
+j=1
+δj = N−K
+Las constantes Mj deben elegirse adecuadamente de forma que trivialicen las restricciones no activadas.
+Javier Quintero Programación Entera 84 / 323
+Modelado de Problemas con Variables Binarias
+Ejemplo
+Para los nuevos laboratorios biomédicos que la empresa abrirá en Madrid, al menos dos de tres protocolos
+medioambientales deben respetarse: emisiones g1(x)≤ 10, consumo energético g2(x)≤ 20, o residuos
+g3(x)≤ 30. En el modelo, estos se incluirían como
+g1(x)≤ 10+M1δ1
+g2(x)≤ 20+M2δ2
+g3(x)≤ 30+M3δ3
+con
+3
+∑
+j=1
+δj = 3−2 = 1
+Javier Quintero Programación Entera 85 / 323
+Proposición (Acotación)
+En el caso de un problema que involucra variables binarias y enteras, en el cual el valor de la variable entera depende de
+la activación de algunas variables binarias, podemos utilizar la técnica de acotación. Por ejemplo, el nivel de producción
+de un bien x depende de realizar un pedido de material y, siendo la variable binaria y la que indica si el envío se solicita o
+no. Esta restricción se introduce en el modelo como x≤My, donde M es una constante que excede los límites de los
+valores de x.
+Ejemplo
+Retomando el ejemplo 30, la condición «Para cada tipo de producción, si está activada, la empresa se compromete a
+producir un mínimo de 1000, 1500, 3000 y 2000 unidades de los dispositivos A, B, C y D, respectivamente», se escribe
+como un conjunto de cuatro restricciones: M1yA ≤ xA ≤My1
+M2yB ≤ xB ≤My2
+M3yC ≤ xC ≤My3
+M4yD ≤ xD ≤My4
+donde los valores de las constantes son 1000, 1500, 3000 y 2000, respectivamente.
+El valor de M y su inclusión obligan a que las variables xi sean cero si yi es cero, lo cual constituye el caso útil. La
+constante M se elige lo suficientemente grande para evitar una restricción artificial de acotación superior que no está en el
+modelo.
+Javier Quintero Programación Entera 86 / 323
+Proposición (Funciones con N valores posibles)
+Sea f una función que puede tomar los valores d1,d2, . . . ,dN . Entonces f puede expresarse como
+f (x) =
+N
+∑
+i=1
+diyi
+N
+∑
+i=1
+yi = 1
+donde yi son variables binarias que indican qué valor asume f .
+Ejemplo
+Las horas de operación de una planta farmacéutica están dadas por g(x). La actividad de la planta no debe
+exceder las 18 horas, pero solo puede operar en bloques de 6 horas. Por lo tanto, g(x) puede tomar los
+valores 6, 12 o 18. Esto puede representarse como
+g(x) = 6y1 +12y2 +18y3
+y1 + y2 + y3 = 1
+Javier Quintero Programación Entera 87 / 323
+Modelado de Problemas con Variables Binarias
+Esto significa, retomando el Ejemplo 30, que la función objetivo se escribe como
+max
+x
+z = 50xA +60xB +55xC +80xD− (14500yA +10000yB +8000yC +9000yD)
+Por lo tanto, el modelo del Ejemplo 30 queda
+max
+x
+z = 50xA +60xB +55xC +80xD− (14500yA +10000yB +8000yC +9000yD)
+s.t 10xA +15xB +5xC +14xD ≤ 20000
+yB + yD ≤ 1
+yA + yB + yC + yD ≥ 1
+yA ≤ δ
+yC + yD ≥ δ
+yC + yD ≥ 1
+1000yA ≤ xA ≤MyA
+1500yB ≤ xB ≤My2
+3000yC ≤ xC ≤MyC
+2000yD ≤ xD ≤MyD
+para xj,≥ 0, j ∈ I, enteras y δ ,yi ∈ {0,1}, para i ∈ I. M suficientemente grande, por ejemplo M = 106.
+Javier Quintero Programación Entera 88 / 323
+Modelado de Problemas con Variables Binarias
+La solución es
+x∗ = (0,0,4000,0,0,0,0,1,0) z∗ = 212000
+Así, para maximizar el beneficio la empresa debe activar únicamente la línea C y producir 4000 unidades del
+producto C para obtener un beneficio de 212000 euros.
+En el Código 4 se muestra el código empleado para la resolución, utilizando intlinprog.
+Javier Quintero Programación Entera 89 / 323
+1 % vector de costes
+2 % xA xB xC xD yA yB yC yD delta
+3 f = -[50 60 55 80 -14500 -10000 -8000 -9000 0];
+4 M = 90000; %M grande
+5 b = [20000 1 -1 0 0 -1 zeros (1,8)]; %vector de recursos
+6 %cotas
+7 ub = [M M M M 1 1 1 1 1];
+8 lb = zeros (1,9);
+9 intcon = 1:9; % indices de variables enteras
+10 %matriz de restricciones
+11 % xA xB xC xD yA yB yC yD delta
+12 A = [ 10 15 5 14 0 0 0 0 0;
+13 0 0 0 0 0 1 0 1 0;
+14 0 0 0 0 -1 -1 -1 -1 0;
+15 0 0 0 0 1 0 0 0 -1;
+16 0 0 0 0 0 0 -1 -1 1;
+17 0 0 0 0 0 0 -1 -1 0;
+18 1 0 0 0 1000 0 0 0 0;
+19 0 -1 0 0 0 1500 0 0 0;
+20 0 0 -1 0 0 0 3000 0 0;
+21 0 0 0 -1 0 0 0 2000 0;
+22 1 0 0 0 -M 0 0 0 0;
+23 0 1 0 0 0 -M 0 0 0;
+24 0 0 1 0 0 0 -M 0 0;
+25 0 0 0 1 0 0 0 -M 0];
+26 Aeq = []; beq= []; %igualdades
+27 [x,fval] = intlinprog(f,intcon ,A,b,Aeq ,beq ,lb,ub); %optimizar
+Código 4: Código para Ejemplo 30Javie Quintero Programación Entera 90 / 323
+Modelado de Problemas con Variables Binarias
+Para incluir variables binarias, en la definición de los parámetros lb, ub, se incluyen como 0,1, respectiva-
+mente.
+Notemos que, para Matlab, el modelo debe ser escrito en forma canónica, esto es, dirección de mínimo y
+desigualdades en forma de menor o igual. Luego, las restricciones de tipo
+1500yB ≤ xB ≤My2
+se codifican en el modelo como dos restricciones
+−xB +1500yB ≤ 0
+xB−My2 ≤ 0
+Nótese, además, que se debe adicionar una nueva variable δ , binaria, como una entrada extra a la función
+objetivo y con una columna en la matriz de restricciones.
+Se define la constante M = 9000, para emplearla como cota superior, tanto del problema como en las restric-
+ciones de acotación de producción.
+Javier Quintero Programación Entera 91 / 323
+§III. Problemas de transporte y asignación
+▶ Problema de transporte.
+▶ Problema de asignación.
+Problema de Transporte
+Para ampliar el contenido de este capítulo, consultar [Hillier and Lieberman, 2015, Cap. 8].
+El problema de transporte es un modelo clásico en investigación operativa que aborda la distribución de un producto
+desde varias fuentes (o nodos de oferta) hacia varios destinos (o nodos de demanda) de manera que se minimice el coste
+total de transporte. Fue introducido por primera vez en la década de 1940 y sigue siendo una de las aplicaciones más
+estudiadas de la programación lineal debido a su elegancia teórica y relevancia práctica.
+Consideramos la siguiente situación:
+• Existen m puntos de oferta (fábricas, almacenes, plantas de producción), donde cada punto de oferta i
+tiene una capacidad total disponible ai ≥ 0.
+• Existen n puntos de demanda (mercados, hospitales, zonas de clientes), donde cada punto de demanda j
+requiere una demanda total bj ≥ 0.
+• El coste unitario de transporte desde el punto de oferta i al punto de demanda j es cij, donde I = {1, . . . ,m}
+y J = {1, . . . ,n}.
+Esta situación se representa como un grafo en la Figura 12.
+Javier Quintero Problemas de transporte y asignación 92 / 323
+O1
+O2
+Om
+(a1)
+(a2)
+(am)
+D1
+D2
+Dn
+(b1)
+(b2)
+(bn)
+c11
+c12
+c1n
+c21
+c22
+c2n
+cm1 cm2
+cmn
+... ...
+Figura 12: Representación como grafo del problema de transporte
+Javier Quintero Problemas de transporte y asignación 93 / 323
+Definición (Problema de transporte)
+En este problema, la decisión consiste en cuántas unidades enviar desde el origen i al destino j, por lo que definimos las
+variables de decisión:
+xij = número de unidades enviadas desde el punto de oferta i al punto de demanda j.
+donde I = {1, . . . ,m} y J = {1, . . . ,n}.
+El objetivo es minimizar el coste total de transporte min
+x
+z =
+m
+∑
+i=1
+n
+∑
+j=1
+cijxij
+sujeto a las restricciones (una para cada punto de oferta y destino):
+n
+∑
+j=1
+xij ≤ ai, i = 1, . . . ,m,
+m
+∑
+i=1
+xij ≥ bj, j = 1, . . . ,n,
+xij ≥ 0, ∀i, j ∈ I× J.
+Estas restricciones garantizan que los envíos desde cada nodo de oferta no excedan su disponibilidad y que la demanda
+en cada destino sea satisfecha. En el caso especial en que ∑
+m
+i=1 ai = ∑
+n
+j=1 bj, el problema se denomina problema de
+transporte balanceado, y la solución está garantizada. En caso contrario, se pueden introducir nodos ficticios de oferta o
+demanda para equilibrar el sistema.
+Javier Quintero Problemas de transporte y asignación 94 / 323
+Problema de Transporte
+Ejemplo
+Una empresa necesita enviar materia prima desde sus 2 almacenes a 3 fábricas. El inventario en unidades de
+materia prima de cada almacén, las demandas en unidades de materia prima de cada fábrica y los costes
+unitarios de transporte (euros por unidad de materia prima enviada entre cada origen y destino) se muestran
+en la Tabla 4. Formule y resuelva el modelo de optimización que minimiza los costes de transporte.
+Fábrica 1 Fábrica 2 Fábrica 3 Oferta
+Almacén 1 4 6 8 20
+Almacén 2 5 4 3 30
+Demanda 10 25 15
+Tabla 4: Matriz de costes de transporte con ofertas y demandas.
+El problema de transporte también puede visualizarse como un grafo bipartito, donde los nodos de la
+izquierda representan los almacenes (ofertas), los nodos de la derecha representan las fábricas (demandas) y
+las aristas representan los posibles envíos con sus costes asociados. La situación del problema se representa
+en el grafo de la Figura 13
+Javier Quintero Problemas de transporte y asignación 95 / 323
+Almacén 1
+Almacén 2
+Fábrica 1
+Fábrica 2
+Fábrica 3
+4
+6
+8
+5
+4
+3
+(20)
+(30)
+(10)
+(25)
+(15)
+Figura 13: Grafo del Ejemplo 41
+Javier Quintero Problemas de transporte y asignación 96 / 323
+Ejemplo
+Dado que tenemos 2 almacenes y 3 fábricas, se tiene que m = 2 y n = 3. Así, I = {1,2} y J = {1,2,3}, por lo tanto las
+variables de decisión son:
+xij : unidades enviadas desde el almacén i a la fábrica j para (i, j) ∈ I× J,xij ≥ 0
+Minimizar el coste de transporte implica minimizar la función de coste ∑
+(i,j)∈I×J
+cijxij, es decir,
+min
+x
+z = 4x11 +6x12 +8x13 +5x21 +4x22 +3x23
+Este problema implica dos tipos de restricciones: un conjunto de demandas y otro conjunto de ofertas. Las restricciones
+de demanda significan que todas las fábricas deben recibir al menos las unidades demandadas, esto es
+2
+∑
+i=1
+xij ≥ bj j = 1,2,3
+De igual forma, las restricciones de oferta significan que cada almacén puede enviar como máximo su inventario, lo cual
+es
+3
+∑
+j=1
+xij ≤ ai i = 1,2
+Javier Quintero Problemas de transporte y asignación 97 / 323
+Ejemplo
+Por lo tanto, el modelo queda
+min
+x
+z = 4x11 +6x12 +8x13 +5x21 +4x22 +3x23
+s.a. x11 + x12 + x13 ≤ 20 (El almacén 1 puede suministrar como máximo 20 unidades)
+x21 + x22 + x23 ≤ 30 (El almacén 2 puede suministrar como máximo 30 unidades)
+x11 + x21 ≥ 10 (La fábrica 1 demanda al menos 10 unidades)
+x12 + x22 ≥ 25 (La fábrica 2 demanda al menos 25 unidades)
+x13 + x23 ≥ 15 (La fábrica 3 demanda al menos 15 unidades)
+xij ∈ Z+, ∀(i, j) ∈ I× J.
+Para obtener la solución podemos usar intlinprog (Matlab) o el solver de Windows.
+x∗ = (10,10,0,0,15,15) z∗ = 205
+Por lo tanto, para minimizar el coste de transporte, debemos enviar 10 unidades desde el almacén 1 a la
+fábrica 1, 10 unidades desde el almacén 1 a la fábrica 2, 15 unidades desde el almacén 2 a la fábrica 2 y 15
+unidades desde el almacén 2 a la fábrica 3, para un coste mínimo de 205 euros.
+Javier Quintero Problemas de transporte y asignación 98 / 323
+5.
+1 % problema de transporte
+2 % x11 x12 x13 x21 x22 x23
+3 f= [4 6 8 5 4 3];
+4 %variables enteras
+5 intcon = 1:6;
+6 %no-negatividad
+7 lb= zeros (1,6);
+8 ub= [];
+9 %igualdades
+10 Aeq1 = [1 1 1 0 0 0];
+11 Aeq2 = [0 0 0 1 1 1];
+12 Aeq3 = [1 0 0 1 0 0];
+13 Aeq4 = [0 1 0 0 1 0];
+14 Aeq5 = [0 0 1 0 0 1];
+15 %ensamblar matriz de igualdades
+16 Aeq= [Aeq1;Aeq2;Aeq3;Aeq4;Aeq5];
+17 %lado derecho igualdades
+18 beq = [20;30;10;25;15];
+19
+20 %resolver
+21 [x,fval] = intlinprog(f,intcon ,[],[],Aeq ,beq ,lb ,ub)
+Código 5: Código para Ejemplo 41
+Javier Quintero Problemas de transporte y asignación 99 / 323
+Problema de Asignación
+El problema de asignación es un modelo fundamental en investigación operativa que aborda la asignación óptima de
+recursos a tareas. Su objetivo es asignar un conjunto de agentes (por ejemplo, trabajadores, máquinas o proveedores de
+servicios) a un conjunto de tareas (por ejemplo, trabajos, ubicaciones o responsabilidades) de manera que se minimice el
+coste total, el tiempo o la distancia de las asignaciones. Este problema es un caso particular de programación lineal y
+optimización combinatoria, y tiene aplicaciones ampliamente extendidas en planificación, logística y sistemas de toma
+de decisiones.
+Consideramos el siguiente escenario:
+• Existen m agentes, cada uno capaz de realizar exactamente una tarea.
+• Existen n tareas, cada una requiere exactamente un agente.
+• El coste de asignar el agente i a la tarea j se denota por cij, donde I = {1, . . . ,m} y J = {1, . . . ,n}.
+Si m = n, entonces el problema está balanceado y cada tarea tendrá asignado su respectivo agente. Si m > n,
+existe un exceso de agentes y habrá agentes sin asignar; por otro lado, si n > m, existe un exceso de tareas y
+habrá tareas sin asignar. Esta situación se representa típicamente como un grafo bipartito completo, véase la
+Figura 14, donde un conjunto de nodos corresponde a los agentes y el otro a las tareas, y cada arista representa
+una posible asignación con un coste asociado.
+Javier Quintero Problemas de transporte y asignación 100 / 323
+A1
+A2
+Am
+T1
+T2
+Tn
+c11
+c12
+c1n
+c21
+c22
+c2n
+cm1 cm2
+cmn
+... ...
+Figura 14: Representación empleando un grafo del problema de asignación
+Javier Quintero Problemas de transporte y asignación 101 / 323
+Definición (Problema de Asignación)
+Definimos las variables de decisión xij =
+{
+1, si el agente i se asigna a la tarea j,
+0, en caso contrario.
+donde I = {1, . . . ,m} y J = {1, . . . ,n}.
+El objetivo es minimizar el coste total de asignación min
+x
+z =
+m
+∑
+i=1
+n
+∑
+j=1
+cijxij
+sujeto a las restricciones:
+n
+∑
+j=1
+xij = 1, para todo i = 1, . . . ,m (cada agente se asigna a una tarea)
+m
+∑
+i=1
+xij = 1, para todo j = 1, . . . ,n (cada tarea se asigna a un agente)
+xij ∈ {0,1}, para todo i, j ∈ I× J.
+Observación
+El problema de asignación es un caso particular del problema de transporte donde todas las ofertas y demandas son
+iguales a uno. Su naturaleza binaria y estructura balanceada permiten algoritmos eficientes y lo convierten en un pilar de
+la optimización combinatoria.
+Javier Quintero Problemas de transporte y asignación 102 / 323
+Problema de Asignación
+Ejemplo
+Una empresa necesita asignar 4 empleados a 4 tareas diferentes. La matriz de costes (en horas requeridas
+para completar cada tarea) se muestra en la Tabla 5. Formule y resuelva el problema de asignación para
+minimizar el tiempo total empleado.
+Tarea 1 Tarea 2 Tarea 3 Tarea 4
+Empleado 1 9 2 7 8
+Empleado 2 6 4 3 7
+Empleado 3 5 8 1 8
+Empleado 4 7 6 9 4
+Tabla 5: Matriz de costes para el problema de asignación (en horas).
+Javier Quintero Problemas de transporte y asignación 103 / 323
+Emp 1
+Emp 2
+Emp 3
+Emp 4
+Tarea 1
+Tarea 2
+Tarea 3
+Tarea 4
+9
+2
+78
+6
+4
+3
+7
+5
+8
+1
+8
+7
+6
+9
+4
+Figura 15: Representación empleando un grafo bipartito del problema de asignación
+Javier Quintero Problemas de transporte y asignación 104 / 323
+Ejemplo
+Sea xij una variable binaria que indica si el empleado i se asigna a la tarea j. Definimos las variables de decisión:
+xij =
+{
+1, si el agente i se asigna a la tarea j,
+0, en caso contrario.
+donde I = {1, . . . ,m} y J = {1, . . . ,n}. La función objetivo es:
+min
+x
+z =9x11 +2x12 +7x13 +8x14 +6x21 +4x22 +3x23 +7x24
++5x31 +8x32 +1x33 +8x34 +7x41 +6x42 +9x43 +4x44
+Sujeto a:
+x11 + x12 + x13 + x14 = 1 (Empleado 1 asignado a una tarea)
+x21 + x22 + x23 + x24 = 1 (Empleado 2 asignado a una tarea)
+x31 + x32 + x33 + x34 = 1 (Empleado 3 asignado a una tarea)
+x41 + x42 + x43 + x44 = 1 (Empleado 4 asignado a una tarea)
+x11 + x21 + x31 + x41 = 1 (Tarea 1 asignada a un empleado)
+x12 + x22 + x32 + x42 = 1 (Tarea 2 asignada a un empleado)
+x13 + x23 + x33 + x43 = 1 (Tarea 3 asignada a un empleado)
+x14 + x24 + x34 + x44 = 1 (Tarea 4 asignada a un empleado)
+xij ∈ {0,1} ∀i, j ∈ I× J.
+Para resolver el problema se emplea el Código 6. Javier Quintero Problemas de transporte y asignación 105 / 323
+1 n = 4; % Number of employees and tasks
+2 % Cost matrix
+3 C = [ 9 2 7 8; 6 4 3 7; 5 8 1 8; 7 6 9 4 ];
+4 f = C(:); % Vectorize cost matrix (column -wise)
+5 numVars = n^2; % Number of variables
+6 intcon = 1: numVars; % Integer variables (all binary)
+7 lb = zeros(numVars ,1); ub = ones(numVars ,1); % Bounds
+8 %Equality constraints % Each employee is assigned exactly one task
+9 Aeq1 = zeros(n, numVars);
+10 for i = 1:n
+11 Aeq1(i, (i-1)*n+1:i*n) = 1;
+12 end
+13 % Each task is assigned exactly one employee
+14 Aeq2 = zeros(n, numVars);
+15 for j = 1:n
+16 Aeq2(j, j:n:end) = 1;
+17 end
+18 Aeq = [Aeq1; Aeq2];
+19 beq = ones (2*n,1);
+20 %Solve the problem
+21 [x, fval] = intlinprog(f, intcon , [], [], Aeq , beq , lb, ub);
+22 X = reshape(x, n, n); % Reshape solution
+23 disp(’*** Solution ***’) % Output
+24 for i = 1:n
+25 for j = 1:n
+26 fprintf(’x_%d%d: %d\n’, i, j, X(i,j));
+27 end
+28 end
+29 fprintf(’Objective: %f\n’, fval);
+Código 6: Código para Ejemplo 45
+Javier Quintero Problemas de transporte y asignación 106 / 323
+Problema de Asignación
+Ejemplo
+x∗ = (0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1), z∗ = 13
+Así, la asignación óptima es:
+• Empleado 1→ Tarea 2
+• Empleado 2→ Tarea 1
+• Empleado 3→ Tarea 3
+• Empleado 4→ Tarea 4
+Para un mínimo de 13 horas de trabajo.
+Javier Quintero Problemas de transporte y asignación 107 / 323

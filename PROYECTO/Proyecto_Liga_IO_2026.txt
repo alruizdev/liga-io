@@ -1,0 +1,163 @@
+ 
+Proyecto de Investigación Operativa 2026 
+Bienvenidos a la Liga IO 2026TM. Durante esta temporada debes diseñar para la 
+gerencia de tu organización dos equipos que te permitan posicionarte lo mejor posible 
+con respecto a tus contrincantes. 
+La Liga IO 2026TMse compone de dos tipos de competición. La liga con formato todos 
+contra todos, y la Copa, con formato eliminación dos a dos. 
+La gerencia se ha comprometido a premiar a los participantes en la Liga IO 2026TMde 
+la siguiente forma 
+ 
+La única fase NO presencial será enviar un equipo a la competición, el resto de los 
+premios solo serán tenidos en cuenta a los miembros del grupo que se presenten el día 
+de la competición. 
+ 
+1. La Liga 
+Para la liga se presentan dos equipos por grupo de trabajo. Se ejecutarán N ligas en 
+formato todos contra todos, incluso los equipos presentados por el mismo grupo, y se 
+calcularán las siguientes estadísticas para cada equipo: 
+ 
+La puntuación se asignará a cada grupo por su equipo con mejor posicionamiento (solo 
+se considerará el máximo si se presentan dos a liga), de manera proporcional al total. 
+Los empates se resolverán con el coeficiente de media de diferencia de goles, (goles a 
+favor - goles en contra). Si el empate persiste, se asignará la misma posición. 
+2. La copa 
+Instancia de enfrentamiento por pares en eliminación simple de uno de los equipos por 
+grupo. Los emparejamientos iniciales se definen de manera aleatoria. Se ejecutarán una 
+sola instancia por cada partido entre los contrincantes. En caso de empates, se repetirá 
+hasta la primera victoria de alguno. De no resolverse en más de 10 instancias, el 
+ganador se decidirá lanzando una moneda cargada (la probabilidad favorecerá el equipo 
+con mejor técnico, finalización, moral y menor cansancio) 5 veces (simulando penaltis). 
+Los premios se repartirán de manera proporcional al posicionamiento por fases, por 
+ejemplo, para una copa de 4 equipos (dos fases), se otorgan 0.5 puntos por fase 
+superada. 
+Si un grupo de trabajo no desea presentarse a la Copa puede subastar su puesto entre los 
+demás grupos de trabajo por un precio que será mayor que 0.1 puntos. El precio será 
+restado de las ganancias del grupo de trabajo comprador. 
+3. Fechas importantes 
+Cada grupo tendrá en cuenta las siguientes fechas para la entrega de los equipos 
+respectivos. 
+ 
+3.1.Formato de la entrega 
+Un solo miembro del grupo de trabajo, designado por el profesor subirá el equipo a la 
+respectiva tarea de Aula Virtual. Se pueden subir máximo dos equipos (ficheros), como 
+ficheros *.mat, que contendrán, cada uno, ´únicamente un vector de 10 entradas enteras, 
+representando un equipo válido. 
+El nombre del fichero tiene que ser XY.mat, donde XY será uno de los seriales 
+entregados al grupo de trabajo, el día de la elaboración de grupos. Cada grupo contará 
+con dos seriales disponibles y ´únicos. Ejemplo, si me asignan los seriales 01 y 02, mi 
+entrega será 01.mat (obligatoria) y 02.mat (opcional). 
+Errores en los seriales, el formato de los archivos, errores de lectura o equipos inválidos 
+implicarán descalificación automática de la competencia. 
+Se entrega, como cortesía, el script de matlab lector.m que lee los ficheros *.mat de un 
+directorio, para que cada grupo de trabajo compruebe si la entrega es correctamente 
+leída. La función en cuestión, devuelve un vector de 1×10 de clase double que puede ser 
+leído posteriormente por el script playMatch.p, y el serial del equipo. 
+3.2.Día de la competición. Presentaciones 
+El día de la liga se seguirá el siguiente orden: 
+1. Ejecución de La Liga, nombramiento de ganadores de título de liga, goleadores 
+y defensores. 
+2. Presentaciones de los grupos de trabajo que deseen exponer y/o justificar su 
+selección de equipo, técnicas de trabajo, algoritmos de optimización y 
+estimación utilizados, etc. La presentación se tiene que limitar a 5 minutos y 
+máximo 4 transparencias. 
+3. Votaciones de mejor nombre y logo 
+4. Copa IO. Enfrentamiento por pares. 
+5. Presentación de equipo all-star y posibles rivales 
+6. Conclusiones 
+De no completar el flujo de trabajo en una clase se terminará en la siguiente. 
+4. Equipos y simulación de enfrentamientos 
+Cada equipo se define como un vector de 10 parámetros y los enfrentamientos se 
+simulan con el script encriptado de Matlab playMatch.p, que se puede descargar en Aula 
+Virtual. 
+4.1.Equipos 
+Los equipos se definen a partir de 10 parámetros. 
+ 
+Luego, crear un equipo es tan sencillo como definir mediante un vector. 
+ 
+ 
+Con presupuesto 
+ 
+Equipo Válido: 
+ 
+Nótese que el modelo exige dos vectores A y B con entradas enteras positivas cuya 
+suma esté entre 95 y 100, que es el presupuesto destinado por gerencia para la 
+competición. 
+4.2.Funcionamiento de playMatch.p 
+Para conocer el resultado de un enfrentamiento entre dos equipos A y B se emplea el 
+script playMatch.p que se puede descargar en Aula Virtual. 
+ 
+Por ejemplo, para los equipos dados en el código de ejemplo, una posible salida sería 
+ 
+Por lo que el partido se consideraría un empate. Nótese que el simulador incluye 
+elementos de aleatoriedad, por lo que dos simulaciones de enfrentamientos entre dos 
+equipos no tienen que dar necesariamente el mismo marcador. 
+5. Formulación matemática del modelo de enfrentamientos 
+En esta sección se explica brevemente como se simula un partido entre estos dos 
+equipos 
+5.1.Parámetros globales 
+Los siguientes parámetros globales se emplean para definir interacciones entre distintas 
+estrategias, ver Subsección 5.8 
+ 
+5.2.Moral 
+La moral influye en el resultado del equipo de acuerdo con las siguientes fórmulas. 
+ 
+La moral es 
+ 
+Donde 
+ 
+Y 
+ 
+5.3.Cansancio 
+El cansancio es un factor a tener en cuenta para el desempeño de un equipo y es influido 
+por diferentes factores tácticos y la moral del equipo. 
+ 
+5.4.Parámetros base 
+Los parámetros de un equipo se pueden desglosar en los siguientes grupos. 
+Ataque 
+ 
+Defensa 
+ 
+Control táctico 
+ 
+5.5.Factores 
+La moral, la técnica y la fatiga influyen directamente en el resultado del partido. Esta 
+relación se calcula empleando las siguientes fórmulas. 
+Factor moral 
+ 
+Factor técnico 
+ 
+Factor de fatiga 
+ 
+5.6.Control efectivo 
+ 
+5.7.Posesión 
+La posesión del balón es complementaria entre ambos equipos 
+ 
+5.8.Interacción táctica 
+La interacción táctica permite que un equipo con ciertas especializaciones pueda tomar 
+ventaja de la estructura y especializaciones del contrario. 
+ 
+5.9.Ataque relativo 
+ 
+5.10. Ocasiones  
+Número total de ocasiones 
+ 
+Donde 
+ 
+5.11. Probabilidad de ocasión clara 
+ 
+ 
+5.12. Ocasiones claras 
+ 
+5.13. Probabilidad de gol 
+ 
+con restricción 
+ 
+5.14. Goles 
+ 
+Observaciones 
+Nótese que el resultado entre dos equipos contiene una componente aleatoria que tiene 
+en cuenta aquellos factores que por la complejidad de la situación no pueden ser 
+incorporados de manera fiel al modelo. Por ello varias repeticiones de un 
+enfrentamiento entre dos equipos puede tener diferentes desenlaces. 

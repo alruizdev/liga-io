@@ -1,0 +1,4081 @@
+§IV. Modelos de optimización de redes
+▶ Teoría de grafos.
+▶ Problema del camino más corto.
+▶ Árbol de expansión mínima.
+▶ Problema del flujo máximo.
+▶ Problema del flujo de costo mínimo.
+Teoría de grafos
+La referencia principal para este capítulo es [Hillier and Lieberman, 2015, Cap. 9].
+La Teoría de Grafos es una rama de la matemática discreta que estudia las relaciones entre objetos mediante estructuras
+denominadas grafos. Un grafo proporciona una forma natural de representar y analizar la conectividad, el flujo y las
+estructuras de red, lo que lo convierte en una herramienta fundamental en matemáticas, informática, ingeniería y
+numerosas ciencias aplicadas.
+Definición (Grafo)
+Un grafo G = (V,E) consiste en un conjunto no vacío de vértices V y un conjunto de aristas E, donde cada
+arista es un par no ordenado de vértices distintos de V .
+Javier Quintero Modelos de optimización de redes 108 / 323
+Teoría de grafos
+Ejemplo
+Considere el grafo representado en la Figura 16. Los vértices son los puntos etiquetados con letras y las
+aristas son las líneas que los conectan. Así, tenemos el conjunto de vértices V = {A,B,C,D} y el conjunto
+de aristas E = {AB,AC,BC,BD,CD}. Para representar los vértices se suelen utilizar números y/o letras, y
+para las aristas, el par de vértices conectados.
+A B
+C D
+Figura 16: Un grafo con cuatro vértices y cinco aristas
+Javier Quintero Modelos de optimización de redes 109 / 323
+Teoría de grafos
+Definición (Digrafo)
+Un grafo dirigido, o digrafo, es un grafo en el que cada arista tiene una dirección y se representa como un
+par ordenado de vértices. Al escribir el conjunto de aristas de un digrafo, el orden es importante.
+Ejemplo
+Los digrafo son adecuados para representar relaciones asimétricas, como calles de sentido único, flujo de
+información o relaciones de precedencia. Considere la Figura 17. Aquí V = {A,B,C} y E = {AB,BC,CA};
+observe que ahora el orden de los vértices que etiquetan una arista indica la dirección de dicha arista.
+A B
+C
+Figura 17: Digraph
+Javier Quintero Modelos de optimización de redes 110 / 323
+Teoría de grafos
+Definición (Cadena / Camino)
+Un camino es una secuencia de vértices tal que cada par consecutivo está conectado por una arista. Los caminos pueden
+ser abiertos (primer y último vértice diferentes) o cerrados (cuando el primer y el último vértice coinciden).
+Observación
+En un grafo conectado, los caminos deben respetar la dirección de las aristas.
+Definición (Loop (Ciclo))
+Un ciclo es un camino en el que el primer y el último vértice son iguales. Si un grafo no contiene ciclos se denomina
+grafo acíclico.
+Ejemplo
+Considere el grafo en la Figura 16
+• Existen varios caminos que conectan A con D, por ejemplo, P1 = {AC,CD}, P2 = {AC,CB,BD}.
+• El camino {AC,CB,AB} es un ciclo, porque comienza y termina en el mismo vértice A.
+Los caminos son fundamentales para analizar la alcanzabilidad y la conectividad dentro de un grafo.
+Javier Quintero Modelos de optimización de redes 111 / 323
+Teoría de grafos
+Definición (Grafo conexo)
+Un grafo se dice conexo si siempre existe un camino entre cada par de vértices.
+Ejemplo
+Los grafos en las Figuras 16, 17 y 19 son conexos; sin embargo, el grafo en la Figura 18 no es conexo.
+Observe que no existe ningún camino que comience en A y termine en E.
+A B
+C D
+E
+Figura 18: Grafo no conexo
+Javier Quintero Modelos de optimización de redes 112 / 323
+Teoría de grafos
+Definición (Árbol)
+Un árbol es un grafo conexo y acíclico.
+Definición (Subgrafo)
+Sean dos grafos G1 = (V1,E1) y G2 = (V2,E2). Decimos que G1 es un subgrafo de G2, y lo denotamos como
+G1 ⊂ G2, si V1 ⊂ V2 y E1 ⊂ E2.
+Definición (Árbol Soporte)
+Dado un grafo conexo G, un árbol soporte es un subgrafo de G que incluye todos los vértices de G y que es,
+a su vez, un árbol.
+Javier Quintero Modelos de optimización de redes 113 / 323
+Teoría de grafos
+Ejemplo
+• El grafo en la Figura 19 es un subgrafo de la Figura 16.
+• El grafo en la Figura 19 es un grafo conexo y acíclico, por lo tanto, un árbol.
+• Además, la Figura 19 es el árbol soporte de la Figura 16.
+A B
+C D
+Figura 19: Spanning Tree (Árbol Soporte)
+Los árboles son estructuras mínimas que conectan todos sus vértices sin ciclos y desempeñan un papel esencial
+en modelos jerárquicos y estructuras de datos. Los árboles soporte son útiles en problemas de optimización,
+como la minimización del coste de conexión de una red.
+Javier Quintero Modelos de optimización de redes 114 / 323
+El problema del camino más corto
+El problema del camino más corto es un concepto fundamental en teoría de grafos y optimización, ampli-
+amente utilizado en logística, diseño de redes y aplicaciones como el análisis de imágenes, el mapeo de
+conectividad y los sistemas de enrutamiento. El objetivo es determinar el camino entre dos nodos en un grafo
+de manera que el coste total (o distancia) sea mínimo.
+Consideramos un grafo dirigido G = (V,E) donde:
+• V es el conjunto de vértices (nodos), que representan ubicaciones, estados o entidades.
+• E es el conjunto de aristas (arcos), cada una con un coste no negativo asociado cij y una dirección para
+la arista (i, j) ∈ E.
+Sea s ∈ V el nodo origen y t ∈ V el nodo destino. El objetivo es encontrar un camino desde s hasta t tal que la
+suma de los costes a lo largo del camino sea mínima.
+Javier Quintero Modelos de optimización de redes 115 / 323
+El problema del camino más corto
+s
+A
+B
+t
+2
+4
+3
+2
+2
+Figura 20: Ejemplo de grafo del problema del camino más corto
+Javier Quintero Modelos de optimización de redes 116 / 323
+Definición (El problema del camino más corto)
+El objetivo de este problema es encontrar el camino más corto entre dos nodos predefinidos en un grafo. Dado que un camino es una
+secuencia de aristas, debemos decidir qué arista se incluye en el camino. Para ello, definimos las variables de decisión binarias:
+xij =
+{
+1 si la arista (i, j) se incluye en el camino,
+0 si no.
+para (i, j) ∈ E. Así, dado que el coste de usar la arista (i, j) es cijxij, la función objetivo se escribe como
+min
+x
+z = ∑
+(i,j)∈E
+cijxij
+Finalmente, si el viajero toca un vértice, eso significa que utiliza una arista que entra en el vértice (una arista que termina en el vértice),
+y dado que debe continuar viajando, debe salir del vértice utilizando una arista que sale del vértice (una arista que comienza en el
+vértice). Esta restricción se denomina, por razones que estudiaremos más adelante, restricción de conservación de flujo. Luego cada
+vértice i genera una restricción de flujo del tipo
+∑
+j:(i,j)∈E
+xij− ∑
+j:(j,i)∈E
+xji =
+
+1 si i = s,
+−1 si i = t,
+0 en otro caso.
+El protocolo establece que, si una arista entra en un vértice, se utiliza signo negativo, y si sale, se utiliza signo positivo. Existen dos
+excepciones a este comportamiento: s (origen) y t (destino). Desde el origen, el viajero solo puede salir, y de esta forma debemos usar
+únicamente una arista; lo mismo ocurre con el vértice destino, el viajero solo puede entrar, utilizando únicamente una arista, por lo que
+consideramos únicamente las aristas que entran.
+Javier Quintero Modelos de optimización de redes 117 / 323
+Ejemplo
+Considere el grafo en la Figura 20. Vamos a encontrar el camino más corto desde s hasta t. Primero, escriba
+el conjunto de aristas y vértices: V = {s,A,B, t} y E = {sA,sB,AB,At,Bt}. Declare las variables binarias
+xij =
+{
+1 si la arista (i, j) está incluida en el camino,
+0 en caso contrario.
+para (i, j) ∈ E. La función objetivo resulta min
+x
+z = ∑
+(i,j)∈E
+cijxij = 2xsA +4xsB +2xAB +3xAt +2xBt
+Las restricciones de conservación de flujo son
+xsA + xsB = 1 el origen envía al viajero
+−xsA + xAB + xAt = 0 vertex A está en equilibrio
+−xsB− xAB + xBt = 0 vertex B está en equilibrio
+−xAt + xBt =−1 el destino recibe al viajero
+Javier Quintero Modelos de optimización de redes 118 / 323
+El problema del camino más corto
+El modelo resulta
+min z = 2xsA +4xsB +2xAB +3xAt +2xBt
+s.t. xsA + xsB = 1
+− xsA + xAB + xAt = 0
+− xsB− xAB + xBt = 0
+− xAt + xBt =−1
+xij ∈ {0,1}, ∀(i, j) ∈ E
+Para resolver el problema se emplea el Código 7.
+Javier Quintero Modelos de optimización de redes 119 / 323
+1 numVars = 5; % Number of variables
+2 % Cost vector (objective function)
+3 % [x_sA , x_sB , x_AB , x_At , x_Bt]
+4 f = [2; 4; 2; 3; 2];
+5 intcon = 1: numVars; % Integer (binary) variables
+6 lb = zeros(numVars ,1); % Bounds
+7 ub = ones(numVars ,1);
+8 % Constraints ; % RHS resources
+9 Aeq1 = [1 1 0 0 0]; beq1 = 1;
+10 Aeq2 = [-1 0 1 1 0]; beq2 = 0;
+11 Aeq3 = [0 -1 -1 0 1]; beq3 = 0;
+12 Aeq4 = [0 0 0 -1 1]; beq4 = -1;
+13 % Assemble equality constraints
+14 Aeq = [Aeq1;Aeq2;Aeq3;Aeq4];
+15 beq = [beq1;beq2;beq3;beq4];
+16 [x, fval] = intlinprog(f, intcon , [], [], Aeq , beq , lb, ub); %solve
+17 disp(’*** Solution ***’)
+18 fprintf(’x_sA = %d\n’, x(1));
+19 fprintf(’x_sB = %d\n’, x(2));
+20 fprintf(’x_AB = %d\n’, x(3));
+21 fprintf(’x_At = %d\n’, x(4));
+22 fprintf(’x_Bt = %d\n’, x(5));
+23 fprintf(’Objective value: %f\n’, fval);
+Código 7: Camino más corto
+Por lo tanto, el camino más corto desde s hasta t es s→ A→ t con un coste total de 5.Javier Quintero Modelos de optimización de redes 120 / 323
+Árbol de Expansión Mínima
+El Problema del Árbol de Expansión Mínima es un concepto fundamental en teoría de grafos y optimización
+combinatoria. Consiste en encontrar un subconjunto de aristas en un grafo conexo y ponderado que conecte
+todos los vértices con el peso total mínimo posible y sin formar ciclos. En ingeniería en telecomunicaciones,
+los árboles de expansión mínima pueden utilizarse para diseñar redes de transmisión eficientes, optimizar
+la topología de redes de sensores en sistemas IoT o planificar infraestructuras de comunicación con coste
+mínimo.
+Considere el grafo G en la figura 21
+A
+B
+C
+D
+10
+5
+10
+10
+15
+Figura 21: Un grafo con ciclos
+Javier Quintero Modelos de optimización de redes 121 / 323
+Árbol de Expansión Mínima
+El problema aquí consiste en extraer un subgrafo conexo de G que no contenga ciclos (un árbol) con los menores pesos
+en las aristas. Por lo tanto, se requiere que G sea un grafo conexo, no dirigido, con pesos positivos. El objetivo es obtener
+un conjunto de aristas que conecte todos los nodos cuyo peso total sea mínimo. Nótese que si una red contiene n nodos,
+entonces se requieren exactamente n−1 aristas para conectarlos a todos. Dichos arcos deben seleccionarse de manera
+que el peso total se minimice. Este problema puede aplicarse en el despliegue de redes, transporte y distribución.
+Para resolver este problema aplicamos el algoritmo de Prim.
+Algorithm 3 Algoritmo de Prim
+1: Sea T = (VT ,ET), donde VT = ET = /0. Elija un nodo arbitrario v0 ∈ V = {v0, . . . ,vn−1} y añádalo al
+subgrafo T , así, VT = {v0}
+2: while existan nodos que aún no estén conectados a T , es decir, VT ̸= V do
+3: Encuentre la arista ek con peso mínimo que conecte T con un nodo que no esté en T
+4: Añada dicho nodo y arista a T , VT = VT ∪{vk} y ET = ET ∪{ek}
+5: end while
+Después de n−1 pasos, el grafo resultante será un árbol de expansión mínima. En caso de que se consideren
+dos aristas con igual peso en el mismo paso, elija una de manera arbitraria.
+Javier Quintero Modelos de optimización de redes 122 / 323
+Árbol de Expansión Mínima
+Ejemplo
+Para encontrar el árbol de expansión mínima en el grafo de la Figura 21, aplicamos el algoritmo de Prim en
+los siguientes pasos
+A A
+C
+5
+A
+C
+B
+5
+10
+A
+B
+C
+D
+10
+5 15
+Paso 0 Paso 1 Paso 2 Paso 3
+Figura 22: Pasos del algoritmo de Prim
+Por lo tanto, el árbol de expansión mínima está dado por T = (V,ET) donde V = {A,B,C,D} y
+ET = {AB,AC,CD}. Con un peso total de 30.
+Javier Quintero Modelos de optimización de redes 123 / 323
+Problema del flujo máximo
+El Problema de Flujo Máximo es un problema clásico de optimización en la teoría de redes. Busca determinar la
+cantidad máxima de flujo que puede enviarse desde un nodo origen hasta un nodo destino a través de una red de aristas
+con restricciones de capacidad. En ingeniería en telecomunicaciones, este concepto es particularmente útil para modelar
+el tráfico de datos en redes, optimizar sistemas de transmisión y analizar el transporte de información en infraestructuras
+complejas. Consideramos un grafo dirigido G = (V,E), e imponemos la restricción de que el flujo debe enviarse desde el
+origen hasta el destino sin pérdidas, es decir, ningún nodo intermedio puede retener flujo.
+• V: Conjunto de nodos por los que debe atravesar el flujo.
+• E: Conjunto de aristas dirigidas que representan las rutas por las que puede viajar el flujo.
+s
+A
+B
+t
+csA
+csB
+cAt
+cBt
+cAB
+Figura 23: Ejemplo de grafo para el problema de flujo máximo
+Javier Quintero Modelos de optimización de redes 124 / 323
+Definición (Problema del flujo máximo)
+Sea G = (V,E) un grafo dirigido con capacidad cij en cada arista (i, j). Definimos las variables de flujo xij tales que:
+xij = unidades de flujo a través de la arista (i, j) para (i, j) ∈ E
+El flujo que atraviesa el grafo puede detectarse de dos maneras equivalentes: como el flujo que sale de s o como el flujo que entra en t, por lo tanto, este
+problema tiene dos funciones objetivo equivalentes
+max
+x
+z = ∑
+j∈V
+xsj = ∑
+i∈V
+xit
+Por otro lado, tenga en cuenta que ningún nodo intermedio puede retener flujo, por lo que existe una restricción de conservación de flujo. En otras palabras,
+el flujo que entra y el que sale debe ser el mismo para todos los nodos intermedios. Recordando el protocolo, el flujo que entra se etiqueta como negativo y
+el que sale como positivo, por lo tanto, las restricciones de conservación de flujo son
+∑
+j:(i,j)∈E
+xij− ∑
+j:(j,i)∈E
+xji =
+
+z si i = s,
+−z si i = t,
+0 en otro caso.
+Nótese que los vértices especiales s y t no se incluyen como restricciones, porque forman parte de la función objetivo. Finalmente, el flujo debe satisfacer
+ciertas restricciones de caja, es decir, el flujo a través de cada arista debe ser positivo y no puede exceder la capacidad de cada arista. Esto es,
+0≤ xij ≤ cij, para (i, j) ∈ E. El modelo resulta
+max z = ∑
+j∈V
+xsj = ∑
+i∈V
+xit
+s.t. xij ≤ cij, ∀(i, j) ∈ E
+∑
+j∈V
+xij = ∑
+j∈V
+xji, ∀i ∈ V \{s, t}
+xij ≥ 0, ∀(i, j) ∈ E
+Javier Quintero Modelos de optimización de redes 125 / 323
+Problema del flujo máximo
+Ejemplo
+Considere el grafo en la Figura 24, donde las etiquetas de las aristas representan la capacidad máxima de
+cada arista. Determinemos el flujo máximo que puede enviarse desde s hasta t
+s
+A
+B
+t
+10
+5
+10
+10
+15
+Figura 24: Grafo para ejemplo 65
+Javier Quintero Modelos de optimización de redes 126 / 323
+Ejemplo
+Primeramente, denotemos las aristas y vértices del grafo como
+V = {s,A,B, t}
+E = {sA,sB,AB,At,Bt}
+.
+Declare las variables de decisión
+xij = unidades de flujo enviadas a través de la arista
+para (i, j) ∈ E. La función objetivo resulta
+max
+x
+z = xsA + xsB = xAt + xBt
+Ahora, las restricciones de conservación de flujo son
+−xsA + xAB + xAt = 0 el vértice A conserva el flujo
+−xsB− xAB + xBt = 0 el vértice B conserva el flujo
+Las variables están sujetas a las restricciones de caja
+0≤ xij ∀(i, j) ∈ E
+xsA ≤ 10
+xsB ≤ 5
+xAB ≤ 15
+xAt ≤ 10
+xBt ≤ 10
+Javier Quintero Modelos de optimización de redes 127 / 323
+Problema del flujo máximo
+El modelo resulta
+max z = xsA + xsB = xAt + xBt
+s.t. − xsA + xAB + xAt = 0
+− xsB− xAB + xBt = 0
+xsA ≤ 10
+xsB ≤ 5
+xAB ≤ 15
+xAt ≤ 10
+xBt ≤ 10
+xij ≥ 0, ∀(i, j) ∈ E
+Para resolver el problema se emplea el Código 8.
+Javier Quintero Modelos de optimización de redes 128 / 323
+1 numVars = 5; % Number of variables
+2 f = -[1; 1; 0; 0; 0]; % Objective function
+3 % Equality constraints (flow conservation)
+4 Aeq1 = [-1 0 1 1 0]; beq1 = 0;
+5 Aeq2 = [ 0 -1 -1 0 1]; beq2 = 0;
+6 Aeq = [Aeq1;Aeq2];
+7 beq = [beq1;beq2];
+8 lb = zeros(numVars ,1); % Bounds
+9 ub = [10; 5; 15; 10; 10];
+10 [x, fval] = linprog(f, [],[], Aeq , beq , lb, ub); % Solve the problem
+11 % Recover max objective value
+12 z = -fval;
+13 % Output
+14 disp(’*** Solution ***’)
+15 fprintf(’x_sA = %.2f\n’, x(1));
+16 fprintf(’x_sB = %.2f\n’, x(2));
+17 fprintf(’x_AB = %.2f\n’, x(3));
+18 fprintf(’x_At = %.2f\n’, x(4));
+19 fprintf(’x_Bt = %.2f\n’, x(5));
+20 fprintf(’Maximum flow value: %.2f\n’, z);
+Código 8: Flujo Máximo
+Javier Quintero Modelos de optimización de redes 129 / 323
+Problema del flujo máximo
+Por lo tanto, el grafo admite un flujo máximo de 15 unidades, utilizando la siguiente distribución:
+Ejemplo
+• Flujo en la arista sA: 10.0
+• Flujo en la arista sB: 5.0
+• Flujo en la arista AB: 0.0
+• Flujo en la arista At: 10.0
+• Flujo en la arista Bt: 5.0
+Observación
+En contextos de ingeniería telemática o de telecomunicaciones, resolver el problema de flujo máximo puede ayudar a
+optimizar la transmisión de datos en redes, garantizar una distribución eficiente del tráfico en infraestructuras críticas y
+modelar la dinámica del flujo de información en sistemas distribuidos. Comprender las limitaciones del flujo y los
+principios de conservación es esencial para diseñar redes seguras y eficientes.
+Javier Quintero Modelos de optimización de redes 130 / 323
+Problema de flujo de costo mínimo
+El problema de Flujo de Costo Mínimo es un modelo de optimización fundamental en la teoría de redes. Su objetivo es
+determinar la forma más eficiente en términos de coste para enviar una cierta cantidad de flujo a través de una red desde
+nodos de suministro hacia nodos de demanda, sujeto a restricciones de capacidad. Este problema tiene amplias
+aplicaciones en telecomunicaciones, como la optimización del enrutamiento de tráfico en redes IP, la asignación eficiente
+de recursos en redes ópticas o la minimización del coste en redes de transporte de datos. El modelo que se aplicará para
+la resolución de este tipo de problema incluye todos los modelos anteriores, incluso transporte y asignación.
+Consideremos un grafo dirigido G = (V,E), donde:
+• V es el conjunto de nodos (que representan routers, estaciones base o puntos de conmutación).
+• E es el conjunto de arcos (que representan enlaces de comunicación).
+• Cada arco (i, j) ∈ A tiene:
+− Una capacidad uij ≥ 0.
+− Un coste por unidad de flujo cij.
+• Cada nodo i ∈ N tiene un valor de oferta/demanda bi, donde:
+− bi > 0: nodo de suministro (origen de tráfico).
+− bi < 0: nodo de demanda (destino de tráfico).
+− bi = 0: nodo de tránsito.
+Javier Quintero Modelos de optimización de redes 131 / 323
+Problema de flujo de costo mínimo
+s
+A
+B
+t [bt][bs]
+(csA,usA)
+(csB,usB)
+(cAt,uAt)
+(cBt,uBt)
+(cAB,uAB)
+Figura 25: Grafo del problema de flujo de coste mínimo
+Javier Quintero Modelos de optimización de redes 132 / 323
+Definición (Problema de flujo de costo mínimo)
+El problema de flujo de coste mínimo puede formularse como:
+min ∑
+(i,j)∈A
+cijxij
+s.a. ∑
+j:(i,j)∈E
+xij− ∑
+j:(j,i)∈E
+xji = bi ∀i ∈ N,
+0≤ xij ≤ uij ∀(i, j) ∈ E.
+Donde:
+• xij es el flujo en el arco (i, j).
+• La primera restricción asegura la conservación del flujo.
+• La segunda restricción impone los límites de capacidad.
+Teorema (Existencia de soluciones factibles)
+Una condición necesaria para que un problema de costo mínimo tenga soluciones factibles es que la oferta y
+la demanda están equilibradas, esto es n
+∑
+i=1
+bi = 0
+Javier Quintero Modelos de optimización de redes 133 / 323
+Problema de flujo de costo mínimo
+Observación
+En caso de ∑
+n
+i=1 bi ̸= 0, se tendrán que ajustar las restricciones de flujo de manera acorde, en la dirección del desbalance,
+de manera que se pueda encontrar una solución. Generalmente, con ajustar las desigualdades en la dirección en la que
+hay exceso (oferta o demanda), será suficiente.
+s
+A
+B
+t [10][10]
+(2,6)
+(4,8)
+(5,8)
+(2,4)
+(2,5)
+Figura 26: Grafo del problema de flujo de coste mínimo
+Javier Quintero Modelos de optimización de redes 134 / 323
+Problema de flujo de costo mínimo
+Ejemplo (Flujo de coste mínimo)
+Considere el grafo en la Figura 26. Vamos a encontrar el flujo de coste mínimo que se puede enviar desde el
+nodo s hasta t. Primero, escriba el conjunto de aristas y vértices.
+V = {s,A,B, t}
+E = {sA,sB,AB,At,Bt}
+Declare las variables de decisión
+xij : unidades de flujo enviadas desde nodo i and nodo j ∀(i, j) ∈ E.
+La función objetivo resulta
+min
+x
+z = ∑
+(i,j)∈E
+cijxij = 2xsA +4xsB +2xAB +5xAt +2xBt
+Las restricciones de conservación de flujo son
+xsA + xsB = 10 el origen envía toda su oferta
+−xsA + xAB + xAt = 0 el vértice A no retiene flujo
+−xsB− xAB + xBt = 0 el vértice B no retiene flujo
+−xAt + xBt =−1 el destino recibe todo el flujo
+Notemos que este problema está equilibrado. Las restricciones de capacidad de la red resultan
+xsA ≤ 6
+xsB ≤ 8
+xAB ≤ 5
+xAt ≤ 8
+xBt ≤ 8
+Javier Quintero Modelos de optimización de redes 135 / 323
+Problema de flujo de costo mínimo
+Ejemplo
+El modelo resulta
+min z = 2xsA +4xsB +2xAB +5xAt +2xBt
+s.t. xsA + xsB = 10
+− xsA + xAB + xAt = 0
+− xsB− xAB + xBt = 0
+− xAt− xBt =−10
+xsA ≤ 6
+xsB ≤ 8
+xAB ≤ 5
+xAt ≤ 8
+xBt ≤ 8
+xij ≥ 0, ∀(i, j) ∈ E
+Para resolver el problema se emplea el Código 9.
+Javier Quintero Modelos de optimización de redes 136 / 323
+1 numVars = 5; % [x_sA , x_sB , x_AB , x_At , x_Bt]
+2 f = [2; 4; 2; 10; 2]; % Objective function
+3 % Equality constraints
+4 Aeq1 = [1 1 0 0 0]; % x_sA + x_sB = 10
+5 Aeq2 = [-1 0 1 1 0]; % -x_sA + x_AB + x_At = 0
+6 Aeq3 = [0 -1 -1 0 1]; % -x_sB - x_AB + x_Bt = 0
+7 Aeq4 = [0 0 0 -1 -1]; % -x_At + x_Bt = -10
+8 Aeq = [Aeq1;Aeq2;Aeq3;Aeq4];
+9 beq = [10; 0; 0; -10];
+10 % Bounds
+11 lb = zeros(numVars ,1); % x_ij >= 0
+12 ub = [6; 8; 5; 8; 8]; % capacities
+13 % Solve the problem
+14 [x, fval , exitflag , output] = linprog(f, [], [], Aeq , beq , lb, ub);
+15 % Output
+16 disp(’*** Solution ***’)
+17 fprintf(’x_sA = %.4f\n’, x(1));
+18 fprintf(’x_sB = %.4f\n’, x(2));
+19 fprintf(’x_AB = %.4f\n’, x(3));
+20 fprintf(’x_At = %.4f\n’, x(4));
+21 fprintf(’x_Bt = %.4f\n’, x(5));
+22 fprintf(’Minimum cost value: %.4f\n’, fval);
+Código 9: Flujo de coste mínimo
+Javier Quintero Modelos de optimización de redes 137 / 323
+Problema de flujo de costo mínimo
+Ejemplo
+Con solución x∗ = [6,4,4,2,8] para z∗ = 72. Por lo tanto, el flujo óptimo resulta, en unidades de flujo,
+xsA = 6
+xsB = 4
+xAB = 4
+xAt = 2
+xBt = 8
+para un coste mínimo de 72 unidades.
+Observación
+En ingeniería de telecomunicaciones, el modelo del flujo de coste mínimo permite optimizar el enrutamiento de tráfico en
+redes de datos, minimizar costes en redes de transporte óptico y garantizar una asignación eficiente de recursos en redes
+multiservicio. Al reducir costes y mejorar la calidad del servicio, este enfoque impacta directamente en la eficiencia de la
+red y en la experiencia del usuario. Recordemos que este modelo engloba todas las aplicaciones vistas anteriormente.
+Javier Quintero Modelos de optimización de redes 138 / 323
+§V. Administración de proyectos con PERT/CPM
+▶ PERT: Program Evaluation and Review Technique .
+▶ CPM: Critical Path Method.
+▶ Manejo de incertidumbre.
+▶ Trueque entre tiempo y coste. Crashing.
+Introducción a PERT y CPM
+Para información más detallada, consultar [Hillier and Lieberman, 2015, Sec. 9.8].
+Uno de los retos más importantes a la hora de dirigir proyectos de gran escala es la planificación. Es necesario conocer
+todas las dependencias, coordinar las partes y tener en cuenta posibles desviaciones. Para realizar este cometido, se
+utilizan las técnicas PERT (Program Evaluation and Review Technique, Técnicas de evaluación y revisión del programa)
+y CPM (Critical Path Method, método del camino crítico), que ayudan al director de proyectos a lidiar con todos los
+problemas de organización. Ambas técnicas están orientadas a la representación gráfica y análisis temporal de proyectos.
+Su creación se remonta a la década de los 50.
+Definición
+• Actividad: Tarea indivisible que consume tiempo y recursos.
+• Evento: Punto en el tiempo que marca el inicio o fin de una o varias actividades.
+• Precedencia: Una tarea i precede a una tarea j si i no puede ser completada hasta que se completa j.
+• Red de proyecto: Representación gráfica mediante nodos (actividades) y arcos (relación de
+precedencia entre actividades) que describe la secuencia lógica del proyecto.
+• Ruta crítica: Secuencia de actividades que determina la duración mínima del proyecto; cualquier
+retraso en esta ruta implica retraso en el proyecto completo.
+Javier Quintero Administración de proyectos con PERT/CPM 139 / 323
+Ejemplo (Reliable Construction Co)
+La empresa Reliable construction ha ganado un proyecto de 5.4 millones de dólares para construir una nueva
+fábrica. El contratante necesita que la fábrica esté terminada en el plazo de un año (52 semanas). Por ello, el
+contrato incluye las siguientes cláusulas:
+• Penalización de 300 mil dólares si se acaba en un plazo superior a 47 semanas.
+• Gratificación de 150 mil dólares si se acaba en un plazo inferior a 40 semanas.
+La Tabla 6 muestra las actividades y demás información necesaria para la realización del proyecto:
+Javier Quintero Administración de proyectos con PERT/CPM 140 / 323
+Tabla de precedencia Reliable Co.
+Tabla 6: Tabla de precedencias ejemplo prototipo
+Actividad Descripción Precedencia Duración estimada
+A Excavar - 2 semanas
+B Cimentar A 4 semanas
+C Levantar muros B 10 semanas
+D Construir tejado C 6 semanas
+E Instalar fontanería exterior C 4 semanas
+F Instalar fontanería interior E 5 semanas
+G Instalar revestimiento exterior D 7 semanas
+H Pintar exterior E,G 9 semanas
+I Instalación eléctrica C 7 semanas
+J Panelar F,I 8 semanas
+K Instalar el piso J 4 semanas
+L Pintar interior J 5 semanas
+M Instalar accesorios exteriores H 2 semanas
+N Instalar accesorios interiores K,L 6 semanas
+Javier Quintero Administración de proyectos con PERT/CPM 141 / 323
+Uso de una red para visualizar un proyecto
+Enfoque AON
+Una forma muy eficiente de poder visualizar el proyecto, sus distintas tareas e información importantes es mediante el
+uso de grafos. Estos incluirán las actividades, relaciones de precedencia e información temporal. Se aplicará el enfoque
+AON (activity on node):
+• Cada actividad se representa en un nodo
+• Los arcos representan relaciones de precedencia.
+• Los número en cada nodo representan la duración de la actividad.
+En la Figura 27 se representa el resultado de aplicar el enfoque AON.
+Para realizar esta organización necesitamos dos tipos de información:
+• El orden de las actividades que deben realizarse.
+• La duración estimada de cada actividad.
+Javier Quintero Administración de proyectos con PERT/CPM 142 / 323
+START 0
+A 2
+B 4
+C 10
+D6
+G7
+H9
+M2
+E 4
+F
+5
+I 7
+J 8
+K4 L 5
+N 6
+END 0
+Figura 27: Representación AON correspondiente a Ejemplo 74
+Javier Quintero Administración de proyectos con PERT/CPM 143 / 323
+Programación de un proyecto con PERT/CPM
+¿Cuánto tiempo va a tardar en realizarse el proyecto? Si sumamos la duración de todas las actividades, obtenemos un
+resultado de 79 semanas. Para calcular la duración del proyecto es necesario calcular la duración de todos los caminos
+que van desde origen hasta el fin. La duración estimada del proyecto será aquel camino que tenga una duración mayor.
+Este camino recibe el nombre de camino crítico. En la Tabla 7, se calcula la longitud de cada una de las rutas del nodo
+START al nodo END.
+Tabla 7: Trayectorias y sus longitudes a través de la red de proyecto del Ejemplo 74, ver Figura 27
+Trayectoria Longitud (semanas)
+START → A→ B→ C→ D→ G→ H→M→ FIN 2+4+10+6+7+9+2 = 40
+START→ A→ B→ C→ E→ H→M→ END 2+4+10+4+9+2 = 31
+START→ A→ B→ C→ E→ F→ /→ K→ N→ FIN 2+4+10+4+5+8+4+6 = 43
+START→ A→ B→ C→ E→ F→ J→ L→ N→ FIN 2+4+10+4+5+8+5+6 = 44
+START→ A→ B→ C→ l→ /→ K→ N→ FIN 2+4+10+7+8+4+6 = 41
+START → A→ B→ C→ I→ J→ L→ N→ FIN 2+4+10+7+8+5+6 = 42
+Luego, se concluye que en este proyecto
+• Ruta crítica: START → A→ B→ C→ E→ F→ J→ L→ N→ FIN
+• Duración estimada del proyecto 44 semanas.
+Javier Quintero Administración de proyectos con PERT/CPM 144 / 323
+Programación de un proyecto con PERT/CPM
+Definición (Tiempo de inicio-finalización mínimo (ES, EF))
+Al tiempo de inicio de una actividad , si no ocurre ningún retraso, se le conoce como tiempo de inicio
+mínimo (ES - early start), de la misma forma, se define el tiempo de finalización mínimo (EF - early
+finish) tal que,
+EF = ES+duración
+Para mejorar la escalabilidad del problema, el ES de la primer actividad se fija en 0. Para ir rellenando el
+grafo, se utiliza la siguiente regla, el tiempo de inicio mínimo de una actividad es el tiempo de finalización
+mínimo mayor de entre sus predecesores.
+En la Figura 28 se calculan los tiempos mínimos de inicio-finalización, de cada actividad del Ejemplo 74.
+Javier Quintero Administración de proyectos con PERT/CPM 145 / 323
+START 0 ES = 0
+EF = 0
+A 2 ES = 0
+EF = 2
+B 4 ES = 2
+EF = 6
+C 10 ES = 6
+EF = 16
+D6ES = 16
+EF = 22
+G7ES = 22
+EF = 29
+H9ES = 29
+EF = 38
+M2ES = 38
+EF = 40
+E
+4 ES = 16
+EF = 20
+F
+5ES = 20
+EF = 25
+I 7 ES = 16
+EF = 23
+J 8 ES = 25
+EF = 30
+K4ES = 33
+EF = 37 L 5 ES = 33
+EF = 38
+N 6 ES = 38
+EF = 44
+END 0 ES = 44
+LS = 44
+Figura 28: Tiempos mínimos de inicio-finalización de cada actividad del Ejemplo 74
+Javier Quintero Administración de proyectos con PERT/CPM 146 / 323
+Programación de un proyecto con PERT/CPM
+Del mismo modo se pueden definir los tiempos de inicio-finalización máximos.
+Definición (Tiempo de inicio-finalización máximos (LS, LF))
+Los tiempos máximos de finalización e inicio (LF,LS), (last finish, last start) se definen como aquellos que,
+aun siendo mayores que los mínimos, no modifican el camino mínimo. Estos tiempo se puede definir como
+LS = LF−duración
+Como regla general, el tiempo máximo de finalización de una actividad es el menor tiempo de inicio máximo
+las actividades sucesoras.
+En la Figura 29 se calculan los tiempos máximos de inicio-finalización, de cada actividad del Ejemplo 74.
+Javier Quintero Administración de proyectos con PERT/CPM 147 / 323
+START 0 LS = 0
+LF = 0
+A 2 LS = 0
+LF = 2
+B 4 LS = 2
+LF = 6
+C 10 LS = 6
+LF = 16
+D6LS = 20
+LF = 26
+G7LS = 26
+LF = 33
+H9LS = 33
+LF = 42
+M2LS = 42
+LF = 44
+E
+4 LS = 16
+LF = 20
+F
+5LS = 20
+LF = 25
+I 7 LS = 18
+LF = 25
+J 8 LS = 25
+LF = 33
+K4LS = 34
+LF = 38 L 5 LS = 33
+LF = 38
+N 6 LS = 38
+LF = 44
+END 0 LS = 44
+LF = 44
+Figura 29: Tiempos máximos de inicio-finalización de cada actividad del Ejemplo 74
+Javier Quintero Administración de proyectos con PERT/CPM 148 / 323
+Programación de un proyecto con PERT/CPM
+Observación
+Por lo general para calcular los pares (ES,EF) se va de la tarea START a la tarea FIN, por otro lado, para calcular los
+pares (LS,LF), se va de la tarea FIN a la tarea START, una vez se conoce la duración mínima del proyecto.
+Definición (Holgura)
+Las holguras nos permiten saber qué actividades pueden retrasarse sin que eso revierta en un retraso del
+proyecto. Para calcularlas se utiliza la siguiente fórmula:
+h = LF−EF
+El camino crítico tiene holguras 0.
+En la Figura 30, se ilustra el cálculo de holguras para cada actividad del Ejemplo 74.
+Javier Quintero Administración de proyectos con PERT/CPM 149 / 323
+START 0 S = (0,0)
+F = (0,0)
+A 2 S = (0,0)
+F = (2,2)
+B 4 S = (2,2)
+F = (6,6)
+C 10 S = (6,6)
+F = (16,16)
+D6S = (16,20)
+F = (22,26)
+G7S = (22,26)
+F = (29,33)
+H9S = (29,33)
+F = (38,42)
+M2S = (38,42)
+F = (40,44)
+E
+4 S = (16,16)
+F = (20,20)
+F
+5S = (20,20)
+F = (25,25)
+I 7 S = (16,18)
+F = (23,25)
+J 8 S = (25,25)
+F = (33,33)
+K4S = (33,34)
+F = (37,38) L 5 S = (33,33)
+F = (38,38)
+N 6 S = (38,38)
+F = (44,44)
+END 0 S = (44,44)
+LS = (44,44)
+Figura 30: Ruta crítica Ejemplo 74
+Javier Quintero Administración de proyectos con PERT/CPM 150 / 323
+Programación de un proyecto con PERT/CPM
+Luego se concluye que el camino crítico es
+START→ A→ B→ C→ E→ F→ J→ L→ N→ FINISH
+Tabla 8: Relación entre holguras y camino crítico
+Actividad Holgura (LF - EF) Camino crítico
+A 0 Sí
+B 0 Sí
+C 0 Sí
+D 4 No
+E 0 Sí
+F 0 Sí
+G 4 No
+H 4 No
+I 2 No
+J 0 Sí
+K 1 No
+L 0 Sí
+M 4 No
+N 0 Sí
+Javier Quintero Administración de proyectos con PERT/CPM 151 / 323
+Manejo de la incertidumbre en las duraciones de las actividades
+PERT introduce tres estimaciones para cada actividad, optimista (o), probable (m) y pesimista (p). Denotemos como
+• µi, duración media de la actividad i. Reservamos µp para la duración del proyecto
+• σi, la desviación típica de la duración de la actividad i. Reservamos σp, para la desviación típica de la duración del
+proyecto.
+Definición (Camino crítico medio (CCM))
+Definiremos el camino crítico medio (CCM) como el valor del camino crítico si cada actividad tiene una duración igual a
+su media.
+Para calcular los tiempos de duración de un proyecto se siguen los siguientes supuestos
+• Supuesto 1: El camino más largo es el CCM.
+• Supuesto 2: Las actividades del camino crítico son estadísticamente independientes, por lo que
+µp =
+N
+∑
+i
+µi; σ
+2
+p =
+N
+∑
+i
+σ
+2
+i ; σ
+2
+i =
+(
+pi−oi
+6
+)2
+; µi =
+oi +4mi +pi
+6
+Luego se asume que
+− µp: suma de las medias de las duraciones de las actividades del CCM.
+− σ2
+p : suma de las varianzas de las duraciones de las actividades en el CCM.
+Javier Quintero Administración de proyectos con PERT/CPM 152 / 323
+Ejemplo
+Consultando a expertos se han podido estimar la media y varianza de cada una de las actividades del
+proyecto del Ejemplo 74. Ver Tabla 9.
+Tabla 9: Aplicación de aproximación 2 a Ejemplo 74
+Actividades en CCM Media Varianza
+A 2 1
+9
+B 4 1
+C 10 4
+E 4 4
+9
+F 5 1
+J 8 1
+L 5 1
+N 6 4
+9
+Duración del proyecto µp = 44 σ2
+p = 9
+• Supuesto 3: Se asume que la distribución es normal. De esta forma el cálculo de probabilidades vendría
+por la función de probabilidad acumulada de la distribución normal.
+P(T ≤ d) = P(N ≤ Kd) ; Kd =
+d−µp
+σp
+Javier Quintero Administración de proyectos con PERT/CPM 153 / 323
+Manejo de la incertidumbre en las duraciones de las actividades
+44
+(Media)
+47
+(Límite)
+σ2
+p = 9
+d−µp
+σp
+=
+47−44
+3
+= 1
+Duración del proyecto
+(semanas)
+Figura 31: Estimación de la duración del proyecto a partir de los datos de la Tabla 9, empleando una aproximación
+normal.
+Javier Quintero Administración de proyectos con PERT/CPM 154 / 323
+Manejo de la incertidumbre en las duraciones de las actividades
+Ejemplo
+¿Cuál es la probabilidad de que el proyecto se complete en 47 semanas o menos?
+Aplicamos la función de matlab normcdf(x,µ,σ), que nos devuelve los valores de la función de
+distribución acumulada, evaluados en los valores en x para la distribución normal con media µ y desviación
+estándar σ , de donde se obtiene
+P(X ≤ 47) = 0.8413
+Javier Quintero Administración de proyectos con PERT/CPM 155 / 323
+Consideración del trueque entre tiempo y costo. Crashing.
+CPM nos permite tener consideraciones en cuanto la reducción del tiempo de proyecto mediante la inyección
+de dinero a las actividades, en lo que se conoce como crashing. Este aporte extra de capital nos permite
+aplicar lo aprendido en el tema de programación lineal para encontrar soluciones óptimas, es decir, conseguir
+una reducción de la duración de la obra con la inversión mínima.
+En primer lugar necesitaremos tener tabulados las posibles inversiones y su contrapartida en la reducción de
+la duración de las actividades. En caso de ser valores fijos, deberemos aplicar una interpolación lineal. Una
+vez realizado esto, debemos formular el modelo de programación matemática que quedará de la siguiente
+manera,
+• Función objetivo: minimización de costes.
+• Restricciones:
+− Reducción máxima.
+− No negatividad.
+− Tiempos de inicio, precedencia.
+− Duración del proyecto.
+Javier Quintero Administración de proyectos con PERT/CPM 156 / 323
+Ejemplo
+Consideremos el proyecto presentado en el Ejemplo 74. La empresa matriz nos comunica que desea terminar el proyecto en 40
+semanas, para lo que destinará recursos extra. En la Tabla 10, se recogen los costes estimados y semanas que se pueden ahorrar
+aplicando crashing en cada tarea.
+Tabla 10: Costes de aplicar crashing al proyecto del Ejemplo 74
+Duración (semanas) Coste ($) Máxima
+reducción
+en semanas
+Costo de crashing
+por semana
+ahorradaActividad Normal Con Crash Normal Con Crash
+A 2 1 $180,000 $ 280,000 1 $100,000
+B 4 2 $320,000 $ 420,000 2 $ 50,000
+C 10 7 $620,000 $ 860,000 3 $ 80,000
+D 6 4 $260,000 $ 340,000 2 $ 40,000
+E 4 3 $410,000 $ 570,000 1 $160,000
+F 5 3 $180,000 $ 260,000 2 $ 40,000
+G 7 4 $900,000 $1,020,000 3 $ 40,000
+H 9 6 $200,000 $ 380,000 3 $ 60,000
+I 7 5 $210,000 $ 270,000 2 $ 30,000
+J 8 6 $430,000 $ 490,000 2 $ 30,000
+K 4 3 $160,000 $ 200,000 1 $ 40,000
+L 5 3 $250,000 $ 350,000 2 $ 50,000
+M 2 1 $100,000 $ 200,000 1 $100,000
+N 6 3 $330,000 $ 510,000 3 $ 60,000
+Con estos datos, ¿cuál es el coste mínimo que nos permite terminar el proyecto en 40 semanas?
+Javier Quintero Administración de proyectos con PERT/CPM 157 / 323
+Ejemplo
+Primeramente consideremos las variables xi, para i = A, . . . ,N, que representan la reducción en tiempo obtenida al
+realizar crashing en la actividad i. Notemos que xi ∈ Z+.
+Luego la función objetivo será minz = 1000000xA +50000xB + . . .+60000xN
+En las restricciones hay que incluir la precedencia. Para ello se introducen las variables auxiliares yi, que representan el
+inicio de la actividad i. En cuanto a las restricciones se tendrá:
+• Restricciones de crashing, no se puede superar el límite impuesto.
+xA ≤ 1, xB ≤ 2, . . . ,xN ≤ 3
+• Restricciones de no negatividad: no se pueden tener tiempo o inicios negativos, yi ≥ 0
+• Restricciones de precedencia, se debe mantener el orden entre actividades
+yB ≥ 0+2− xA
+yH ≥ yG +7− xG
+yH ≥ yE +4− xE
+• Restricción de duración total del proyecto yFIN ≤ 40
+Javier Quintero Administración de proyectos con PERT/CPM 158 / 323
+El modelo matemático resulta
+min 100xA +50xB +80xC +40xD +160xE +40xF +40xG +60xH
++30xI +30xJ +40xK +50xL +100xM +60xN
+s.t.
+yB ≥ 2− xA
+yC ≥ yB +4− xB
+yD ≥ yC +10− xC
+yE ≥ yC +10− xC
+yF ≥ yE +4− xE
+yG ≥ yD +6− xD
+yH ≥ yE +4− xE
+yH ≥ yG +7− xG
+yI ≥ yC +10− xC
+yJ ≥ yF +5− xF
+yJ ≥ yI +7− xI
+yK ≥ yJ +8− xJ
+yL ≥ yJ +8− xJ
+yM ≥ yH +9− xH
+yN ≥ yK +4− xK
+yN ≥ yL +5− xL
+yFIN ≥ yM +2− xM
+yFIN ≥ yN +6− xN
+0≤ xA ≤ 1,
+0≤ xB ≤ 2,
+0≤ xC ≤ 3,
+0≤ xD ≤ 2
+0≤ xE ≤ 1,
+0≤ xF ≤ 2,
+0≤ xG ≤ 3,
+0≤ xH ≤ 3
+0≤ xI ≤ 2,
+0≤ xJ ≤ 2,
+0≤ xK ≤ 1,
+0≤ xL ≤ 2
+0≤ xM ≤ 1,
+0≤ xN ≤ 3
+yB,yC,yD,yE,yF ,yG,yH ,yI ,yJ ,yK ,yL,yM ,yN ≥ 0
+yFIN ≤ 40
+xA, . . . ,xN ∈ Z+, yB, . . . ,yN ,yFIN ∈ Z+
+Para resolverlo empleamos el Código 10.
+Javier Quintero Administración de proyectos con PERT/CPM 159 / 323
+1 f = [100 50 80 40 160 40 40 60 30 30 40 50 100 60 0 0 0 0 0 0 0 0 0 0 0 0 0 0];
+2 intcon = 1: length(f);
+3 A=[-1 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 0;%B-A
+4 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 -1 0 0 0 0 0 0 0 0 0 0 0 0;%C-B
+5 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 -1 0 0 0 0 0 0 0 0 0 0 0;%D-C
+6 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 -1 0 0 0 0 0 0 0 0 0 0;%E-C
+7 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 -1 0 0 0 0 0 0 0 0 0;%F-E
+8 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 -1 0 0 0 0 0 0 0 0;%G-D
+9 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 -1 0 0 0 0 0 0 0;%H-E
+10 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 -1 0 0 0 0 0 0 0;%H-G
+11 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 -1 0 0 0 0 0 0;%I-C
+12 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 -1 0 0 0 0 0;%J-F
+13 0 0 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 -1 0 0 0 0 0;%J-I
+14 0 0 0 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 -1 0 0 0 0;%K-J
+15 0 0 0 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 -1 0 0 0;%L-J
+16 0 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 -1 0 0;%M-H
+17 0 0 0 0 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 -1 0;%N-K
+18 0 0 0 0 0 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 -1 0;%N-L
+19 0 0 0 0 0 0 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 -1;%Fin -M
+20 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 1 -1];%Fin -N
+21 b=-[2; 4; 10; 10; 4; 6; 4; 7; 10; 5; 7; 8; 8; 9; 4; 5; 2; 6];
+22 Aeq = []; beq = [];
+23 lb = zeros(1,length(f));
+24 ub =[1 2 3 2 1 2 3 3 2 2 1 2 1 3 inf.*ones (1 ,13) 40];
+25 [x val] = intlinprog(f,intcon ,A,b,Aeq ,beq ,lb, ub)
+26 cost = val + (180+320+620+260+410+180+900+200+210+430+160+250+100+330)
+Código 10: PERT-CPM con crashing
+Javier Quintero Administración de proyectos con PERT/CPM 160 / 323
+Consideración del trueque entre tiempo y costo. Crashing.
+Solución:
+Se concluye que:
+• Es posible acabar el proyecto en 40 semanas.
+• El coste total ascendería a 4690000 dólares.
+• Para ello se debe realizar un crashing sobre la
+− Tarea F de 2 semanas, y
+− Tarea J de 2 semanas.
+Javier Quintero Administración de proyectos con PERT/CPM 161 / 323
+§VI. Programación no lineal
+▶ PERT: Program Evaluation and Review Technique .
+▶ CPM: Critical Path Method.
+▶ Manejo de incertidumbre.
+▶ Trueque entre tiempo y coste. Crashing.
+Optimización convexa. Condiciones de primer y segundo orden.
+En este capítulo introducimos problemas más generales que involucran funciones no lineales. Está basado en
+el [Hillier and Lieberman, 2015, Cap. 12]
+La optimización convexa desempeña un papel fundamental en la ingeniería debido a su tratabilidad matemática y su
+amplia aplicabilidad. Problemas como la reconstrucción de señales en imagen médica, el control óptimo de sistemas de
+administración de fármacos y los modelos de machine learning para herramientas de diagnóstico suelen basarse en
+formulaciones convexas para garantizar soluciones fiables y eficientes.
+Los problemas convexos resultan especialmente atractivos porque cualquier mínimo local es también un mínimo global,
+y existen algoritmos potentes capaces de resolverlos de manera eficiente incluso en altas dimensiones.
+Definición (Conjunto convexo)
+Un conjunto C ⊆ Rn es convexo si, para cualesquiera dos puntos x1,x2 ∈ C, el segmento que los une queda
+completamente contenido en C:
+λx1 +(1−λ )x2 ∈ C para todo λ ∈ [0,1]
+Javier Quintero Programación no lineal 162 / 323
+Definición (Función convexa)
+Una función f : Rn→ R es convexa si su dominio es convexo y, para todo x1,x2 ∈ dom(f ) y λ ∈ [0,1], se cumple:
+f (λx1 +(1−λ )x2)≤ λ f (x1)+(1−λ )f (x2)
+Ejemplo (Función convexa)
+La función f (x) = x2 es una función convexa. Notemos que dom(f ) = R, es trivialmente un conjunto convexo. Por otro
+lado, aplicamos la Definición 84, debemos probar que para todo x1,x2 ∈ R, y λ ∈ [0,1], se cumple
+f (λx1 +(1−λ )x2) = (λx1 +(1−λ )x2)
+2
+≤ λx2
+1 +(1−λ )x2
+2 = λ f (x1)+(1−λ )f (x2)
+λx2
+1 +(1−λ )x2
+2 ≥ (λx1 +(1−λ )x2)
+2
+(1−λ )x2
+2 +λx2
+1 ≥ λ
+2x2
+1 +2λ (1−λ )x1x2 +(1−λ )2x2
+2
+λx2
+1 ≥ λ
+2x2
+1 +2λ (1−λ )x1x2 +
+[
+(1−λ )2− (1−λ )
+]
+x2
+2
+0≥ λ (λ −1)x2
+1−2λ (λ −1)x1x2 +λ (λ −1)x2
+2
+0≥ λ (λ −1)(x1− x2)
+2
+que se cumple para λ ∈ [0,1].
+Javier Quintero Programación no lineal 163 / 323
+Optimización convexa. Condiciones de primer y segundo orden.
+Observe en la Figura 32 que geométricamente, el gráfico de una función convexa entre does puntos se en-
+cuentra por debajo del segmento que une ambos puntos.
+−2 −1 1 2
+1
+2
+3
+4
+Convex function x
+f (x)
+Figura 32: Plot of f (x) = x2Javier Quintero Programación no lineal 164 / 323
+Optimización convexa. Condiciones de primer y segundo orden.
+Teorema (Funciones Convexas y Dos Veces Diferenciables)
+Sea f : Rn→R una función para la cual se cumple que ∇2f (x), la matriz Hessiana, es definida positiva para
+todo x ∈ Rn, entonces f es una función convexa.
+Observación
+Este teorema ofrece una condición fuerte para determinar si una función es convexa o no. Esto es equivalente, en una
+variable, a pedir que la segunda derivada sea positiva. Se recomienda encarecidamente revisar la definición de matriz
+Hessiana y de matriz definida positiva en el Apéndice B.
+Ejemplo
+La función f (x) =
+n
+∑
+i=1
+x2
+i es convexa. Calculando la matriz hessiana de f ,
+∇
+2f (x) = 2Idn
+donde Idn es la matriz identidad de tamaño n×n. Como la matriz hessiana es definida positiva, aplicamos el
+Teorema 86 para concluir que f es una función convexa.
+Javier Quintero Programación no lineal 165 / 323
+Definición (Función afín)
+Se define f : Rn→ Rp es una función afín si se puede escribir f (x) = Ax+b, donde A ∈ Rn×p y b ∈ Rp
+Una función afín es la suma de una función lineal Ax y una constante b.
+Definición (Máximo Local)
+Sea f : Rn→ R una función, y sea x0 ∈ Rn un punto en el dominio de f . Decimos que f tiene un máximo local en x0 si
+existe un entorno U de x0 tal que:
+f (x)≤ f (x0) for all x ∈ U.
+En otras palabras, f (x0) es mayor o igual a f (x) para todo x cerca x0.
+Definición (Mínimo Local)
+Sea f : Rn→ R una función, y sea x0 ∈ Rn un punto en el dominio de f . Decimos que f tiene un mínimo local en x0 si
+existe un entorno U de x0 tal que:
+f (x)≥ f (x0) for all x ∈ U.
+En otras palabras, f (x0) es menor o igual que f (x) para todos los x cercanos a x0.
+Un punto x0 donde f tiene un máximo o un mínimo local se denomina punto crítico. Estos puntos suelen aparecer donde
+el gradiente ∇f (x0) es cero, pero no todos los puntos críticos son extremos locales.
+Javier Quintero Programación no lineal 166 / 323
+Ejemplo
+Considera la gráfica de la siguiente función, f (x) = x4−17x2 + x, en la Figura 33. Los mínimos locales se pueden
+encontrar en x∗ z∗
+−1.11 −2.06
+2.9 −69.34
+y un máximo local en x∗3 = 0.03 para z∗3 = 0.01. Obsérvese que x∗1 =−1.11 es un mínimo global, porque es el punto más
+bajo que alcanza la función; sin embargo, x∗3 no es un máximo global, ya que esta función crece hasta infinito cuando el
+valor de x aumenta. Nótese que esta función no es convexa, la gráfica entre los mínimos locales es cóncava.
+−4 −2 2 4
+−50
+50
+100
+150
+200
+x
+f (x)
+Figura 33: Función no convexa
+Javier Quintero Programación no lineal 167 / 323
+Optimización convexa. Condiciones de primer y segundo orden.
+Definición (Problema de optimización convexo)
+Consideremos el problema de optimización en forma estándar
+min
+x
+f (x)
+s.t. gi(x)≤ 0, i = 1, . . . ,m
+hj(x) = 0, j = 1, . . . ,p
+x ∈ Rn
+(7)
+decimos que (7) es un problema de optimización convexa si f y gi son funciones convexas para i = 1, . . . ,m y
+hj son funciones afines para j = 1, . . . ,p. Esto hace que la región factible sea una región convexa.
+Javier Quintero Programación no lineal 168 / 323
+Ejemplo (Convexo y no-convexo)
+El problema
+min
+x
+f (x) = x2
+1 + x2
+2
+s.t. x4
+1 + ex2 ≤ 0
+x1 + x2 = 0
+x ∈ Rn
+es un problema convexo. Obsérvese que f y x4
+1 + ex2 son funciones convexas, y x1 + x2 es una función afín.
+Sin embargo el problema
+min
+x
+f (x) = x2
+1 + x3
+2
+s.t. x4
+1 + ex2 ≤ 0
+(x1 + x2)
+2 = 0
+x ∈ Rn
+no es un problema convexo porque f no es convexa y la restricción de igualdad no es una función afín, aunque puede
+transformarse en una.
+Teorema (Optimalidad global en optimización convexa)
+Cualquier óptimo local de un problema convexo es también un óptimo global
+Javier Quintero Programación no lineal 169 / 323
+Condiciones de primer y segundo orden sin restricciones
+La programación no lineal sin restricciones se centra en encontrar el mínimo o el máximo de una función no
+lineal sin imponer restricciones sobre las variables. Esto resulta especialmente útil en aplicaciones donde la
+dinámica del sistema es inherentemente no lineal y compleja.
+Definición (Problema Diferenciable No Lineal sin Restricciones)
+Sea f : Rn→ R una función continuamente diferenciable. El Problema Diferenciable No Lineal sin
+Restricciones (DNLUP) es
+min
+x
+f (x)
+donde x ∈ Rn.
+La solución de este problema puede deducirse fácilmente a partir de las condiciones de primer y segundo
+orden estudiadas en Cálculo de varias variables.
+Javier Quintero Programación no lineal 170 / 323
+Condiciones de primer y segundo orden sin restricciones
+Teorema (Solutiones del DNLUP)
+Sea x∗ ∈ Rn, y f definidos anteriormente. Una condición necesaria para que x∗ sea un mínimo local de f (x)
+es que el gradiente se anule:
+∇f (x∗) = 0
+y la matriz hessiana∇2f (x∗) sea positiva definida. x∗ será el mínimo global, si z∗ = f (x∗)≤ f (x) para todo
+x ∈ Rn.
+En otras palabras, para encontrar máximos o mínimos locales, primero localizamos los puntos críticos, donde
+el gradiente se anula.
+Definición (Punto crítico)
+Un punto x0 ∈ Rn se denomina punto crítico de una función diferenciable f : Rn→ R si ∇f (x0) = 0.
+Observación
+Los puntos críticos son candidatos a extremos locales, pero no garantizan necesariamente la existencia de máximos o
+mínimos.
+Javier Quintero Programación no lineal 171 / 323
+Condiciones de primer y segundo orden sin restricciones
+Entonces, debemos aplicar la prueba de la segunda derivada, que ayuda a clasificar los puntos críticos como
+máximos locales, mínimos o puntos de silla.
+Teorema (Test de la segunda derivada)
+Sea f : Rn→ R una función dos veces diferenciable y sea x0 un punto crítico. Consideremos la matriz
+hessiana Hf (x0):
+• Si Hf (x0) es positiva definida, entonces x0 es un mínimo local.
+• Si Hf (x0) es definida negativa, entonces x0 es un máximo local.
+• Si Hf (x0) tiene autovalores positivos y negativos, entonces x0 es un punto de silla.
+• Si |Hf (x0)|= 0 se está en presencia de un caso degenerado y no se puede deducir nada acerca de la
+función desde la matriz hessiana.
+Javier Quintero Programación no lineal 172 / 323
+Condiciones de primer y segundo orden sin restricciones
+Teorema (Test de la segunda derivada para funciones de dos variables)
+Sea f (x,y) una función de clase C2 definida en un abierto U de R2. un punto (x0,y0) es un mínimo local de f
+si se cumplen las siguientes condiciones:
+(i) ∂ f
+∂x (x0,y0) =
+∂ f
+∂y (x0,y0) = 0
+(ii) ∂ 2f
+∂x2 (x0,y0)> 0
+(iii) D =
+(
+∂ 2f
+∂x2
+)(
+∂ 2f
+∂y2
+)
+−
+(
+∂ 2f
+∂x∂y
+)2
+> 0 en (x0,y0)
+( D es el determinante de la matriz hessiana.) Si en (ii) se tiene < 0 en vez de > 0 con la condición (iii),
+entonces se tendrá un máximo local. Si D < 0 (e.g., si ∂ 2f
+∂x2 (x0,y0) = 0 o ∂ 2f
+∂y2 (x0,y0) = 0, pero ∂ 2f
+∂x∂y (x0,y0) ̸=
+0), entonces (x0,y0) es un punto de silla (no es máximo ni mínimo).
+Javier Quintero Programación no lineal 173 / 323
+Ejemplo
+Encuentre los máximos relativos, mínimos y puntos de silla de la función f (x,y) = log
+(
+x2 + y2 +1
+)
+. Debemos primero localizar los
+puntos críticos de esta función; por lo tanto, de acuerdo con el Teorema 99, calculamos
+∇f (x,y) =
+2x
+x2 + y2 +1
+i+
+2y
+x2 + y2 +1
+j
+Así, ∇f (x,y) = 0 si y solo si (x,y) = (0,0), y por tanto el único punto crítico de f es (0,0). Ahora debemos determinar si este es un
+máximo, un mínimo o un punto de silla. Las segundas derivadas parciales son
+∂ 2f
+∂x2 =
+2
+(
+x2 + y2 +1
+)
+− (2x)(2x)
+(x2 + y2 +1)2
+∂ 2f
+∂y2 =
+2
+(
+x2 + y2 +1
+)
+− (2y)(2y)
+(x2 + y2 +1)2
+∂ 2f
+∂x∂y
+=
+−2x(2y)
+(x2 + y2 +1)2
+Por tanto,
+∂ 2f
+∂x2 (0,0) = 2 =
+∂ 2f
+∂y2 (0,0) y
+∂ 2f
+∂x∂y
+(0,0) = 0
+lo que implica D = 2 ·2 = 4 > 0. Como
+(
+∂ 2f/∂x2)(0,0)> 0, concluimos que (0,0) es un mínimo local. (¿Puedes demostrarlo
+únicamente a partir del hecho de que log t es una función creciente de t > 0?)
+Javier Quintero Programación no lineal 174 / 323
+Aplicaciones e ilustración gráfica de PNL
+En programación lineal todas sus funciones (objetivo y de restricción) son lineales. Este supuesto se cumple
+en el caso de muchos problemas prácticos, pero no siempre es así. Para tratar con situaciones en las que la
+programación lineal no puede modular, vamos a tratar con funciones no lineales.
+Definición
+Problema de programación no lineal De manera general, el problema de programación no lineal consiste en
+encontrar x = (x1,x2, . . . ,xn) para
+min f (x)
+s.t. gi(x)≤ bi, para i = 1,2, . . . ,m,
+x≥ 0,
+donde f (x) y gi(x) son funciones dadas de n variables de decisión.
+Dada las diferentes formas que pueden tomar las funciones f (x) y g(x) existen diferentes tipos de problemas
+PNL. Cada uno de estos problemas tiene una resolución específica, por lo que tratarlos individualmente es
+una tarea compleja. Además, existen ciertas consideraciones que se deben tener en cuenta a la hora de abordar
+este tipo de problemas.
+Javier Quintero Programación no lineal 175 / 323
+Ejemplo (Wyndor Glass formulación no lineal)
+Considere el modelo del Ejemplo 6. Si se sustituye la segunda
+restricción por una restricción no lineal, 9x2
+1 +5x2
+2 ≤ 216, la
+solución óptima sigue siendo (x∗1,x
+∗
+2) = (2,6), vea Figura 34, o
+Geogebra.
+max
+x
+z = 3x1 +5x2
+s.a. x1 ≤ 4
+9x2
+1 +5x2
+2 ≤ 216
+3x1 +2x2 ≤ 18
+x1,x2 ≥ 0
+Notemos que en este ejemplo, la solución se encuentra sobre la
+frontera de la región factible, pero no es una solución factible de
+vértice.
+Figura 34: Modelo Ejemplo 6, con una
+restricción no lineal
+Javier Quintero Programación no lineal 176 / 323
+Aplicaciones e ilustración gráfica de PNL
+Ejemplo
+Ahora supongamos que las restricciones lineales se
+conservan, pero la función objetivo cambia, para hacerse no
+lineal. Si
+max
+x
+z = 126x1−9x2
+1 +182x2−13x2
+2
+s.a. x1 ≤ 4
+x2 ≤ 6
+3x1 +2x2 ≤ 18
+x1,x2 ≥ 0
+La solución óptima ahora resulta (x∗1,x
+∗
+2) =
+( 8
+3 ,5
+)
+, con
+z∗ = 857, vea Figura 35, o Geogebra.
+Esta solución, nuevamente se encuentra sobre la frontera de
+la región factible, pero no es una solución factible de vér-
+tice. Figura 35: Modelo Ejemplo 6, con una función
+objetivo no lineal
+Javier Quintero Programación no lineal 177 / 323
+Aplicaciones e ilustración gráfica de PNL
+Finalmente consideremos el siguiente caso
+Ejemplo
+Conservamos las restricciones lineales, pero la función objetivo
+cambia a z = 54x1−9x2
+1 +78x2−13x2
+2, para hacerse no lineal. Si
+max
+x
+z = 54x1−9x2
+1 +78x2−13x2
+2
+s.a. x1 ≤ 4
+x2 ≤ 6
+3x1 +2x2 ≤ 18
+x1,x2 ≥ 0
+La solución óptima ahora resulta (x∗1,x
+∗
+2) = (3,3), con z∗ = 198,
+vea Figura 36, o Geogebra.
+Por lo tanto, es necesario que un algoritmo general para resolver
+problemas de este tipo tome en cuenta todas las soluciones en la
+región factible, y no sólo aquellas que están sobre la frontera.
+Figura 36: Modelo Ejemplo 6, con una función
+objetivo no lineal
+Javier Quintero Programación no lineal 178 / 323
+Aplicaciones e ilustración gráfica de PNL
+Otra complicación que surge en programación no lineal es que un máximo local no necesariamente es un
+máximo global es decir, no es la solución óptima global, ver Figura 37.
+x
+f (x)
+0 1 2 3 4 5
+Figura 37: Función multimodal: varios óptimos locales
+Los algoritmos de Programación no Lineal, en general, no pueden distinguir entre máximos y mínimos locales
+y globales.
+Javier Quintero Programación no lineal 179 / 323
+Aplicaciones e ilustración gráfica de PNL
+Los problemas PNL presentan muchas formas distintas. Al contrario que en el caso lineal, no hay un método general de
+resolución. Existen pues distintos métodos específicos para cada una de las familias, tales como
+• Optimización no restringida: este tipo de problemas no tiene restricciones, por lo que su función objetivo es del tipo
+Minimizar min o maximizar max f (x), donde esta función es no lineal.
+• Optimización restringida linealmente: en este tipo de problemas la única no linealidad aparece en la función
+objetivo, mientras las restricciones son lineales
+Minimizar min o maximizar max f (x), donde esta función es no lineal, restringida a gi(x)≤ bi, funciones lineales.
+• Programación cuadrática: la función objetivo tiene forma cuadrática, es decir, hay polinomios de segundo grado,
+ya sea por variables al cuadrado o producto de variables.
+• Programación convexa: aquí se deben cumplir dos condiciones:
+− f (x) debe ser cóncava o convexa
+− Cada una de las funciones de restricción gi(x) han de ser convexas
+En este caso se puede asegurar que la solución es mínimo o máximo global.
+• Programación no convexa
+Javier Quintero Programación no lineal 180 / 323
+Aplicaciones e ilustración gráfica de PNL
+• Programación separable: es un tipo especial de programación convexa, donde además se ha de cumplir
+− f (x) y gi(x) han de ser separables
+¿Qué es una función separable? Aquella en la que cada uno de sus términos sólo contiene una variable
+f (x) =
+n
+∑
+j=1
+fj(xj)
+• Programación no convexa: este tipo de problemas recoge todos aquellos que no satisfacen los supuestos de la
+programación convexa. En este tipo de problemas no hay garantía de encontrar máximos globales.
+• Programación geométrica: es un tipo especial de programación no convexa en el que las restricciones son de tipo
+polinomios.
+g(x) =
+N
+∑
+i=1
+ciPi(x)
+Pi(x) = xa1i
+1 ,xa2i
+2 , . . . ,xani
+n
+• Programación fraccional: en este tipo de problemas, la función objetivo tiene forma de fracción
+max/min f (x) =
+f1(x)
+f2(x)
+(8)Javier Quintero Programación no lineal 181 / 323
+Optimización no restringida. Resolución con Matlab
+Para optimización no lineal sin restricciones, Matlab tiene las funciones
+• fminunc, basada en el gradiente y
+• fminsearch, no basada en el gradiente.
+Para más información consultar Apéndice G.
+fminunc resuelve problemas del tipo min
+x
+f (x)
+Ejemplo
+Minimizar la función 2x2−1 empleando fminunc, para encontrar un mínimo alrededor del punto x0 = 1
+1 fun = @(x)x^2-1; %anonimus function
+2 x0 = 1; % starting point
+3 fminunc(fun ,x0);
+Código 11: Ejemplo de uso de fminunc
+La función se debe escribir en modo anónimo @(x) para declarar la variable y se debe proveer de un punto de inicio
+para el algoritmo.
+La solución es x∗ = 0 para z∗ =−1. Ver Código 11
+Javier Quintero Programación no lineal 182 / 323
+Ejemplo
+Tenemos que instalar una nueva antena que permita dar cobertura
+mediante radio-enlace a cada una de las sedes de nuestra empresa.
+Estas se encuentran distribuidas tal y como aparece en la figura 38.
+• Las perdidas debidas a la propagación en espacio libre tienen
+la siguiente forma FSPL =
+(
+4πd
+λ
+)2
+• La longitud de onda no va a cambiar para ninguna de las
+sedes a las que tenemos que darle cobertura, nuestro
+problema se convierte en la minimización de las distancias
+entre nuestra antena y nuestras bases.
+• Si definimos la posición de nuestra antena como (xa,ya)
+podemos escribir la distancia hasta cada una de nuestras
+sedes como di =
+√
+(xi− xa)2 +(yi− ya)2
+• De tal manera que la función a minimizar es
+z =
+N
+∑
+i=1
+di; donde N es el número de sedes
+Figura 38: Mapa Ejemplo 106
+Se desea que las perdidas debido a la
+propagación en espacio libre sea mínima. ¿En
+qué coordenadas deberemos instalar la antena?
+(asumir que las distancias están en km).
+Javier Quintero Programación no lineal 183 / 323
+Optimización no restringida. Resolución con Matlab
+1 x0 = [1,1];
+2 [x,fval] = fminunc(@fdist ,x0);
+3 function [d] = fdist(x)
+4 pos_sedes = [3,7;
+5 7,2;
+6 2,5;
+7 10,4];
+8 d = 0;
+9 for i = 1:size(pos_sedes ,1)
+10 d = d + sqrt(( pos_sedes(i,1)-x(1))^2 +( pos_sedes(i,2)-x(2))^2);
+11 end
+12 end
+Código 12: Ejemplo de uso de fminunc
+Aplicando la función de MATLAB, ver Código 12, que hemos visto anteriormente para este problema obten-
+emos la siguiente solución:
+• x = [4.5455,4.6818]
+• fval = 15.2734
+Javier Quintero Programación no lineal 184 / 323
+Optimización no restringida. Resolución con Matlab
+Ejemplo
+Es decir, nuestra antena debe colocarse en las coordenadas (4.5455,4.6818) y la suma de distancias a todas
+las estaciones es de 15.2734 km, ver Figura 39.
+Figura 39: Solución Ejemplo 106. Izquierda, representación tridimensional del problema y su solución. Derecha: mapa
+de contornos.
+Javier Quintero Programación no lineal 185 / 323
+Optimización no lineal con restricciones. Solución con Matlab
+Para optimización no lineal con restricciones, emplearemos la función fmincon de matlab, basada en el gradiente. Para
+más información consultar Apéndice G.
+Ejemplo
+El problema 9 tiene como solución x∗ ≈ (0.7071,0.7071) for z∗ ≈ 1.4142, ver Código 13
+maxz = x1 + x2
+s.ax2
+1 + x2
+2 ≤ 1
+x1,x2 ≥ 0
+(9)
+1 A=[];b=[];
+2 Aeq =[]; beq =[];
+3 lb = [0,0];
+4 ub = [];
+5 x0 = [1,0];
+6 nonlcon = @circlecon;
+7 [x,fval] = fmincon(fun ,x0,A,b,Aeq ,beq ,lb,ub,nonlcon);
+8 fun = @(x) -(x(1)+x(2)); %function
+9 function [c,ceq] = circlecon(x) %declaring the non -linear constraints
+10 c = (x(1))^2 + (x(2))^2-1;
+11 ceq = [];
+12 end
+Código 13: Solución Ejemplo 108
+Javier Quintero Programación no lineal 186 / 323
+Optimización no lineal con restricciones. Solución con Matlab
+Ejemplo (Ejemplo prototipo, uso de fmincon)
+Tenemos que instalar una nueva antena que permita dar cobertura mediante radio-enlace a cada una de las
+sedes de nuestra empresa, ver Figura 38.
+Se desea que las perdidas debido a la propagación en espacio libre sea mínima. ¿En qué coordenadas
+deberemos instalar la antena? (asumir que las distancias están en km).
+Además queremos que ninguna de las sedes se encuentre a una distancia superior a 5 km ya que la banda
+de frecuencias que utilizamos está muy saturada y necesitamos que llegue un nivel de potencia determinado.
+Solución: La longitud de onda no va a cambiar para ninguna de las sedes a las que tenemos que darle
+cobertura, nuestro problema se convierte en la minimización de las distancias entre nuestra antena y nuestras
+bases.
+Javier Quintero Programación no lineal 187 / 323
+Optimización no lineal con restricciones. Solución con Matlab
+Si definimos la posición de nuestra antena como (xa,ya) podemos escribir la distancia hasta cada una de
+nuestras sedes como
+di =
+√
+(xi− xa)2 +(yi− ya)2
+De tal manera que la función a minimizar es
+z =
+N
+∑
+i=1
+di; donde N es el número de sedes
+st.di < 5 i =1,2,3,4.
+Aplicando la función de Matlab fmincon, ver Código 14, obtenemos la siguiente solución:
+• x = [5.0321,4.5652]
+• fval = 14.4675
+Es decir, nuestra antena debe colocarse en las coordenadas (5.0321,4.5652) y la suma de distancias a todas
+las estaciones es de 14.4675 km, ver Figura 40
+Javier Quintero Programación no lineal 188 / 323
+1 A=[];b=[];
+2 Aeq =[]; beq =[];
+3 lb = [0,0];
+4 ub = [];
+5 x0 = [1,1];
+6 [x,fval] = fmincon(@fdist ,x0,A,b,Aeq ,beq ,lb,ub,@nonlcon);
+7
+8 function [d] = fdist(x) %distance function
+9 pos_sedes = [3,7;
+10 7,2;
+11 2,5;
+12 10,4];
+13 d = 0;
+14 for i = 1:size(pos_sedes ,1)
+15 d = d + sqrt(( pos_sedes(i,1)-x(1))^2 +( pos_sedes(i,2)-x(2))^2);
+16 end
+17 end
+18 function [c,ceq] = nonlcon(x) %nonlinear constraint -- distance
+19 pos_sedes = [3,7;
+20 7,2;
+21 2,5;
+22 10,4];
+23 c = zeros(size(pos_sedes ,1) ,1);
+24 for i = 1:size(pos_sedes ,1)
+25 c(i) = sqrt(( pos_sedes(i,1)-x(1))^2 + ...
+26 (pos_sedes(i,2)-x(2))^2) - 5;
+27 end
+28 ceq = [];
+29 end
+Código 14: Solución Ejemplo 109
+Javier Quintero Programación no lineal 189 / 323
+Optimización no lineal con restricciones. Solución con Matlab
+Figura 40: Solución Ejemplo 109. Izquierda, representación tridimensional del problema y su solución. Derecha: mapa
+de contornos. En amarillo la intersección de los discos inducida por las nuevas restricciones de distancia.
+Javier Quintero Programación no lineal 190 / 323
+Condiciones de Karush-Kuhn-Tucker
+Muchos problemas de optimización en ingeniería implican relaciones no lineales y están sujetos a restric-
+ciones derivadas de consideraciones físicas, biológicas o de seguridad. Por ejemplo, optimizar la dosis de un
+fármaco debe respetar los límites fisiológicos, y el diseño de una prótesis debe ajustarse a las restricciones
+anatómicas. Estos problemas se modelan mediante programación no lineal con restricciones, donde tanto la
+función objetivo como las restricciones pueden ser no lineales.
+Definición (Formulación canónica problema no lineal con restricciones)
+Sea f : Rn→ R una función objetivo, y sean gi(x)≤ 0 y hj(x) = 0 las restricciones de desigualdad y de
+igualdad, respectivamente. La forma general de un problema de programación no lineal con restricciones es:
+min
+x∈Rn
+f (x)
+subject to gi(x)≤ 0, i = 1, . . . ,m
+hj(x) = 0, j = 1, . . . ,p
+Surge una pregunta natural: ¿existe alguna generalización de las anteriores condiciones (las dadas en la
+Sección 1) de punto crítico y de segundo orden para encontrar las soluciones óptimas? La respuesta es sí. La
+solución óptima debe satisfacer las condiciones de Karush-Kuhn-Tucker (KKT), que generalizan el método
+de los multiplicadores de Lagrange para manejar restricciones de desigualdad.
+Javier Quintero Programación no lineal 191 / 323
+Condiciones de Karush-Kuhn-Tucker
+Las condiciones de Karush-Kuhn-Tucker (KKT) son un conjunto de condiciones necesarias para que una
+solución en programación no lineal sea óptima, dadas ciertas condiciones de regularidad. Estas condiciones
+generalizan el método de los multiplicadores de Lagrange para manejar restricciones de desigualdad y son
+fundamentales en problemas de optimización con restricciones.
+Consideremos el siguiente problema de optimización:
+min
+x
+f (x)
+s.t. gi(x)≤ 0, i = 1, . . . ,m
+hj(x) = 0, j = 1, . . . ,p
+x ∈ Rn
+(10)
+Supongamos que f ,gi y hj son diferenciables en la región factible F ⊂ Rn.
+Javier Quintero Programación no lineal 192 / 323
+Condiciones de Karush-Kuhn-Tucker
+Definición (Función de Lagrange)
+Definimos la función de Lagrange asociada a la ecuación (10) como
+L (x,λ ,µ) = f (x)+
+m
+∑
+i=1
+λig(x)+
+p
+∑
+j=1
+µjh(x)
+donde λ = (λ1, . . . ,λm) ∈ Rm y µ = (µ1, . . . ,µp) ∈ Rp son vectores.
+Javier Quintero Programación no lineal 193 / 323
+Condiciones de Karush-Kuhn-Tucker
+Teorema (KKT-conditions)
+El puntox∗ es un mínimo local si y solo si, existen multiplicadores de Lagrange λ ∗i ≥ 0 and µ∗j ∈R tales que:
+(Condición estacionaria) ∇L = ∇f (x∗)+
+m
+∑
+i=1
+λ
+∗
+i ∇gi(x∗)+
+p
+∑
+j=1
+µ
+∗
+j ∇hj(x∗) = 0
+(Condición de factibilidad primal)
+{
+gi(x∗) ≤ 0, i = 1, . . . ,m
+hj(x∗) = 0, j = 1, . . . ,p
+(Condición de positividad/negatividad) λ
+∗
+i ≥ 0(mínimos), i = 1, . . . ,m
+λ
+∗
+i ≤ 0(máximos), i = 1, . . . ,m
+(Condición de holgura) λ
+∗
+i gi(x∗) = 0, i = 1, . . . ,m
+Si el problema es de maximización, como el único cambio es en los multiplicadores, estos serán un indicio
+para detectar la naturaleza del punto.
+Javier Quintero Programación no lineal 194 / 323
+Condiciones de Karush-Kuhn-Tucker
+Observación
+• Este mínimo local de x∗ coincide con el mínimo ℓ∗ = (x1, . . . ,xn,λ1,λm,µ1, . . . ,µp) de la función Lagrangiana L .
+• Las condiciones KKT transforman el proceso de optimización en una búsqueda de raíces de sistemas de ecuaciones.
+• Si p = 0, es decir, no hay restricciones de igualdad, este resultado se reduce al caso habitual de los multiplicadores
+de Lagrange.
+• La condición de estacionariedad se refiere a la condición de primer orden que hace que el gradiente de una función
+sea igual a cero.
+• La factibilidad primal obliga a que la solución pertenezca a la región factible.
+• La factibilidad dual fija el signo de los λ según la naturaleza de mínimo/máximo.
+• La holgura complementaria fuerza una de las siguientes condiciones: λi = 0 o la restricción gi está activa en la
+solución dada.
+Javier Quintero Programación no lineal 195 / 323
+Condiciones de Karush-Kuhn-Tucker
+• Para poder asegurar que un punto cumple las condiciones necesarias de optimalidad es obligatorio que
+este punto cumpla alguna de las hipótesis de cualificación de restricciones.
+• Demostrar estas hipótesis se sale fuera del alcance de la asignatura.
+• Aplicaremos la siguiente: Un punto cumple las KKT si el conjunto del gradiente de las restricciones
+activas es linealmente independiente.
+Ejemplo (Condiciones de KKT en matlab)
+Dado el siguiente problema de optimización, encuentre todos los puntos críticos y clasifíquelos de acuerdo a
+las condiciones KKT de primer orden. Compruebe los puntos factibles obtenidos.
+min/ max
+(x,y,z)
+x2− y2
+s.t. x2 +2x+1+ y2 ≤ 4
+x2−2x+1+ y2 ≤ 4
+Javier Quintero Programación no lineal 196 / 323
+Condiciones de Karush-Kuhn-Tucker
+Solución:
+1. Obtener el lagrangiano
+L = f +λ1g1 +λ2g2
+2. Aplicar la condición estacionaria. Calcular el gradiente del Lagrangiano e igualarlo a cero (∇L = 0).
+En Matlab puedes utilizar el comando gradient.
+3. Aplicar la condición de holgura. Igualar a cero las restricciones de desigualdad multiplicadas por λi,
+llamados multiplicadores de Lagrange.
+4. Resolver el sistema formado por las cuatro ecuaciones anteriores. En Matlab puedes utilizar el comando
+solve.
+Javier Quintero Programación no lineal 197 / 323
+Condiciones de Karush-Kuhn-Tucker
+5. Los puntos críticos (x,y) obtenidos son, ver Tabla 11.
+Tabla 11: Puntos crítcos Ejemplo 113
+x y λ1 λ2
+0 0 0 0
+1 0 -1/2 0
+-1 0 0 -1/2
+-3 0 -3/2 0
+3 0 0 -3/2
+0
+√
+3 1/2 1/2
+0 −
+√
+3 1/2 1/2
+−1/2 −
+√
+15/2 1 0
+−1/2
+√
+15/2 1 0
+1/2 −
+√
+15/2 0 1
+1/2
+√
+15/2 0 1
+Javier Quintero Programación no lineal 198 / 323
+Condiciones de Karush-Kuhn-Tucker
+6. Las condiciones KKT de primer grado son las siguientes
+• Condición estacionaria y de holgura: se cumplen a la hora de resolver el sistema de ecuaciones
+• Condición de factibilidad: Comprobar que se cumplen las restricciones
+hi(x∗) = 0 i = 1, . . . ,m
+gj(x∗) = 0 j = 1, . . . ,p
+• Condición de positividad/negatividad: El signo de λi indica el tipo de punto: λi ≤ 0 indica máx-
+imo, λi ≥ 0 indica mínimo, ver Tabla 12.
+7. Comprobar los puntos factibles. Utilizamos subs para sustituir los puntos obtenidos en las restricciones
+y comprobaremos si se cumplen subs(g1, [x,y], [sol.x, sol.y])
+Javier Quintero Programación no lineal 199 / 323
+Condiciones de Karush-Kuhn-Tucker
+8. Comprobar los valores obtenidos para los puntos factibles. Utilizaremos la función fmincon, ya que
+vamos a optimizar una función no lineal con restricciones para cada punto, ver Código 15.
+El flujo de trabajo completo de este ejemplo se puede reproducir a partir del Código 16.
+1 x0 =[sol.x,sol.y];
+2 A=[]; b=[]; Aeq = []; beq = []; lb =[]; ub = [];
+3 fun = @(x) x(1)^2 - x(2)^2;
+4 [x,fval]= fmincon(fun , x0, A,b,Aeq ,beq ,lb,ub,@nonlcon);
+5
+6 function[c, ceq] = nonlcon(x)
+7 c = [ x(1)^2 + 2*x(2) - 3 + x (2)^2 , x(1)^2 - 2 *x(2) - 3 + x(2) ^2 ];
+8 ceq = [];
+9 end
+Código 15: Aplicación de fmincon
+Javier Quintero Programación no lineal 200 / 323
+Condiciones de Karush-Kuhn-Tucker
+Tabla 12: Clasificación de puntos críticos Ejemplo 113
+x y λ1 λ2 Factible Máx/Mín Valor
+0 0 0 0 Sí ¿? 0
+1 0 -1/2 0 Sí Máx 1
+-1 0 0 -1/2 Sí Máx 1
+-3 0 -3/2 0 No - -
+3 0 0 -3/2 No - -
+0
+√
+3 1/2 1/2 Sí Mín -3
+0 −
+√
+3 1/2 1/2 Sí Mín -3
+−1/2 −
+√
+15/2 1 0 No - -
+−1/2
+√
+15/2 1 0 No - -
+1/2 −
+√
+15/2 0 1 No - -
+1/2
+√
+15/2 0 1 No - -
+Javier Quintero Programación no lineal 201 / 323
+1 syms x y m1 m2
+2 Z = x^2-y^2;
+3 g1 = x^2+2*x-3+y^2;
+4 g2 = x^2-2*x-3+y^2;
+5
+6 L = Z + m1*g1 + m2*g2;
+7 nLx = gradient(L,x);
+8 nLy = gradient(L,y);
+9 eq1 = nLx == 0;
+10 eq2 = nLy == 0;
+11 eq3 = m1*g1 == 0;
+12 eq4 = m2*g2 == 0;
+13 sist = [eq1;eq2;eq3;eq4];
+14 sol = solve(sist);
+15
+16 for i = 1:11
+17 Fac(i) = subs(g1 ,[x,y],[double(sol.x(i)),double(sol.y(i))]) <=0 && subs(g2 ,[x,y],[double(sol.x(i)),
+double(sol.y(i))]) <=0;
+18 mx(i) = sol.m1(i) <=0 && sol.m2(i) <=0;
+19 mn(i) = sol.m1(i) >=0 && sol.m2(i) >=0;
+20 end
+21
+22 for i = 1:11
+23 x0 = double ([sol.x(i),sol.y(i)]);
+24 if Fac(i) && mn(i)
+25 disp(’min’)
+26 i, x0
+27 fun = @(x) x(1)^2-x(2)^2;
+28 [x,fval] = fmincon(fun ,x0 ,[],[],[],[],[],[], @nonlcon)
+29 end
+30 if Fac(i) && mx(i)
+31 disp(’max’)
+32 i, x0
+33 fun = @(x) -x(1)^2+x(2)^2;
+34 [x,fval] = fmincon(fun ,x0 ,[],[],[],[],[],[], @nonlcon)
+35 end
+36 end
+37 %
+38
+39 function [c,ceq] = nonlcon(x)
+40 c = [x(1) ^2+2*x(1) -3+x(2)^2, x(1)^2-2*x(1) -3+x(2) ^2];
+41 ceq = [];
+42 end
+Código 16: Código para Ejemplo 113
+Condiciones de Karush-Kuhn-Tucker
+Se debe tener en cuenta que
+• Las condiciones KKT son expresiones de primer orden que pueden dar lugar a máximos, mínimos o
+puntos de silla.
+• Si aplicamos las condiciones KKT de segundo orden podemos, conocer la verdadera naturaleza de los
+puntos obtenidos. Además, este tipo de condiciones son suficientes para la optimalidad.
+• Estas condiciones vienen marcadas por condiciones sobre el Hessiano:
+zTH x∗2L (x∗,λ ∗,µ∗)z > 0
+∀z
+[
+∇h(x∗)
+∇gact(x∗)
+]
+z = 0
+Javier Quintero Programación no lineal 203 / 323
+Condiciones de Karush-Kuhn-Tucker
+Ejemplo
+Dado el siguiente problema de optimización, encuentre todos los puntos críticos y clasifíquelos de acuerdo a
+las condiciones KKT de primer orden. Compruebe los puntos factibles obtenidos.
+min/ max
+(x,y,z)
+x2 + y2
+s.t. x2 +2x−1+ y2 ≤ 4
+x2−2x+1+ y2 ≤ 3
+Los puntos críticos obtenidos están en la Tabla 13.
+Javier Quintero Programación no lineal 204 / 323
+Condiciones de Karush-Kuhn-Tucker
+Tabla 13: Clasificación puntos críticos Ejemplo 114
+x y µ1 µ2 Valor Mín/Máx
+0 0 0 0 0 Mín/Máx
+1−
+√
+3 0 0
+√
+3/3−1 0.5359 Máx
+−1−
+√
+6 0 −
+√
+6/6−1 0 11.899 -
+3/4 −
+√
+47/4 -1/2 -1/2 12.3125 Máx
+3/4
+√
+47/4 -1/2 -1/2 12.3125 Máx
+1+
+√
+3 0 −1/2 −
+√
+3/3−1 7.4641
+−1+
+√
+6 0
+√
+6/6−1 0 2.1010 Máx
+Javier Quintero Programación no lineal 205 / 323
+Condiciones de Karush-Kuhn-Tucker
+Para resolver un problema no lineal en el solver de Windows solo seleccione la opción Problem: non-linear
+y escriba el problema teniendo en cuenta que las potencias deben escribirse usando **. Véase el Apéndice B
+para más información.
+Javier Quintero Programación no lineal 206 / 323
+§VII. Teoría de colas
+▶ PERT: Program Evaluation and Review Technique .
+▶ CPM: Critical Path Method.
+▶ Manejo de incertidumbre.
+▶ Trueque entre tiempo y coste. Crashing.
+Introducción
+Referencia
+Para este capítulo se emplea como referencia [Miranda, 2005]. Para más detalles acerca de la formulación de los
+modelos esta referencia es sumamente útil.
+La teoría de colas estudia el comportamiento de sistemas donde existe un conjunto limitado de recursos para atender las
+peticiones generadas por los usuarios, de tal manera que cuando un usuario envía una tarea al sistema, ésta podrá tener
+que esperar para ser atendida por algún recurso, o, incluso, podrá ser rechazada si el sistema no tiene capacidad
+suficiente para almacenarla en espera de ser atendida. El estudio de estos sistemas implicará el modelado no sólo del
+sistema en sí, sino también del comportamiento aleatorio del tráfico ofrecido por los usuarios al sistema. Este tráfico
+ofrecido por los usuarios se modela mediante dos procesos estocásticos: proceso de llegadas de las tareas y proceso de
+servicio demandado por las mismas, usualmente considerados independientes entre sí.
+El conjunto más amplio de resultados analíticos en teoría de colas se encuentran para los procesos de llegada de Poisson
+y proceso de servicio demandado aleatorio puro modelado por variables aleatorias con distribución exponencial, que
+caracterizan sistemas de espera en los que tanto las llegadas de tareas de usuarios como la demanda que realizan son
+completamente aleatorias, en el sentido de que la evolución del sistema sólo depende de su condición presente y no de su
+pasado. Si bien en la práctica surgen otros modelos de colas con caracterización del tráfico mediante otros tipos de
+procesos, su análisis matemático es más complejo y no se dispone, en la actualidad, de una solución general para todos
+los casos posibles de interés.
+Javier Quintero Programación no lineal 207 / 323
+Introducción
+Para el estudio de sistemas modelados mediante modelos de colas cuya solución analítica se desconoce, o bien es muy
+difícil de obtener, se suele recurrir a técnicas de simulación que, mediante el empleo de programas de computación,
+permiten obtener estimaciones de los parámetros de interés del comportamiento del sistema.
+El objetivo de este capítulo es el estudio de esta disciplina enmarcada dentro de la investigación de operaciones por lo
+que en los siguientes apartados nos centraremos en el estudio de un conjunto de modelos de colas con solución analítica
+conocida.
+La teoría de colas estudia aquellos sistemas en los que existe contienda por los recursos, lo que hace que en un momento
+dado pueda haber más demanda de recursos que recursos disponibles, por lo que algunas de estas solicitudes de servicio
+deberán esperar a ser atendidas, formándose así una cola de acceso de las tareas a los recursos. e incluso podrán ser
+rechazadas por falta de capacidad de almacenamiento.
+La mayoría de resultados de la teoría de colas se obtienen suponiendo que los sistemas estudiados son conservativos. Un
+sistema de espera es conservativo si los recursos no están desocupados cuando hay tareas esperando a ser servidas, y si la
+demanda de servicio de dichas tareas no depende del orden en que son servidas.
+Javier Quintero Programación no lineal 208 / 323
+Introducción
+En los modelos de colas existentes, las tareas generadas por los usuarios de una población llegan al sistema en un
+instante de tiempo aleatorio. Estas tareas demandan una cantidad de servicio también aleatoria, y se sirven una a una o
+por grupos. El orden en el que se sirven las tareas que ocupan la cola del sistema lo determina una disciplina de gestión
+de cola.
+En los siguientes apartados se describen detalladamente los elementos necesarios para la caracterización de
+un modelo de colas cualquiera, tanto el modelado del tráfico ofrecido por los usuarios, como el modelado del
+sistema encargado de aceptar y atender sus peticiones de servicio.
+Importante
+Todos los resultados obtenidos en este curso parten de la suposición de que nuestros sistemas son conservativos, es
+decir, no se puede dar el caso de servidores inactivos cuando hay tareas por realizar.
+Javier Quintero Programación no lineal 209 / 323
+Estructura básica de los modelos de colas. Ejemplo prototipo
+La Teoría de Colas estudia el comportamiento de los sistemas donde existe un conjunto limitado de recursos
+para atender las peticiones generadas por los usuarios.
+Un modelo genérico de colas puede representarse como la Figura 41. El principio básico de funcionamiento
+es el siguiente: un cliente llega a través de Llegadas, ingresa o no al sistema, representado por líneas discon-
+tinuas. una vez dentro del sistema, respeta una disciplina de cola, para llegar al canal de servicio. Una vez
+atendido, egresa o sale del sistema.
+Cola Canal de servicio
+Llegadas Salidas
+Sistemas de colas
+Disciplina de la cola
+Figura 41: Estructura genérica de una cola
+Javier Quintero Programación no lineal 210 / 323
+Terminología
+Los modelos de colas cuentan con varias partes básicas que hay que tener en cuenta, siendo estas:
+• Población: La población representa el conjunto de clientes potenciales que pueden requerir el servicio.
+Puede ser finita, cuando el número de posibles clientes está limitado (por ejemplo, máquinas en una
+fábrica), o infinita, cuando no existe un límite práctico al número de clientes que pueden llegar al sistema,
+como ocurre en muchos servicios abiertos al público.
+• Llegadas: Las llegadas describen la forma en que los clientes acceden al sistema. Se caracterizan por
+la frecuencia y regularidad con que ocurren y suelen modelarse mediante procesos aleatorios, siendo el
+proceso de Poisson uno de los más utilizados en teoría de colas.
+• Impaciencia: La impaciencia se refiere al comportamiento de los clientes cuando el tiempo de espera
+es excesivo. Algunos clientes pueden abandonar la cola antes de ser atendidos (abandono) o decidir no
+entrar al sistema al observar una cola demasiado larga (rechazo).
+• Capacidad: La capacidad del sistema indica el número máximo de clientes que pueden estar simultánea-
+mente en la cola y en servicio. Cuando esta capacidad es limitada, los clientes que llegan al sistema lleno
+no pueden ingresar y se pierden.
+• Modo de llegadas: El modo de llegadas especifica si los clientes llegan individualmente o en lotes,
+así como si las llegadas dependen o no del estado del sistema. Este aspecto influye directamente en la
+congestión y el desempeño del sistema.
+Javier Quintero Programación no lineal 211 / 323
+Terminología
+• Disciplina de cola: La disciplina de cola define el orden en que los clientes son atendidos. La más
+común es primero en llegar, primero en ser atendido, aunque también existen otras como prioridad,
+atención aleatoria o último en llegar, primero en ser atendido.
+• Duración del servicio: La duración del servicio corresponde al tiempo necesario para atender a un
+cliente. Este tiempo puede ser constante o aleatorio y se modela mediante distintas distribuciones de
+probabilidad, dependiendo de la naturaleza del sistema.
+• Modo de atención: El modo de atención describe la forma en que se presta el servicio, incluyendo
+el número de servidores disponibles y si estos trabajan de manera independiente o coordinada. Puede
+tratarse de atención individual, en paralelo o en etapas sucesivas.
+• Ingresos y salidas de clientes: Este aspecto considera el flujo de clientes dentro del sistema, desde su
+ingreso hasta su salida tras recibir el servicio o abandonar la cola. El análisis de estos flujos permite
+evaluar el desempeño del sistema en términos de tiempos de espera, longitud de cola y nivel de servicio.
+Javier Quintero Programación no lineal 212 / 323
+Ejemplos de sistemas de colas reales. Aplicaciones
+Sistemas Ejemplo Clientes Canales
+Transporte
+Puertos
+Aeropuertos
+Autopistas
+Terminales
+Carga y descarga
+Barcos
+Aviones
+Coches
+Buses
+Camiones
+Muelles
+Pistas
+Casillas de peaje
+Plataforma
+Islas
+Computación
+Procesamiento
+Impresión
+Trabajos
+Trabajos
+CPU
+Impresoras
+Telefonía Centrales Llamados Líneas
+Producción
+Elaboración
+Reparación
+Control de calidad
+Productos
+Solicitudes
+Productos
+Máquinas
+Operarios
+Inspectores
+Atención al público
+Bancos
+Supermercados
+Estaciones de servicio
+Negocios
+Atención médicos
+Alquiler de coches
+Personas
+Personas
+Coches
+Personas
+Pacientes
+Personas
+Cajeros
+Cajeros
+Surtidores
+Empleados
+Ambulancias
+Empleados
+Administración
+Dpto. compras
+Juzgados
+Solicitudes
+Causas
+Compradores
+Jueces
+Javier Quintero Programación no lineal 213 / 323
+Proceso de nacimiento y muerte
+El proceso de nacimiento y muerte es un tipo particular de proceso estocástico en tiempo continuo que
+modela la evolución del número de elementos en un sistema mediante transiciones entre estados consecutivos.
+Este tipo de proceso constituye la base matemática de muchos modelos clásicos de teoría de colas.
+Sea {N(t), t ≥ 0} el número de clientes en el sistema en el instante t. El proceso es de nacimiento y muerte si
+sólo son posibles las siguientes transiciones:
+n−→ n+1 (nacimiento)
+n−→ n−1 (muerte)
+donde:
+• La tasa de nacimiento en el estado n es λn.
+• La tasa de muerte en el estado n es µn.
+Estas tasas representan, respectivamente, la llegada de nuevos clientes al sistema y la finalización del servicio.
+Este proceso es una cadena de Markov en tiempo continuo, ya que el futuro del sistema depende únicamente
+del estado actual y no de la historia previa.
+Javier Quintero Programación no lineal 214 / 323
+Ecuaciones de equilibrio
+En régimen estacionario, i.e., bajo estabilización de las variables del sistema; las probabilidades de que hayan
+n clientes en el sistema, p(n) = lim
+t→∞
+P(N(t) = n) satisfacen las ecuaciones de equilibrio:
+λn−1p(n−1)+µn+1p(n) = (λn +µn)p(n)
+para n≥ 1, junto con:
+µ1p(1) = λ0p(0).
+A partir de estas relaciones se obtiene de forma recursiva:
+p(n) =
+(
+n−1
+∏
+i=0
+λi
+µi+1
+)
+p(0).
+Javier Quintero Programación no lineal 215 / 323
+Ecuaciones de equilibrio
+El valor de p(0) se determina mediante la condición de normalización:
+∞
+∑
+n=0
+p(n) = 1.
+Para que exista régimen estacionario es necesario que la serie anterior converja. Para este fin, o bien se limita
+el largo de la cola, o en muchos modelos prácticos esto se traduce en la condición ρ < 1 donde ρ representa
+la utilización del sistema (menos clientes entrantes que la capacidad de procesamiento).
+Muchos de los modelos fundamentales de teoría de colas pueden formularse como procesos de nacimiento y
+muerte, debido a que el número de clientes en el sistema cambia únicamente por llegadas y salidas.
+Javier Quintero Programación no lineal 216 / 323
+Modelos de colas basados en procesos de nacimiento y muerte. Ejemplos
+En el un modelo con llegadas y salidas que se comporten como un proceso de Poisson, con una sola estación
+de servicio (modelo M/M/1), se tendrá que
+• Las llegadas siguen un proceso de Poisson con tasa constante λ , por lo que λn = λ .
+• El tiempo de servicio es exponencial con tasa µ , por lo que µn = µ para n≥ 1.
+Las probabilidades estacionarias resultan:
+Pn = (1−ρ)ρn, donde ρ =
+λ
+µ
+.
+Javier Quintero Programación no lineal 217 / 323
+Modelos de colas basados en procesos de nacimiento y muerte. Ejemplos
+Por otro lado, cuando existen m servidores (M/M/m), la tasa de servicio depende del número de clientes en
+el sistema:
+µn =
+{
+nµ, n < m,
+mµ, n≥ m.
+Este modelo describe sistemas con múltiples canales de servicio, típicos en centrales telefónicas, servidores
+de red o estaciones base.
+Si bajo las condiciones anteriores, la capacidad del sistema está limitada a K clientes, (M/M/m/K), se tiene:
+λK = 0,
+lo que significa que nuevas llegadas son rechazadas cuando el sistema está lleno. Este modelo es especial-
+mente relevante para el dimensionamiento de buffers en routers y dispositivos de red.
+Javier Quintero Programación no lineal 218 / 323
+Resolución analítica de modelos de colas
+Una gran parte del espectro de los sistemas de colas no pueden resolverse de manera exacta, en dichos casos
+se recurre a la simulación. Sin embargo un subgrupo, bajo ciertas hipótesis, tiene solución exacta. En este
+capítulo se estudiarán la mayoría de modelos de colas cuya solución analítica es conocida. Para ellos se
+definirán los principales parámetros y variables de un sistema de colas.
+Javier Quintero Resolución analítica de modelos de colas 219 / 323
+Modelos de colas con disciplina de prioridades
+La disciplina de cola se encarga de establecer el acceso de las tareas a los diferentes recursos. Los tipos de
+disciplinas más utilizados son:
+• FIFO (First-In-First-Out): Los clientes se atienden de acuerdo a su orden de llegada a la cola.
+• LIFO (Last-In-First-Out): Los clientes se atienden en orden inverso al que llegan a la cola.
+• SIRO (Service In Random Order): Los clientes son atendidos de forma aleatoria.
+• SIFO (Shortest-In, First-Out): Los clientes con servicios más cortos se atienden primero.
+• RR (Round Robin): Se atiende a varios clientes a la vez segmentando sus tareas.
+Javier Quintero Resolución analítica de modelos de colas 220 / 323
+Notación de un sistema de espera
+Definición (Notación de Kendall)
+La forma más usual de representar los sistemas de colas es mediante la notación de Kendall
+A/B/m/K/N/Z
+• A: Distribución de la variable aleatoria tiempo entre llegadas (población finita).
+• B: Distribución de la variable aleatoria tiempo de servicio.
+• m: Número de servidores en el sistema.
+• K: Capacidad del sistema, ∞ si no se especifica.
+• N: Tamaño de la población, ∞ si no se especifica.
+• Z: Disciplina de gestión de cola, FIFO si no se especifica.
+Javier Quintero Resolución analítica de modelos de colas 221 / 323
+Papel de las distribuciones exponenciales:
+Las principales distribuciones que se emplean en el modelado de sistemas de colas son:
+• M: Distribución exponencial, ver Figura 42.
+f (x) = λe−λx
+• D: Distribución determinista (constante).
+f (x) = δ (x−a)
+• U: Distribución uniforme, ver Figura 43.
+f (x) =
+{
+1
+b−a , a≤ x≤ b
+0, resto
+• Ek: Distribución Erlang de parámetro k, ver Figura 44.
+f (x) =
+λ kxk−1e−λk
+(k−1)!
+• Hk: Distribución hiperexponencial de parámetro k, ver Figura 45.
+f (x) =
+k
+∑
+i=1
+αiλie−λix,
+k
+∑
+i
+αi = 1
+Javier Quintero Resolución analítica de modelos de colas 222 / 323
+Papel de las distribuciones exponenciales
+Figura 42: Distribución Exponencial Figura 43: Distribución Uniforme
+Javier Quintero Resolución analítica de modelos de colas 223 / 323
+Papel de las distribuciones exponenciales
+Figura 44: Distribución Erlang Figura 45: Distribución Hiperexponencial
+Javier Quintero Resolución analítica de modelos de colas 224 / 323
+Régimen Permanente
+Importante (Régimen de trabajo)
+El régimen de trabajo se refiere a la fase en la cual se encuentra el sistema. Existen dos regímenes de trabajo:
+• Régimen transitorio: Cuando el valor de las variables de un sistema depende de las condiciones iniciales del
+mismo, decimos que nos encontramos en régimen transitorio, ver Figura 46.
+• Régimen permanente: En este curso nos centraremos en el régimen permanente, es decir, cuando las variables
+han alcanzado un estado estable, ver Figura 46.
+t
+RÉGIMEN TRANSITORIO RÉGIMEN PERMANENTE
+Figura 46: Diferencia de regímenes
+Observación
+Las distribuciones exponenciales desempeñan un papel central en la ingeniería de telecomunicaciones. Su aplicación
+incluye el dimensionamiento de enlaces en redes de paquetes, modelización del tráfico en sistemas de colas M/M/1,
+análisis de fiabilidad de equipos y enlaces, planificación de capacidad en redes móviles y estudios de interrupciones en
+servicios. Su estructura matemática sencilla facilita la integración en modelos más complejos como cadenas de Markov,
+procesos de Poisson o simulaciones dinámicas de redes.
+Javier Quintero Resolución analítica de modelos de colas 225 / 323
+Nomenclatura
+En general vamos a emplear la siguiente nomenclatura
+• λ : Número promedio de clientes que arriban al sistema por unidad de tiempo (tasa promedio de arribos)
+• Ta : Intervalo promedio entre arribos de clientes (llamado también tiempo promedio de arribos)
+Ta =
+1
+λ
+• µ : Número promedio de clientes que puede atender un canal por unidad de tiempo (velocidad promedio
+de atención).
+• Ts : Duración promedio del servicio (o Tiempo promedio de atención)
+Ts =
+1
+µ
+• ρ : Factor de tránsito (o de tráfico)
+ρ =
+λ
+µ
+• n: Estado del sistema (es la cantidad de clientes que hay dentro del sistema en un momento determinado).
+• p(n): Probabilidad de que el sistema se encuentre en el estado n.
+Javier Quintero Resolución analítica de modelos de colas 226 / 323
+Nomenclatura
+• K: Capacidad del sistema (cantidad máxima de clientes que puede haber en el sistema, tanto en los
+canales como en la cola).
+• m: Cantidad de canales dispuestos en paralelo en la unidad operativa de atención.
+• H: Número promedio de canales activos
+• LC : Longitud promedio de la cola (número esperado de clientes esperando ser atendidos).
+LC =
+K
+∑
+n=m+1
+(n−m) ·p(n)
+• L: Longitud promedio del sistema (número esperado de clientes dentro del sistema).
+L =
+K
+∑
+n=0
+n ·p(n)
+Además: L = LC +H
+• λn : Tasa promedio de ingreso de clientes al sistema cuando el estado del mismo es n.
+En términos generales:
+λn = λ ·p(i/n)
+Javier Quintero Resolución analítica de modelos de colas 227 / 323
+Nomenclatura
+• µn : Tasa promedio de egreso de clientes del sistema cuando el estado del mismo es n.
+• λ̄ : Tasa promedio de ingreso de clientes al sistema. En forma general, tendremos que
+λ̄ =
+K
+∑
+n=0
+λnp(n)
+• µ̄ : Tasa promedio de egreso de clientes del sistema. En forma general:
+µ̄ =
+K
+∑
+n=0
+µnp(n)
+También: µ̄ = µ ·H
+• PA: Porcentaje de actividad del canal
+PA =
+H
+M
+• WC : Tiempo promedio de espera en cola de un cliente.
+WC =
+LC
+λ̄
+Javier Quintero Resolución analítica de modelos de colas 228 / 323
+Nomenclatura
+• W: Tiempo promedio de permanencia en el sistema de un cliente.
+W = WC +Ts
+o también:
+W =
+L
+λ̄
+La expresión anterior es la fórmula de Little, y establece que el tiempo promedio de residencia en el
+sistema está dado por la relación entre el número promedio de clientes que permanece en el mismo y el
+flujo de circulación de clientes que pasa por él.
+• ωC(t) : Probabilidad de que un cliente tenga que esperar un tiempo superior a t en la cola
+ωC(t) = p(wC > t)
+• ω(t) : Probabilidad de que un cliente tenga que permanecer un tiempo superior a " t " en el sistema.
+ω(t) = p( W > t)
+• R : Tasa promedio de clientes rechazados (por capacidad finita o por impaciencia).
+R = λ − λ̄
+Javier Quintero Resolución analítica de modelos de colas 229 / 323
+Nomenclatura
+• PR: Porcentaje de rechazos del sistema
+PR =
+R
+λ
+• A : Tasa promedio de clientes que abandonan el sistema sin recibir el servicio.
+λ̄ = µ̄ +A
+• PAB: Porcentaje de abandonos del sistema
+PAB =
+A
+λ̄
+• λr : Número promedio de veces por unidad de tiempo que un mismo cliente requiere un servicio en el
+sistema (aplicable a sistemas de población finita).
+• U(oTr) : Tiempo promedio que transcurre para que un cliente solicite un servicio desde que sale del
+sistema (aplicable a sistemas de población finita).
+U =
+1
+λr
+Javier Quintero Resolución analítica de modelos de colas 230 / 323
+Nomenclatura
+• N: Tamaño de la población
+• J: Número promedio de clientes fuera del sistema (aplicable a población finita)
+• D: Probabilidad de que un cliente que arriba al sistema tenga que esperar para recibir el servicio.
+• x: Factor de servicio de un sistema de población finita
+x =
+TS
+TS +U
+• F: Factor de eficiencia de un sistema de población finita
+F =
+TS +U
+TS +U+WC
+• α : Coeficiente de impaciencia promedio de la población de clientes del sistema.
+Javier Quintero Resolución analítica de modelos de colas 231 / 323
+Nomenclatura
+Parámetros económicos
+Para el análisis económico denotaremos
+• ce como el coste derivado de esperar en el sistema.
+• cs costo de atención de un canal a velocidad unitaria.
+• cL como el coste de cada lugar en la cola.
+• u como el precio de cada servicio
+• ce como el coste derivado de mantener una unidad en el sistema, y
+• cc como el coste por unidad de tiempo cada canal.
+Javier Quintero Resolución analítica de modelos de colas 232 / 323
+Sistemas de un solo canal: Modelo M/M/1
+En esta sección se estudian modelos con un solo servidor/canal m = 1.
+λ λ̄
+µ
+µ̄
+Figura 47: Modelo M/M/1
+El primer modelo a estudiar es el M/M/1, bajo las siguientes hipótesis:
+• El proceso de llegadas es de tipo Poisson.
+• El proceso de salidas es de tipo Poisson.
+• El sistema se encuentra en régimen permanente.
+• Los clientes forman una cola simple.
+• La disciplina de cola es FIFO.
+• Se dispone de un solo canal de servicio.
+• La capacidad del sistema es infinita.
+• Los clientes no presentan impaciencia.
+• La población es infinita.
+Este modelo se puede representar como la Figura 47Javier Quintero Sistemas de un solo canal 233 / 323
+Modelo M/M/1: Parámetros
+• p(n) probabilidad de que en el sistema haya n clientes (estado n del sistema).
+• λ : tasa promedio de llegadas al sistema, el cliente llega, a espera de entrar o no.
+• Ta =
+1
+λ
+intervalo medio entre llegadas
+• µ: tasa promedio de salidas del sistema.
+• Ts =
+1
+µ
+duración promedio de servicios
+• m = 1: un solo canal de atención (servidor).
+• ρ =
+λ
+µ
+: factor de tránsito
+Javier Quintero Sistemas de un solo canal 234 / 323
+Modelo M/M/1: Variables
+• p(n): probabilidad de que en el sistema haya n clientes (estado n del sistema).
+• L: longitud promedio del sistema.
+• Lc: longitud promedio de la cola.
+• λ : tasa promedio de ingresos de clientes al sistema, clientes entran al sistema.
+• µ: tasa promedio de egresos de clientes del sistema, clientes salen del sistema.
+• Wc: tiempo promedio de espera en cola.
+• H: promedio de canales activos.
+• W: tiempo promedio de permanencia en el sistema.
+• ωc(t): probabilidad de espera mayor a t en la cola.
+• ω(t): probabilidad de espera mayor a t en el sistema.
+Javier Quintero Sistemas de un solo canal 235 / 323
+Modelo M/M/1: Determinación de variables
+• Determinación de p(n): el estado de sistema es una V.A que representa la probabilidad de que en el
+sistema haya n clientes.
+p(n) =
+(
+λ
+µ
+)n
+p(0) = ρ
+np(0) = ρ
+n(1−ρ)
+p(n > k) = ρ
+k+1
+p(n≥ k) = ρ
+k
+ρ < 1← λ < µ
+• Determinación de L: la longitud del sistema es una V.A cuya media representa el valor esperado de que
+en el sistema haya n clientes.
+L = E[p(n)] =
+∞
+∑
+n=0
+nρ
+n(1−ρ) =
+λ
+µ−λ
+Javier Quintero Sistemas de un solo canal 236 / 323
+Modelo M/M/1: Determinación de variables
+• Determinación de Lc: el estado de sistema es una V.A cuya media representa el valor esperado de que en
+el sistema haya n−1 clientes en cola.
+Lc = L−ρ =
+λ
+2
+(µ−λ )µ
+• Determinación de H: el número promedio de canales activos es una V.A cuya media representa el número
+de clientes atendiéndose en el sistema.
+H =ρ
+L =Lc +H
+PA =
+H
+m
+= ρ (Porcentaje de actividad)
+Javier Quintero Sistemas de un solo canal 237 / 323
+Modelo M/M/1: Determinación de variables
+• Determinación de Wc: el tiempo medio de espera en cola viene dado por la relación entre la Lc y λ o µ
+(Fórmula de Little)
+Wc =
+Lc
+λ
+=
+λ
+µ(µ−λ )
+• Determinación de W: el tiempo de permanencia en el sistema es igual al tiempo de espera en cola más
+el tiempo promedio de atención. Además, verifica la Fórmula de Little.
+W =Wc +Ts
+W =
+L
+λ
+Javier Quintero Sistemas de un solo canal 238 / 323
+Modelo M/M/1: Determinación de variables
+• Determinación de ω(t): la probabilidad de que un cliente tenga que permanecer en el sistema un tiempo
+superior a t, es decir, ω(t) = p(W > t)
+ω(t) = p(W > t) = e−(µ−λ )t
+• Determinación de ωc(t): la probabilidad de que un cliente tenga que permanecer en la cola un tiempo
+superior a t, es decir, ωc(t) = p(Wc > t)
+ωc(t) = p(Wc > t) = ρe−(µ−λ )t
+Javier Quintero Sistemas de un solo canal 239 / 323
+Modelo M/M/1: Análisis Económico
+• La velocidad de media de atención, µ , es una variable de decisión.
+• Podemos modificarla para obtener un balance entre el coste de mejorar el servicio y las pérdidas por mal
+funcionamiento.
+• Definimos ce como el coste derivado de esperar en el sistema, y
+• cs costo de atención de un canal a velocidad unitaria.
+• Podemos definir una función de costes tal que:
+Z = ceL+ csµ
+• Minimizando la función anterior, obtenemos la velocidad de servicio óptima como:
+µ0 = λ +
+√
+λ
+ce
+cs
+Javier Quintero Sistemas de un solo canal 240 / 323
+Modelo M/M/1: Ejemplo de aplicación
+Ejemplo (Modelo M/M/1)
+A la ventanilla de un banco llegan usuarios según un proceso de Poisson de tasa 5 usuarios por hora.
+Sabiendo que estos consumen un tiempo aleatorio cuya distribución puede suponerse exponencial de media
+1
+6 de hora y que la disciplina de atención es FIFO. Se pide:
+a) Calcular los valores medios de clientes en el sistema y en la cola.
+Notemos que λ = 5 usuarios/hora, y Ts =
+1
+6 = 1
+µ
+, por tanto µ = 6 usuarios/hora. Luego, se tendrá
+L =
+λ
+µ−λ
+= 5
+Por otro lado,
+Lc = L−ρ =
+25
+6
+≈ 4.1
+Se concluye que el sistema tendrá un número medio de usuarios de 5 y una longitud de cola media de
+4.1 usuarios.
+Javier Quintero Sistemas de un solo canal 241 / 323
+Modelo M/M/1: Ejemplo de aplicación
+b) ¿Qué porcentaje de los usuarios llega al sistema y lo encuentra desocupado?
+p(0) = 1−ρ = 1− 5
+6
+=
+1
+6
+Aproximadamente un sexto de los usuarios encuentran desocupado el sistema.
+c) Calcular el tiempo medio total de estancia en el centro de un usuario
+W =
+L
+λ
+= 1
+Luego, el tiempo medio de un usuario en el sistema es de una hora.
+d) Si en la sala de espera hay 4 sillas, ¿cuál es la probabilidad de que un usuario llegue al sistema y tenga
+que estar de pie?
+Esto es equivalente a preguntar la probabilidad de que haya estrictamente más de 4 usuarios en el sistema,
+esto es
+p(n > 4) = ρ
+k+1 = ρ
+5 ≈ 0.402
+La probabilidad de que un usuario llegue al sistema y tenga que estar de pie es de aproximadamente un
+40%.
+Javier Quintero Sistemas de un solo canal 242 / 323
+e) Calcular los valores medios del tiempo de espera en cola y del tiempo de respuesta.
+Wc =
+λ
+µ(µ−λ )
+=
+5
+6
+Por lo que se concluye que el tiempo de espera en cola medio es de 50 minutos, y el tiempo de respuesta medio es
+de 1 hora (W = 1).
+f) ¿Cuál es la probabilidad de que un usuario espere más de una hora en ser atendido?
+ω(t)|t=1 = p(Wc > t) = ρe−(µ−λ )t ≈ 0.301
+La probabilidad de que un usuario tenga que esperar más de una hora es de aproximadamente un 30%.
+g) ¿Cuántas sillas se necesitarían para que un usuario al llegar al sistema tenga una probabilidad menor del 10% de
+esperar de pie?
+En esta pregunta se nos indica calcular la cantidad de sillas k, necesarias para que la probabilidad de tener más
+usuarios que k+2 (k sillas en la cola, 1 usuario que llega y 1 usuario siendo atendido) sea menor que el 10%. Para
+ello empleamos
+p(n > k+1) = ρ
+k+2 ≤ 0.1
+k ≤− 1
+logρ
+−2
+k ≥ 10.6
+Por lo tanto se necesitarían 11 sillas para que la probabilidad de un cliente de pie sea menor que el 10%
+Javier Quintero Sistemas de un solo canal 243 / 323
+Modelo M/M/1/K:
+El siguiente modelo a estudiar es el M/M/1/K, ver figura 48, bajo las siguientes hipótesis.
+λ λ̄
+R
+µ
+µ̄
+Figura 48: representación gráfica de un modelo M/M/1/K
+• El proceso de llegadas es de tipo Poisson.
+• El proceso de salidas es de tipo Poisson.
+• El sistema se encuentra en régimen permanente.
+• Los clientes que llegan forman una cola simple.
+• La disciplina de cola es FIFO.
+• Se dispone de un solo canal de servicio.
+• La capacidad del sistema está limitada a un valor K (cola finita).
+• Los clientes no presentan impaciencia.
+• La población de clientes potenciales es infinita.
+Javier Quintero Sistemas de un solo canal 244 / 323
+Modelo M/M/1/K: Parámetros
+• λ : tasa promedio de llegadas al sistema. También podemos referirnos como intervalo medio entre lle-
+gadas Ta =
+1
+λ
+• µ: tasa promedio de salidas del sistema. También podemos referirnos como intervalo medio entre salidas
+Ts =
+1
+µ
+• m = 1: número de servidores, en este caso 1.
+• K: capacidad del sistema. Esto significa que no pueden haber más clientes que K, si hay más clientes,
+estos serán rechazados.
+Javier Quintero Sistemas de un solo canal 245 / 323
+Modelo M/M/1/K: Variables
+• p(n): probabilidad de que en el sistema haya n clientes.
+• L: longitud promedio del sistema (número esperado de clientes esperando dentro del sistema).
+• Lc: longitud promedio de la cola (número esperado de clientes esperando ser atendidos).
+• λ : tasa promedio de ingreso de clientes al sistema.
+• µ: tasa promedio de egreso de clientes del sistema.
+• Wc: tiempo promedio de espera en cola.
+• W: tiempo promedio de espera en el sistema.
+• H: promedio de canales activos.
+• R: tasa promedio de clientes rechazados.
+• PR: porcentaje de rechazo.
+Javier Quintero Sistemas de un solo canal 246 / 323
+Modelo M/M/1/K: Determinación de variables.
+Importante
+Para varias de las variables se cumplirá que la fórmula presenta una indeterminación del tipo 0/0 en el caso ρ = 1. Para
+resolverla se aplicará la regla de L’Hòpital, con respecto a ρ .
+• p(n): el estado de sistema es una V.A que representa la probabilidad de que en el sistema haya n clientes.
+p(n) =
+{
+ρn 1
+K+1 Si ρ = 1
+ρn 1−ρ
+1−ρK+1 si no
+• L: la longitud del sistema representa el número esperado de clientes en el sistema, se deduce como el
+valor esperado de la v.a. número de clientes en el sistema
+L =
+{
+ρ
+1−(K+1)ρK+KρK+1
+(1−ρ)(1−ρK+1)
+ρ ̸= 1
+K
+2 ρ = 1
+Javier Quintero Sistemas de un solo canal 247 / 323
+Modelo M/M/1/K: Determinación de variables.
+• Longitud esperada de la cola Lc: representa el estado de sistema es una V.A cuya media representa el
+valor esperado de que en el sistema haya n−1 clientes en cola, clientes esperando ser atendidos.
+Lc = L− (1−p(0)) = ρ
+2 1−KρK−1 +KρK
+(1−ρ)(1−ρK+1)
+• H: el número promedio de canales activos es una V.A cuya media representa el número de clientes
+atendiéndose en el sistema.
+H =1−p(0) = L−Lc
+L =Lc +H
+• Porcentaje de actividad: PA = H
+m = 1−p(0)
+• Tasa promedio de egresos µ = µ[1−p(0)] = µ ·H.
+Los egresos se producen solo en los estados n ̸= 0.
+• Tasa promedio de ingresos λ = λ · [1−p(K)]
+Se producirán ingresos al sistema mientras no haya K clientes, esto es n≤ K.
+Bajo condiciones de equilibrio, se tendrá que λ = µ .
+Javier Quintero Sistemas de un solo canal 248 / 323
+Modelo M/M/1/K: Determinación de variables.
+• Wc: El tiempo medio de espera en cola viene dado por la relación entre Lc y λ (o µ) (Fórmula de Little).
+Wc =
+Lc
+µ
+=
+Lc
+µ
+(
+1− 1−ρ
+1−ρK+1
+)Wc =
+Lc
+λ
+=
+Lc
+λ · [1−p(K)]
+=
+Lc
+λ · [1−ρkp(0)]
+• W: El tiempo de espera en el sistema es igual al tiempo de espera en cola más el tiempo promedio de
+atención.
+W = Wc +Ts
+Javier Quintero Sistemas de un solo canal 249 / 323
+Modelo M/M/1/K: Determinación de variables.
+• R: el número promedio de clientes rechazados por unidad de tiempo es la tasa promedio de llegadas
+multiplicada por la probabilidad de no ingresar.
+R = λp(K) = λρ
+K (1−ρ)
+1−ρK+1
+λ = λ +R
+• PR: el porcentaje de rechazos, serán aquellas llegadas que serán rechazadas por encontrarse el sistema
+ocupado se puede escribir como:
+PR =
+R
+λ
+Javier Quintero Sistemas de un solo canal 250 / 323
+Modelo M/M/1/K: Análisis Económico
+• En este tipo de sistemas se intentan balancear las perdidas por ingresos no percibidos y el coste asociado
+a la infraestructura de espera.
+• Definimos cL como el coste de cada lugar en la cola, y u como el precio de cada servicio.
+• Variable de desición K, lugares habilitados para cola.
+• Podemos definir una función de costes tal que:
+Z = cL(K−1)+uR = cL(K−1)+uλρ
+K 1−ρ
+1−ρK+1
+• Problema de minimización en enteros.
+Javier Quintero Sistemas de un solo canal 251 / 323
+Modelo M/M/1/K: Ejemplo de aplicación
+Ejemplo (Ejemplo 2.4 de [Miranda, 2005] – Modelo M/M/1/10)
+A un sistema M/M/1/10 llega un ciudadano cada 5 minutos, en promedio. Si no hay sillas vacías, el
+ciudadano se va. La duración media del servicio es de 6 minutos. Calcule:
+a) Probabilidad de que un ciudadano no tenga que esperar para recibir el servicio.
+Primeramente calculemos los parámetros del sistema
+λ =
+1
+5
+cl/min = 12cl/h
+µ =
+1
+6
+cl/min = 10cl/h
+ρ =
+λ
+µ
+= 1.2
+Por lo que se tiene que la probabilidad de llegar y no tener que esperar es de
+p(0) =
+1−ρ
+1−ρn ≈ 0.0310
+Javier Quintero Sistemas de un solo canal 252 / 323
+Modelo M/M/1/K: Ejemplo de aplicación
+b) Porcentaje de ocupación.
+El porcentaje de ocupación del canal se calcula como
+PA =
+H
+m
+= H = 1−p(0)≈ 0.9689 = 96.89%
+El porcentaje de ocupación será aproximadamente del 96.89%
+c) Probabilidad de encontrar 3 o más sillas ocupadas.
+p(n > 3) = 1−p(0)−p(1)−p(2)≈ 0.8872
+p(1) = ρp(0)≈ 0.0372
+p(2) = ρ
+2p(0)≈ 0.0446
+Por tanto, la probabilidad de encontrar 3 o más sillas ocupadas es aproximadamente 4.46%
+d) Probabilidad de que haya menos de 2 sillas ocupadas.
+p(n≤ 1) = p(0)+p(1)≈ 0.0682
+Por tanto, la probabilidad de que hayan menos de 2 clientes en el sistema es aproximadamente 6.82%
+Javier Quintero Sistemas de un solo canal 253 / 323
+Modelo M/M/1/K: Ejemplo de aplicación
+Javier Quintero Sistemas de un solo canal 254 / 323
+Sistemas de varios canales en paralelo: Modelo M/M/m
+En esta sección se estudian modelos con más de un servidor/canal m≥ 1. El siguiente modelo a estudiar es el M/M/m,
+bajo las siguientes hipótesis.
+λ λ̄
+µ
+µ̄
+• El proceso de llegadas es de tipo Poisson.
+• El proceso de salidas es de tipo Poisson.
+• El sistema se encuentra en régimen permanente.
+• Los clientes forman una cola simple.
+• La disciplina de cola es FIFO.
+• Se dispone de m canales de servicio, en paralelo, con
+la misma velocidad de atención.
+• La capacidad del sistema es infinita.
+• Los clientes no presentan impaciencia.
+• La población es infinita.
+Javier Quintero Sistemas de varios canales en paralelo 255 / 323
+Modelo M/M/m: Parámetros
+• λ : tasa promedio de llegadas al sistema. También podemos referirnos como intervalo medio entre lle-
+gadas Ta =
+1
+λ
+• µ: tasa promedio de salidas del sistema. También podemos referirnos como intervalo medio entre salidas
+Ts =
+1
+µ
+• m: número de servidores.
+Javier Quintero Sistemas de varios canales en paralelo 256 / 323
+Modelo M/M/m: Variables
+• p(n): probabilidad de que en el sistema haya n clientes.
+• L: longitud promedio del sistema.
+• Lc: longitud promedio de la cola.
+• Wc: tiempo promedio de espera en cola.
+• H: promedio de canales activos.
+• W: tiempo promedio de espera en el sistema.
+• ωc(t): probabilidad de espera mayor a t en la cola.
+• ω(t): probabilidad de espera mayor a t en el sistema.
+Javier Quintero Sistemas de varios canales en paralelo 257 / 323
+Modelo M/M/m: Determinación de variables
+• Determinación de p(n): el estado de sistema es una V.A que representa la probabilidad de que en el
+sistema haya n clientes.
+p(n) =
+{
+ρn
+n! p(0), si n < m(
+ρ
+m
+)n mm
+m! p(0), si n≥ m
+p(0) =
+[
+m−1
+∑
+n=0
+ρn
+n!
++
+ρm
+(m−1)!(m−ρ)
+]−1
+p(n≥ k) =
+ρk
+(k−1)!(k−ρ)
+p(0)
+Luego se debe cumplir que ρ
+m < 1, para que el sistema esté en equilibrio y funcione sin colapsar.
+• Determinación de L: la longitud del sistemas es una V.A cuya media representa el valor esperado de que
+en el sistema haya n clientes.
+L = E[p(n)] =
+ρmµλ
+(m−1)!(mµ−λ )2 p(0)+ρ
+Javier Quintero Sistemas de varios canales en paralelo 258 / 323
+Modelo M/M/m: Determinación de variables
+• Determinación de Lc: el estado de sistema es una V.A cuya media representa el valor esperado de que en
+el sistema haya n−m clientes en cola.
+Lc = L−ρ =
+ρmµλ
+(m−1)!(mµ−λ )2 p(0)
+• Determinación de H: el número promedio de canales activos es una V.A cuya media representa el número
+de clientes atendiéndose en el sistema.
+H =ρ
+L =Lc +H = Lc +ρ
+PA =
+H
+m
+=
+ρ
+m
+(Porcentaje de actividad de cada canal)
+• Determinación de Wc: el tiempo medio de espera en cola viene dado por la relación entre la Lc y λ
+Wc =
+Lc
+λ
+Javier Quintero Sistemas de varios canales en paralelo 259 / 323
+Modelo M/M/m: Determinación de variables
+• Determinación de W: el tiempo de espera en el sistema es igual al tiempo de espera en cola más el tiempo
+promedio de atención. Además, verifica la Fórmula de Little.
+W =Wc +Ts
+W =
+L
+λ
+• Determinación de µ , λ : tasas promedio de ingresos y egresos del sistema.
+µ = µ ·H,
+λ = λ
+• Determinación de ω(t): la probabilidad de que un cliente tenga que permanecer en el sistema un tiempo
+superior a t, es decir, ω(t) = p(W > t)
+ω(t) = p(W > t) = e−µt
+[
+1+(mρ)mp(0)[1− eµ(m−1−mρ)t]
+m!(1−ρ)(m−1−mρ)
+]
+• Determinación de ωc(t): la probabilidad de que un cliente tenga que permanecer en la cola un tiempo
+superior a t, es decir, ωc(t) = p(Wc > t)
+ωc(t) = p(Wc > t) =
+e−µ(m−ρ)tρmp(0)
+(m−1)!(m−ρ)
+Javier Quintero Sistemas de varios canales en paralelo 260 / 323
+Modelo M/M/m: Análisis Económico
+• En este tipo de sistemas, el número de servidores m es la variable de decisión.
+• Podemos modificarla para minimizar el coste operativo del sistema.
+• ce como el coste derivado de mantener una unidad en el sistema, y
+• cc como el coste por unidad de tiempo cada canal.
+• Podemos definir una función de costes tal que:
+z = ceL+ ccm
+• Problema de minimización en enteros.
+Javier Quintero Sistemas de varios canales en paralelo 261 / 323
+Modelo M/M/m: Ejemplo de aplicación
+Ejemplo (Ejemplo 3.1 de [Miranda, 2005] – Modelo M/M/4)
+Un taller de reparaciones cuenta con cuatro técnicos (sistema M/M/4). En promedio, llegan pedidos cada 5
+minutos y la duración media de las reparaciones es de 10 minutos. Determinar:
+a) El número mínimo de operarios para que el sistema funcione.
+Cálculo de parámetros
+λ =
+1
+5
+cl
+min
+·60 · min
+h
+= 12
+cl
+h
+µ =
+1
+10
+cl
+min
+·60 · min
+h
+= 6
+cl
+h
+ρ =
+λ
+µ
+= 2
+Nótese que para que el sistema no colapse y entre en estado de equilibrio se tiene que dar que
+ρ
+m
+< 1,
+por lo tanto a partir de 3 operarios serán suficientes para que el sistema funcione.
+Javier Quintero Sistemas de varios canales en paralelo 262 / 323
+Modelo M/M/m: Ejemplo de aplicación
+b) La probabilidad de que una pieza sea reparada conforme llega.
+La probabilidad de que una pieza sea reparada al llegar es la probabilidad de tener 3 o menos clientes en
+el sistema, esto es
+p(n≤ 3) = p(0)+p(1)+p(2)+p(3) = 1−p(n≥ 4)≈ 0.8261
+Por tanto, la probabilidad de que una pieza sea reparada al llegar es aproximadamente de 82.61%.
+c) Porcentaje de ocupación de los técnicos.
+El porcentaje de ocupación de los técnico es el porcentaje de actividad del canal, esto es
+PA =
+H
+m
+=
+ρ
+m
+=
+1
+2
+Por tanto, el porcentaje de ocupación de los técnicos es del 50%.
+d) Probabilidad de que haya menos de dos piezas en el sistema.
+p(n < 2) = p(0)+p(1) = (1+ρ)p(0)≈ 0.3912
+Por tanto, la probabilidad de que haya menos de dos piezas en el sistema es aproximadamente 39.12%.
+Javier Quintero Sistemas de varios canales en paralelo 263 / 323
+Modelo M/M/m: Ejemplo de aplicación
+e) Número medio de piezas en el taller.
+L≈ 2.1739
+Por tanto la media de piezas en el sistema es de aproximadamente 2.17.
+f) Número promedio de piezas a la espera de ser reparadas.
+Lc = L−ρ = 0.1739
+Por tanto el promedio de piezas a la espera de ser reparadas es de 0.1739.
+g) Ganancias esperadas, si cada reparación se cobra a 50 C.
+Los ingresos esperados por hora serán el promedio de ingresos (egresos) por hora multiplicados por la
+ganancia, esto es
+Ingreso = u ·λ = 50 ·12 = 600e/h
+Por tanto los ingresos esperados por hora son de 600 C.
+h) Tiempo promedio de permanencia de una pieza en el taller.
+El tiempo promedio de permanencia de la pieza en el taller se calcula como
+W = Wc +Ts =
+Lc
+λ
++
+1
+µ
+≈ 0.1812h
+Por tanto, el tiempo promedio de permanencia de una pieza en el taller es de aproximadamente 0.1812
+horas.
+Javier Quintero Sistemas de varios canales en paralelo 264 / 323
+Modelo M/M/m/K
+El siguiente modelo a estudiar es el M/M/m/K, bajo las siguientes hipótesis.
+λ λ̄
+R
+µ
+µ̄
+• El proceso de llegadas es de tipo Poisson.
+• El proceso de salidas es de tipo Poisson.
+• El sistema se encuentra en régimen permanente.
+• Los clientes forman una cola simple.
+• La disciplina de cola es FIFO.
+• Se dispone de m canales de servicio, en paralelo, con
+la misma velocidad de atención.
+• La capacidad del sistema está limitada a un valor
+K.
+• Los clientes no presentan impaciencia.
+• La población es infinita.
+Javier Quintero Sistemas de varios canales en paralelo 265 / 323
+Modelo M/M/m/K: Parámetros
+• λ : tasa promedio de llegadas al sistema. También podemos referirnos como intervalo medio entre lle-
+gadas Ta =
+1
+λ
+• µ: tasa promedio de salidas del sistema. También podemos referirnos como intervalo medio entre salidas
+Ts =
+1
+µ
+• m: número de servidores.
+• K: capacidad del sistema.
+Javier Quintero Sistemas de varios canales en paralelo 266 / 323
+Modelo M/M/m/K: Variables
+• p(n): probabilidad de que en el sistema haya n clientes.
+• L: longitud promedio del sistema.
+• Lc: longitud promedio de la cola.
+• Wc: tiempo promedio de espera en cola.
+• H: promedio de canales activos.
+• W: tiempo promedio de espera en el sistema.
+• R: tasa promedio de clientes rechazados.
+Javier Quintero Sistemas de varios canales en paralelo 267 / 323
+Modelo M/M/m/K: Determinación de variables
+• Determinación de p(n): el estado de sistema es una V.A que representa la probabilidad de que en el
+sistema haya n clientes.
+p(n) =
+{
+ρn
+n! p(0) Si n < m(
+ρ
+m
+)n mm
+m! p(0) Si m≤ n≤ K
+p(0) =
+[
+ρm
+(m−1)!
+(
+1−
+[
+ρ
+m
+]K−m+1
+)
+1
+(m−ρ)
++
+m−1
+∑
+n=0
+ρn
+n!
+]−1
+• Determinación de L: la longitud del sistema es una V.A cuya media representa el valor esperado de que
+en el sistema haya n clientes.
+L =
+K
+∑
+n=0
+np(n)
+=
+ρ
+m ·ρ
+m ·p(0)
+m! ·
+(
+1− ρ
+m
+)2 ·
+[
+1−
+(
+ρ
+m
+)K−m
+− (K−m) ·
+(
+ρ
+m
+)K−m
+·
+(
+1− ρ
+m
+)]
++ρ ·
+[
+1−
+(
+ρ
+m
+)K
+· K
+K
+m!
+·p(0)
+]
+Javier Quintero Sistemas de varios canales en paralelo 268 / 323
+Modelo M/M/m/K: Determinación de variables
+• Determinación de Lc: el estado de sistema es una V.A cuya media representa el valor esperado de que en
+el sistema haya n−m clientes en cola.
+Lc =
+K
+∑
+n=m
+(n−m)p(n)
+=
+ρ
+m ·ρ
+m
+m! ·
+(
+1− ρ
+m
+)2 ·
+[
+1−
+(
+ρ
+m
+)K−m
+− (K−m) ·
+(
+ρ
+m
+)K−m
+·
+(
+1− ρ
+m
+)]
+·p(0)
+• Determinación de H: el número promedio de canales activos es una V.A cuya media representa el número
+de clientes atendiéndose en el sistema.
+H =ρ [1−p(K)]
+PA =
+H
+m
+(Porcentaje de actividad de cada canal)
+Javier Quintero Sistemas de varios canales en paralelo 269 / 323
+Modelo M/M/m/K: Determinación de variables
+• Determinación de µ , λ : tasas promedio de ingresos/egresos del sistema.
+µ = µH,
+λ = λ [1−p(K)]
+• Determinación de Wc: El tiempo medio de espera en cola viene dado por la relación entre la Lc y λ o µ .
+Wc =
+Lc
+λ
+=
+Lc
+λ (1−p(K))
+• Determinación de W: El tiempo de espera en el sistema es igual al tiempo de espera en cola más el
+tiempo promedio de atención.
+W = Wc +Ts
+• Determinación de R: el número promedio de clientes rechazados por unidad de tiempo es la tasa prome-
+dio de llegadas multiplicada por la probabilidad de no ingresar.
+R = λp(K) = λ −λ
+Javier Quintero Sistemas de varios canales en paralelo 270 / 323
+Modelo M/M/m/K: Análisis Económico
+• Si elegimos el número de canales disponibles m como variable a optimizar, definimos
+− ce como el coste de esperar una unidad de tiempo en el sistema.
+− cc el coste por unidad de tiempo de cada canal.
+min(Z) = ceL+ ccm
+• Si elegimos el tamaño de la cola K−m como variable a optimizar, definimos
+− cL como el coste de cada plaza de la cola.
+− u precio de una unidad de servicio.
+min(Z) = cL(K−m)+uR
+• Si elegimos la velocidad de servicio µ como variable a optimizar
+− cs costo de atención de un canal a velocidad unitaria
+min(Z) = csMµ +uR
+Javier Quintero Sistemas de varios canales en paralelo 271 / 323
+Modelo M/M/m/K: Ejemplo de aplicación
+Ejemplo (Ejemplo 3.4 de [Miranda, 2005] – Sistema M/M/2/4)
+Un taller mecánico cuenta con 2 técnicos y una capacidad de 4 coches, cada 5 minutos llega un coche. Si no
+hay huecos vacíos, el coche se va. La duración media de las consultas es de 10 minutos. Calcule:
+a) Probabilidad de que un coche no tenga que esperar para ser atendido.
+p(n≤ 1) = p(0)+p(1) =
+1
+3
+p(0) =
+1
+9
+p(1) = ρp(0) =
+2
+9
+Por tanto, la probabilidad de no tener que esperar para ser atendido es de aproximadamente un 33%.
+Nota: al calcular p(0), algunas calculadoras pueden dar 0 (lo que es imposible en este caso). La razón
+es que m = ρ produce una indeterminación. Para calcular p(0) hay que resolverla analíticamente.
+Javier Quintero Sistemas de varios canales en paralelo 272 / 323
+Modelo M/M/m/K: Ejemplo de aplicación
+b) Porcentaje de ocupación.
+PA =
+H
+m
+=
+ρ[1−p(K)]
+m
+=
+7
+9
+Por lo que se concluye que el porcentaje de ocupación es de aproximadamente 77%.
+c) Probabilidad de que un coche no pueda ingresar.
+Esto es, la probabilidad de que el sistema esté lleno, n = K
+p(4) =
+2
+9
+Por tanto, la probabilidad de que un coche no pueda entrar es de aproximadamente el 22%.
+d) Tasa promedio de coches que no son atendidos.
+Esto es la tasa de rechazos R
+R = λp(K) =
+8
+3
+cl/h
+Por tanto, la tasa de rechazos será de aproximadamente 2,666 coches por hora.
+Javier Quintero Sistemas de varios canales en paralelo 273 / 323
+Modelo M/M/m/K: Ejemplo de aplicación
+e) Número promedio de clientes esperando ser atendidos.
+Lc =
+K
+∑
+n=m
+(n−m)p(n) = p(3)+2p(4) =
+2
+3
+coches
+Por tanto, el número promedio de coches esperando ser atendidos es de aproximadamente 0.666.
+f) Número promedio de coches en el taller.
+L = Lc +H =
+2
+3
++2[1−p(4)] =
+20
+9
+coches
+Por tanto, el número de clientes siendo atendidos es de aproximadamente 2,22.
+g) Facturación esperada, si cada servicio se cobra a 50 C.
+Ingreso = u ·λ = uλ [1−p(K)]≈ 466,68 e/h
+Por tanto la facturación esperada es de aproximadamente 466,68 e/h.
+Javier Quintero Sistemas de varios canales en paralelo 274 / 323
+Modelo M/M/m/K: Ejemplo de aplicación
+h) Tiempo promedio de espera en cola.
+Wc =
+Lc
+λ
+≈ 0.0714 h
+i) Si el cliente es aceptado por el taller a las 9h, ¿a qué hora esperaría irse con su coche reparado?
+W = Wc +Ts ≈ 0.2381 h = 14.286 min
+Por tanto, el cliente espera poder irse aproximadamente a las 9 : 14 horas.
+j) Pérdida de facturación, si cada reparación se factura a 50 C.
+Loss = u ·R≈ 133.33 e/h
+Javier Quintero Sistemas de varios canales en paralelo 275 / 323
+Sistemas de población finita
+Si la población fuente de clientes de un sistema de colas es finita pero lo suficientemente grande como para
+que la tasa media de arribos no se vea afectada de manera apreciable por la entrada o salida de un cliente del
+sistema, el modelo puede analizarse, en la práctica, como si la población fuese infinita.
+En cambio, cuando la fuente de usuarios es reducida y la llegada de un cliente o la finalización de un servicio
+modifica sensiblemente la probabilidad de arribos futuros, se trata de un sistema con población finita, que
+requiere un tratamiento específico.
+En estos sistemas, los clientes atendidos no abandonan definitivamente el conjunto de potenciales usuarios,
+sino que regresan a la población fuente del sistema.
+Para el análisis de sistemas con población finita, la observación no se centra en el flujo global de llegadas, sino
+en el comportamiento individual de cada cliente. Con este fin se introduce el parámetro Tr (frecuentemente
+denotado por la letra “U”), que representa el tiempo medio entre dos arribos consecutivos de un mismo cliente
+al sistema; es decir, el tiempo medio que un cliente permanece fuera del sistema.
+Javier Quintero Sistemas de población finita 276 / 323
+Sistemas de población finita
+Se define entonces λr como el inverso de Tr. Este parámetro expresa la frecuencia con la cual un usuario
+solicita el servicio, es decir, el número medio de veces por unidad de tiempo que un cliente, estando fuera del
+sistema, ingresa al mismo para recibir atención.
+Si se denota por N el tamaño total de la población (número de clientes tanto dentro como fuera del sistema),
+todo arribo necesariamente proviene de los N−n clientes que no se encuentran en el sistema en ese instante.
+A continuación se formulará el modelo correspondiente al caso en que no existen restricciones de capacidad.
+No obstante, el mismo esquema de modelización puede adaptarse a sistemas con capacidad finita, limitando
+el número de estados posibles, de forma análoga a lo estudiado previamente para esos sistemas.
+Javier Quintero Sistemas de población finita 277 / 323
+Sistemas de población finita
+Los sistemas de población finita se definen sobre los siguientes supuestos.
+• Si la población de un sistema es lo suficientemente grande, la tasa de llegadas no se ve afectada cuando
+aparece una llegada o una salida, como en los casos anteriores.
+• En caso contrario, hay que tener en cuenta las siguientes consideraciones:
+− Las observaciones se hace sobre cada cliente, en vez de sobre la población.
+− Definiremos el parámetro Tr o U, como el tiempo entre llegadas para un mismo cliente.
+− Llamaremos N al tamaño de la población, es decir, al número de clientes dentro y fuera del sistema.
+Javier Quintero Sistemas de población finita 278 / 323
+Modelo M/M/1/-/N
+Un sistema M/M/1/-/N, se basa en las siguientes hipótesis.
+λ λ̄
+µ
+µ̄
+• El proceso de llegadas es de tipo Poisson.
+• El proceso de salidas es de tipo Poisson.
+• El sistema se encuentra en régimen permanente.
+• Los clientes forman una cola simple.
+• La disciplina de cola es FIFO.
+• Se dispone de un solo canal de servicio.
+• La capacidad del sistema es infinita.
+• Los clientes no presentan impaciencia.
+• La población es finita y relativamente pequeña.
+Javier Quintero Sistemas de población finita 279 / 323
+Modelo M/M/1/-/N: Parámetros
+• λr: frecuencia de requerimientos de servicios por el cliente. También podemos referirnos como intervalo
+medio entre requerimientos: Tr = U = 1
+λr
+.
+• µ: tasa promedio de salidas del sistema. También podemos referirnos como intervalo medio entre sali-
+das: Ts =
+1
+µ
+.
+• m: número de servidores, en este caso 1.
+• N: número total de clientes, tamaño de la población.
+Javier Quintero Sistemas de población finita 280 / 323
+Modelo M/M/1/-/N: Variables
+• p(n): probabilidad de que en el sistema haya n clientes.
+• L: longitud promedio del sistema.
+• Pin: porcentaje de clientes que se encuentran en el sistema.
+• Lc: longitud promedio de la cola.
+• Pq: porcentaje de clientes que se encuentran en la cola.
+• H: promedio de canales activos.
+• Pactive: porcentaje de clientes que están siendo atendidos.
+• Pout: porcentaje de clientes que están fuera del sistema.
+• W: tiempo promedio de espera en el sistema.
+• Wc: tiempo promedio de espera en cola.
+• J: número promedio de clientes fuera del sistema.
+Javier Quintero Sistemas de población finita 281 / 323
+Modelo M/M/1/-/N: Determinación de variables
+• Determinación de p(n): el estado de sistema es una V.A que representa la probabilidad de que en el
+sistema haya n clientes.
+p(n) =
+N!
+(N−n)!
+ρ
+n
+r p(0)
+p(0) =
+1
+∑
+N
+n=0
+N!
+(N−n)! ρn
+r
+• Determinación de L: la longitud del sistemas es una V.A cuya media representa el valor esperado de que
+en el sistema haya n clientes.
+L = E[p(n)] =
+∞
+∑
+0
+np(n) = N− 1−p(0)
+ρr
+• El porcentaje de clientes que se encuentran en el sistema viene dado por
+Pin =
+L
+N
+Javier Quintero Sistemas de población finita 282 / 323
+Modelo M/M/1/-/N: Determinación de variables
+• Determinación de Lc: el estado de sistema es una V.A cuya media representa el valor esperado de que en
+el sistema haya n−1 clientes en cola.
+Lc = N− (1+ρr)[1−p(0)]
+ρr
+• El porcentaje de clientes que se encuentran esperando en la cola viene dado por
+Pqueue =
+Lc
+N
+• Determinación de H: el número promedio de canales activos es una V.A cuya media representa el número
+de clientes atendiéndose en el sistema.
+H = 1−p(0)
+Pactive =
+H
+N
+Porcentaje de clientes siendo atendidos
+PA =
+H
+m
+= 1−p(0)(Porcentaje de actividad)
+Javier Quintero Sistemas de población finita 283 / 323
+Modelo M/M/1/-/N: Determinación de variables
+• Determinación de J: el número promedio de usuarios que se encuentran fuera del sistema, viene dado por:
+J =N−L
+J =
+H
+ρr
+• El porcentaje de clientes que se encuentran fuera del sistema viene dado por la expresión
+Pout =
+J
+N
+• Determinación de µ/λ : tasas promedio de ingresos/egresos del sistema.
+µ = µ[1−p(0)] = λ = λrJ
+• Determinación de Wc: el tiempo medio de espera en cola viene dado por la relación entre la Lc y λ ( o µ).
+Wc =
+Lc
+λ
+=
+Lc
+Jλr
+=
+Lc
+µ[1−p(0)]
+=
+Lc
+µ
+• Determinación de W: el tiempo de espera en el sistema es igual al tiempo de espera en cola más el tiempo promedio
+de atención.
+W =Wc +Ts
+Javier Quintero Sistemas de población finita 284 / 323
+Modelo M/M/1/-/N: Análisis Económico
+• Como hay un solo canal, la velocidad de media de atención, µ , se escoge usualmente como variable de
+decisión.
+• Podemos modificarla para obtener un balance entre el coste de mejorar el servicio y las perdidas por mal
+funcionamiento.
+• Definimos ce como el coste derivado de esperar en el sistema, y cs como el coste por atender a una
+velocidad unitaria.
+• Podemos definir una función de costes tal que:
+min(Z) = ceL+ csµ
+Javier Quintero Sistemas de población finita 285 / 323
+Modelo M/M/1/-/N: Ejemplo de aplicación
+Ejemplo (Ejemplo 4.1 de [Miranda, 2005] – modelo M/M/1/-/5)
+En un sistema M/M/1/-/5, cada cliente permanece en promedio 0.5 horas fuera del sistema. La duración
+media del sistema es de 20 minutos. Determinar:
+a) Probabilidad de que el sistema se encuentre ocupado.
+Cálculo de parámetros
+U = 0.5 h/pedido⇒ λr = 2 pedidos/h
+µ = 3 pedidos/h
+ρr =
+2
+3
+Las probabilidades de cada estado resultan:
+p(0) = 0.0142, p(1) = 0.0473, p(2) = 0.1261, p(3) = 0.2524, p(4) = 0.3362, p(5) = 0.2241
+Por tanto la probabilidad de que el sistema esté ocupado es de
+p(1)+p(2)+p(3)+p(4)+p(5) = 1−p(0)≈ 0.9858
+aproximadamente un 98%.
+Javier Quintero Sistemas de población finita 286 / 323
+Modelo M/M/1/-/N: Ejemplo de aplicación
+b) Porcentaje de clientes que se encuentran fuera del sistema.
+Pout =
+J
+N
+=
+N−L
+N
+= 1− 1
+N
+(
+N− 1−p(0)
+ρr
+)
+≈ 0.2958
+o usando J = 1.4789, se concluye igualmente que el porcentaje de clientes fuera del sistema es de
+aproximadamente 30%.
+c) Cantidad de clientes que se atienden en el sistema por hora, en promedio.
+mu = µ ·H = µ(1−p(0))≈ 2.957
+Por tanto, se atienden de media aproximadamente 3 clientes por hora.
+d) Longitud promedio de la cola.
+Lc = N− (1+ρr)(1−p(0))
+ρr
+≈ 2.5353
+Por tanto, la longitud media de la cola es de aproximadamente 2.5353 clientes.
+Javier Quintero Sistemas de población finita 287 / 323
+Modelo M/M/1/-/N: Ejemplo de aplicación
+e) Tiempo de espera promedio de un cliente en cola.
+Wc =
+Lc
+J ·λr
+≈ 0.8573 h
+Por tanto, el tiempo de espera promedio de un cliente en cola es de 0.8573 h.
+f) Tiempo promedio de permanencia de un cliente dentro del sistema.
+W = Wc +Ts ≈ 1.19 h
+Por tanto, el tiempo promedio de permanencia de un cliente en cola es de 1.19 h.
+Javier Quintero Sistemas de población finita 288 / 323
+Modelo M/M/1/-/N: Ejemplo de aplicación
+Tarea (Ejemplo 4.2 de [Miranda, 2005] – modelo M/M/1/-/5)
+Un CPD tiene disponibles 4 racks de servidores idénticos, de los cuales están en funcionamiento 3 y el cuarto está de
+backup, es decir, entra en funcionamiento cuando uno de los anteriores sufre algún problema. Sabiendo que los
+servidores fallan, en promedio, cada 12 horas de funcionamiento y que existe un equipo de reparación que tardas 3 horas
+en arreglar los desperfectos. Tenga en cuenta que si hay más de dos servidores fuera de servicio el CPD debe
+desconectarse.
+a) Deducir y calcular las probabilidades asociadas a cada uno de los estados posibles.
+b) Determinar la longitud promedio de cola de servidores averiados en esperas de ser reparados .
+c) Sabiendo que el beneficio que produce una máquina en funcionamiento es de 1500C, calcular las pérdidas
+esperadas.
+Javier Quintero Sistemas de población finita 289 / 323
+Modelo M/M/m/-/N
+Un sistema M/M/m/-/N, se basa en las siguientes hipótesis.
+λ λ̄
+µ
+µ̄
+• El proceso de llegadas es de tipo Poisson.
+• El proceso de salidas es de tipo Poisson.
+• El sistema se encuentra en régimen permanente.
+• Los clientes forman una cola simple.
+• La disciplina de cola es FIFO.
+• Se dispone de m canales de servicio en paralelo, con
+la misma velocidad de atención.
+• La capacidad del sistema es infinita (cola infinita).
+• Los clientes no presentan impaciencia.
+• La población es finita y relativamente pequeña.
+Javier Quintero Sistemas de población finita 290 / 323
+Modelo M/M/m/-/N: Parámetros
+• λr: tasa promedio de llegadas al sistema. También podemos referirnos como intervalo medio entre
+llegadas Ta = U = 1
+λr
+• µ: tasa promedio de salidas del sistema. También podemos referirnos como intervalo medio entre salidas
+Ts =
+1
+µ
+• m: número de servidores.
+• N: número total de clientes.
+Javier Quintero Sistemas de población finita 291 / 323
+Modelo M/M/m/-/N: Variables
+• p(n): probabilidad de que en el sistema haya n clientes.
+• L: longitud promedio del sistema.
+• Lc: longitud promedio de la cola.
+• Wc: tiempo promedio de espera en cola.
+• H: promedio de canales activos.
+• W: tiempo promedio de espera en el sistema.
+• J: número promedio de clientes fuera del sistema
+• D: probabilidad de esperar para recibir servicio.
+• X: factor de servicio.
+• F: factor de eficiencia.
+Javier Quintero Sistemas de población finita 292 / 323
+Modelo M/M/m/-/N: Determinación de variables
+• Determinación de p(n): el estado de sistema es una V.A que representa la probabilidad de que en el
+sistema haya n clientes.
+p(n) =
+{
+Cn
+Nρn
+r p(0) = N!
+(N−n)!n! ρn
+r p(0) Si n < m
+n!mm
+m!mn Cn
+Nρn
+r p(0) Si m≤ n≤ N
+p(0) =
+[
+m−1
+∑
+n=0
+Cn
+Nρ
+n
+r +
+N
+∑
+n=m
+Cn
+N
+n!mm
+m!mn ρ
+n
+r
+]−1
+Recordemos que Cn
+N denota el número combinatorio
+Cn
+N =
+N!
+n!(N−n)!
+• Determinación de L: la longitud del sistemas es una V.A cuya media representa el valor esperado de que
+en el sistema haya n clientes.
+L =
+m−1
+∑
+n=0
+nCn
+Nρ
+n
+r p(0)+
+N
+∑
+n=m
+nCn
+N
+n!mm
+m!mn ρ
+n
+r p(0)
+Javier Quintero Sistemas de población finita 293 / 323
+Modelo M/M/m/-/N: Determinación de variables
+• El porcentaje de clientes que se encuentran en el sistema viene dado por
+Pin =
+L
+N
+• Determinación de Lc: el estado de sistema es una V.A cuya media representa el valor esperado de que en
+el sistema haya n−m clientes en cola.
+Lc =
+N
+∑
+n=m
+(n−m)p(n) =
+N
+∑
+n=m
+(n−m) ·Cn
+N ·
+n!
+m!
+· m
+m
+mn ·ρ
+n
+r ·p(0)
+• El porcentaje de clientes que se encuentran esperando en la cola viene dado por
+Pqueue =
+Lc
+N
+Javier Quintero Sistemas de población finita 294 / 323
+Modelo M/M/m/-/N: Determinación de variables
+• Determinación de H: el número promedio de canales activos es una V.A cuya media es el número de
+clientes atendiéndose en el sistema.
+H =
+m−1
+∑
+n=1
+np(n)+
+N
+∑
+n=m
+mp(n)
+Pactive =
+H
+N
+Porcentaje de clientes siendo atendidos
+PA =
+H
+m
+Porcentaje de actividad
+• Determinación de J: el número promedio de usuarios que se encuentran fuera del sistema, viene dado
+por:
+J =N−L
+J =
+H
+ρr
+• El porcentaje de clientes que se encuentran fuera del sistema viene dado por la expresión
+Pout =
+J
+N
+Javier Quintero Sistemas de población finita 295 / 323
+Modelo M/M/m/-/N: Determinación de variables
+• Determinación de Wc: el tiempo medio de espera en cola viene dado por la relación entre la Lc y λ (o
+µ).
+Wc =
+Lc
+λ
+=
+Lc
+Jλr
+• Determinación de µ/λ : tasas promedio de ingresos y egresos del sistema.
+µ = µ ·H = λ = λrJ
+• Determinación de W: el tiempo de espera en el sistema es igual al tiempo de espera en cola más el tiempo
+promedio de atención.
+W = Wc +Ts
+W =
+L
+λ
+=
+L
+Jλr
+Javier Quintero Sistemas de población finita 296 / 323
+Modelo M/M/m/-/N: Determinación de variables
+• Si el tamaño de N es demasiado grande (N > 10), es conveniente usar las aproximaciones enunciadas por
+Peck y Hazelwood. Para ello se definen el factor de servicio X y el factor de eficiencia F, que cumplen
+X =
+Ts
+Ts +U
+F =
+Ts +U
+Ts +U+Wc
+H = FNX
+J = FN(1−X)
+Lc = (1−F)N
+Javier Quintero Sistemas de población finita 297 / 323
+Modelo M/M/m/-/N: Análisis económico
+• En este tipo de sistemas, el número de servidores es la variable de decisión.
+• Podemos modificarla para minimizar el coste operativo del sistema.
+• Definimos ce como el coste derivado de esperar en el sistema, y cc como el coste de atención de un
+servidor.
+• Podemos definir una función de costes tal que:
+Z = ceL+ ccm
+• Problema en enteros positivos.
+Javier Quintero Sistemas de población finita 298 / 323
+Modelo M/M/m/-/N: Ejemplo de aplicación
+Ejemplo (Ejemplo 4.4 de [Miranda, 2005] – M/M/m/-/N)
+Una empresa cuenta con 5 máquinas idénticas que necesitan supervisión, en promedio, cada 2 horas. Las
+operaciones de supervisión tienen una duración promedio de 1 hora. La empresa cuenta con dos operarios
+para realizar esta actividad. Cada máquina proporciona una ganancia esperada de 500C por hora.
+a) Deducir y calcular las probabilidades asociadas a cada uno de los estados posibles.
+Calculamos los parámetros
+ρr =
+λr
+µ
+=
+0.5
+1
+= 0.5
+Para calcular las probabilidades empleamos Matlab, para obtener
+p(1) = 0.2763
+p(2) = 0.2763
+p(3) = 0.2073
+p(4) = 0.1036
+p(5) = 0.0260
+Javier Quintero Sistemas de población finita 299 / 323
+Modelo M/M/m/-/N: Ejemplo de aplicación
+b) Determinar, L, Lc, H y J.
+L = 0 ·p(0)+1 ·p(1)+2 ·p(2)+3 ·p(3)+4 ·p(4)+5 ·p(5) = 1.9948
+Lc = 1 ·p(3)+2 ·p(4)+3 ·p(5) = 0.4922
+H = L−Lc = 1,5026
+J = N′−L = 3,0052
+c) Determinar el factor de servicio, el factor de eficiencia y el porcentaje de actividad de cada trabajador.
+X =
+TS
+TS +U
+= 0.3333
+µ̄ = µ ·H = 1.5026
+WC =
+LC
+µ̄
+= 0.3276
+F =
+TS +U
+TS +U+WC
+= 0.9016
+PA =
+H
+M
+= 0.7513
+d) Calcular las pérdidas.
+LC = 500 · L = 997,41
+e
+h
+Javier Quintero Sistemas de población finita 300 / 323
+Redes de colas
+En los sistemas de colas analizados hasta el momento se ha supuesto que cada sistema ofrecía un único tipo de servicio,
+prestado en un único centro de atención compuesto por uno o varios canales dispuestos en paralelo, con determinadas
+características operativas tales como capacidad, modalidad de atención y disciplina de servicio.
+No obstante, en numerosos sistemas reales coexisten varios centros de atención dentro de un mismo sistema, en los
+cuales se brindan distintos servicios que, en muchos casos, se encuentran vinculados de manera secuencial. En estas
+configuraciones, un cliente que ingresa al sistema recibe un primer servicio en un centro de atención (o subsistema) y,
+una vez finalizado, se dirige a un segundo centro para recibir un nuevo servicio, continuando este proceso hasta
+completar la secuencia y abandonar el sistema.
+Esta organización de centros de atención conectados secuencialmente se denomina disposición en serie o en cascada.
+Javier Quintero Redes de colas 301 / 323
+Redes en serie y en paralelo
+Dentro de las redes en serie podemos diferenciar dos tipos: sistemas secuenciales, ver Figura 49 y sistemas
+paralelos, ver Figura, 50.
+M/M/1 M/M/3
+Figura 49: Sistema en serie
+M/M/3 M/M/3 M/M/1
+M/M/1
+M/M/1
+INGRESO
+30%
+20%
+40%
+50% 60%
+SALIDA
+Figura 50: Sistema en paralelo
+Javier Quintero Redes de colas 302 / 323
+Redes en serie y en paralelo
+λ = 6
+µ = 8
+µ = 2.5
+Figura 51: Recepción de pacientes
+Ejemplo (Ejemplo aplicación redes secuenciales)
+Supongamos una sala de urgencias, en donde los pacientes deben formar una cola única a la espera de recibir
+asignación en uno de 3consultorios, ver Figura 51. En promedio la llegada de pacientes se realiza a razón de
+6 por hora. El recepcionista tarda una 0.125 horas en llamar a un paciente, y el tiempo medio de tratamiento
+en cada uno de los consultorios es de 0.4 horas. Obtener los parámetros básicos del sistema.
+Javier Quintero Redes de colas 303 / 323
+• Subsistema I
+ρ1 = 0.75
+H1 = 0.75
+p(0)1 = 0.25
+Lc1 = 2.25
+L1 = 3
+Wc1 = 0.375
+W1 = 0.5
+Para el segundo subsistema, la tasa de llegadas es igual a la tasa efectiva de salidas del primer subsistema, es decir,
+λ2 = µ1 = µ1 ·H = 6
+• Subsistema II
+ρ2 = 2.4
+H2 = 2.4
+p(0)2 = 0.0562
+Lc2 = 2.59
+L2 = 4.99
+Wc2 = 0.4315
+W2 = 0.8315
+µ2 = µ2H2 = 6
+• Sistema completo
+H = H1 +H2 = 3.15
+p(0) = p(0)1p(0)2 = 0.01405
+Lc = Lc1 +Lc2 = 4.84
+L = L1 +L2 = 7.99
+Wc = Wc1 +Wc2 = 0.8065
+W = W1 +W2 = 1.3315
+Javier Quintero Redes de colas 304 / 323
+Redes en serie y en paralelo
+El trabajo con sistemas en paralelo se basa en los siguientes principios.
+Teorema (Teorema de Burke)
+La división de un flujo de clientes de un proceso de Poisson, probabilísticamente lleva a procesos que
+también son de tipo Poisson, ver Figura 52.
+λ
+p1
+λ1 = p1 ·λ
+p2
+λ2 = p2 ·λ
+pN
+λN = pN ·λ
+Figura 52: División de flujos de Poisson.
+Javier Quintero Redes de colas 305 / 323
+Redes en serie y en paralelo
+Proposición
+La combinación de flujos independientes de clientes de procesos de Poisson lleva a un proceso de naturaleza
+poissoniana, ver Figura 53.
+p1
+p2
+pN
+λ1 +λ2 + · · ·+λN = λ
+Figura 53: Combinación de flujos de Poisson.
+Javier Quintero Redes de colas 306 / 323
+Teorema (Teorema de Jackson)
+Para un sistema con m centros de atención, la probabilidad de que el sistema se encuentre en el estado n1,n2, . . . ,nm
+viene dada por:
+p(n1,n2, . . . ,nm) =
+m
+∏
+i=1
+pi(ni)
+Proposición (Equilibrio entre ingresos y egresos)
+En condiciones de equilibrio, las tasa efectivas de ingresos y egresos son iguales (µ = λ ). Por tanto, se cumple:
+λ = µ ·H =
+1
+Ts
+·H
+Ts =
+H
+λ
+Teorema (Fórmula de Little)
+Los sistemas de colas cumplen la fórmula de Little
+W =
+L
+λ
+Wc =
+Lc
+λ
+Javier Quintero Redes de colas 307 / 323
+Redes en serie y en paralelo
+I
+II
+III
+λ1 = 3
+λ2 = 4
+Ejemplo
+Considere el sistema anterior, donde la estación 1 es M/M/1 con µ1 = 6, la estación 2 es M/M/2/2 con
+µ2 = 2 y la estación 3 es M/M/1/2 con µ3 = 5, estando los valores de λ y µ expresados en usuarios por día,
+sabiendo que cada servicio ofrecido en la estación III se cobran 100C y que cada canal tiene un coste de 50C
+día, calcular la ganancia esperada diaria.
+Javier Quintero Redes de colas 308 / 323
+Redes en serie y en paralelo
+Para resolver este problema tenemos que encontrar la tasa efectiva de clientes que dejan el sistema µ3, lo cual indicará la
+facturación, luego como el sistema tiene en total m = m1 +m2 +m3 = 4 canales, tendrá un coste operativo de 200 C/día.
+Notar que como el nodo 3 es M/M/1/2, se deduce que µ3 = λ3 = λ3 · [1− p3(2)]. Luego, la estructura del
+problema indica que se tendrá que encontrar λ3 = µ1 +µ2 y p3(2).
+• Estación 1 −M/M/1, λ1 = 3, µ1 = 6.
+− Dado que no hay restricciones de capacidad µ1 = λ1 = λ1 = 3
+• Estación 2 −M/M/2/2, µ2 = 2.
+− p2(0) = 0.2, p2(1) = 0.4 y p2(2) = 0.4.
+− µ2 = µ2 · [1−p2(2)] = 2.4
+• Estación 3 −M/M/1/2, µ3 = 5.
+− λ3 = µ1 +µ2 = 5.4.
+− p3(0) = 0.308, p3(1) = 0.3326 y p3(2) = 0.3593.
+− µ3 = 3.4598
+• Luego se concluye que la tasa de clientes atendidos en el sistema 3, y que por tanto, dejan el sistema es,
+µ3 = 3.4598.
+− Beneficio B = 100C/día ·µ3−50C/día ·m·= 146 C/día.
+Javier Quintero Redes de colas 309 / 323
+Redes con realimentación
+Las redes con realimentación (también denominado como redes con reciclaje) responden a la siguiente
+situación, ver Figura 54:
+• En algunos sistemas reales ocurre que parte de los clientes atendidos en una determinada unidad del
+sistema tienen que retornar a una unidad anterior, para ser atendidos nuevamente.
+• En estos casos, es necesario tener en cuenta el flujo de clientes que van por la rama realimentada.
+• Es importante notar que, siendo los procesos de llegadas de tipo Poisson, el flujo resultante se comporta
+como si fuera de Poisson, aunque no lo es estrictamente hablando.
+λ λ1
+µ1
+λ1
+µ2
+0.2λ1
+Figura 54: Ejemplo de red con retroalimentación
+Javier Quintero Redes de colas 310 / 323
+Redes con realimentación
+Ejemplo (Red simple con realimentación)
+Por ejemplo, supongamos un sistema de elaboración de un producto en una máquina, al que llegan piezas
+con una tasa λ para ser procesadas a una velocidad µ1. Una vez fabricadas, las piezas son sometidas a un
+control de calidad, que se realiza a una velocidad promedio de µ2. Un 20% de las piezas inspeccionadas
+requiere ser reprocesadas, por lo que vuelven a la cola de la máquina 1, ver Figura 54.
+La filosofía para la resolución de este tipo de sistemas es considerar que la tasa de entrada a los sistemas que
+reciben la realimentación es una combinación de la tasa media con el flujo que se recibe de otros nodos.
+En este ejemplo específico se trata con dos sistemas M/M/1, por lo que se tendrá que
+λ1 = µ1 = λ1.
+Luego para el segundo subsistema, se tendrá de manera análoga:
+λ2 = µ2 = λ1 = λ1.
+Javier Quintero Redes de colas 311 / 323
+Redes con realimentación
+• Tasa efectiva de entrada al primer subsistema
+λ1 = λ +0.2λ
+λ1 =
+λ
+0.8
+• Centro 1
+ρ1 =
+λ1
+µ1
+p(n)1 = ρ
+n
+1 (1−ρ1)
+L1 =
+λ
+µ1−λ
+Lc1 =
+λ 2
+µ1(µ1−λ1)
+H1 = ρ1
+Wc1 =
+Lc1
+λ1
+W1 = Wc1 +Ts1
+• Centro 2
+ρ2 =
+λ1
+µ2
+p(n)2 = ρ
+n
+2 (1−ρ2)
+L2 =
+λ1
+µ2−λ1
+Lc2 =
+λ 2
+1
+µ2 · (µ2−λ1)
+H2 = ρ2
+Wc2 =
+Lc2
+λ1
+W2 = Wc1 +Ts2
+Javier Quintero Redes de colas 312 / 323
+M/M/1
+µ1 = 14
+M/M/1
+µ2 = 4
+M/M/1
+µ3 = 2
+λ = 10 0.8
+0.20.7
+0.3
+Ejemplo (Sistema con realimentación en paralelo)
+Se tienen tres subsistemas
+• Subsistema 1: M/M/1 – µ1 = 14
+• Subsistema 2: MM1 – µ1 = 4
+• Subsistema 3: M/M/1 – µ3 = 2
+Los datos están expresados en clientes/hora. Determinar cuántos clientes salen del sistema, calcular la
+longitud promedio de clientes en cada centro, y encontrar la probabilidad de que el sistema esté vacío.
+Javier Quintero Redes de colas 313 / 323
+Redes con realimentación
+Solución: Al sistema ingresan en media λ = 10 clientes por hora. De acuerdo a los flujos de clientes, se
+tendrá
+Centro 1:
+λ1 = λ +0.7
+λ1 = µ1 = λ1
+Centro 2:
+λ2 = µ3 +0.2µ1
+λ2 = µ2 = λ2
+Centro 3:
+λ3 = 0.3µ2
+λ3 = µ3 = λ3
+Por tanto las ecuaciones de balance de flujo, resultan
+λ1 = λ +0.7λ2
+λ2 = 0.2λ1 +λ3
+λ3 = 0.3λ2
+Resolviendo este sistema se obtiene:
+λ1 = 12.5, λ2 = 3.5714, λ3 = 1.0714
+Luego se tiene que, del sistema salen
+µ = 0.8µ1 = 10
+clientes por hora. Javier Quintero Redes de colas 314 / 323
+Redes con realimentación
+La longitud promedio de cada subsistema será
+L1 = 8.3333, L2 = 8.3327, L3 = 1.1538
+clientes.
+La probablidad de que el sistema esté vacío se obtiene aplicando el Teorema de Jackson,
+p(0,0,0) = p(0)1 ·p(0)2 ·p(0)3 = (1−ρ1)(1−ρ2)(1−ρ3) = 0.0053
+donde se ha empleado que
+ρ1 = 0.8929, ρ2 = 0.8929, ρ3 = 0.5357
+En resumen:
+• µ = 10 clientes/hora,
+• L1 = 8.333, L2 = 8.3327 y L3 = 1.1538 clientes.
+• p(vacio) = 0.0053.
+Javier Quintero Redes de colas 315 / 323
+Modelos de colas con distribuciones no exponenciales
+En el estudio clásico de la teoría de colas, gran parte de los resultados analíticos se apoyan en la suposi-
+ción de llegadas y tiempos de servicio exponenciales. Esta hipótesis conduce a modelos matemáticamente
+manejables (como M/M/1, M/M/m, etc.) gracias a la propiedad de falta de memoria de la distribución
+exponencial, que permite modelar el sistema como una cadena de Markov.
+Sin embargo, en muchos sistemas reales de telecomunicaciones, esta suposición no es realista.
+El tráfico de datos, la duración de las conexiones, el tamaño de los paquetes, el comportamiento de los usuarios
+y los tiempos de procesamiento en dispositivos de red presentan con frecuencia variabilidad, asimetría y
+dependencia temporal que no pueden describirse adecuadamente mediante distribuciones exponenciales.
+Por ello, es fundamental extender el análisis hacia modelos con distribuciones generales, que permiten
+capturar de manera más fiel el comportamiento de los sistemas reales.
+Javier Quintero Redes de colas 316 / 323
+Limitaciones del supuesto exponencial
+En redes de telecomunicaciones se observan fenómenos como:
+• Tráfico autocorrelacionado (por ejemplo, tráfico de video o descargas masivas).
+• Tiempos de servicio con baja variabilidad (procesamiento casi determinista en routers).
+• Tiempos de servicio con alta variabilidad (procesamiento variable en servidores, retransmisiones, coli-
+siones).
+• Distribuciones pesadas en la cola (heavy–tailed), típicas en tamaños de archivos o sesiones de usuario.
+Estos comportamientos producen desviaciones significativas respecto a las predicciones de los modelos M/M/1
+o M/M/c. En particular, la variabilidad de los tiempos de servicio impacta directamente en:
+• El tiempo medio de espera.
+• La longitud media de la cola.
+• La probabilidad de congestión.
+Javier Quintero Redes de colas 317 / 323
+Notación general: modelos G/G/1
+Para describir sistemas con distribuciones arbitrarias se utiliza la notación de Kendall extendida:
+A/B/c
+donde:
+• A describe la distribución de los tiempos entre llegadas.
+• B describe la distribución de los tiempos de servicio.
+• c es el número de servidores.
+La letra G (General) indica que no se asume ninguna forma específica para la distribución.
+Así, el modelo más general de un solo servidor es:
+G/G/1
+que representa un sistema con llegadas y servicios de distribución arbitraria.
+Javier Quintero Redes de colas 318 / 323
+Importancia del coeficiente de variación
+En modelos no exponenciales, la forma exacta de la distribución es menos relevante que su media y su
+variabilidad. Esta última se mide mediante el coeficiente de variación:
+CX =
+σX
+E[X]
+donde X puede representar tiempos entre llegadas o tiempos de servicio.
+• Para la exponencial: CX = 1.
+• Para la determinista: CX = 0.
+• Para distribuciones muy variables: CX > 1.
+Este parámetro resulta clave porque el rendimiento del sistema depende fuertemente de la variabilidad, incluso
+cuando la media se mantiene constante.
+Javier Quintero Redes de colas 319 / 323
+Aproximación de Kingman para G/G/1
+Dado que el modelo G/G/1 no admite una solución exacta sencilla, se utilizan aproximaciones. La más
+importante es la fórmula de Kingman para el tiempo medio de espera en cola:
+Wq ≈
+ρ
+1−ρ
+·
+C2
+A +C2
+S
+2
+·E[S]
+donde:
+• ρ = λE[S] es la utilización del sistema.
+• CA es el coeficiente de variación de los tiempos entre llegadas.
+• CS es el coeficiente de variación de los tiempos de servicio.
+• E[S] es el tiempo medio de servicio.
+Esta expresión muestra de forma explícita que la variabilidad influye tanto como la carga del sistema.
+Javier Quintero Redes de colas 320 / 323
+Casos particulares relevantes I
+Algunos modelos intermedios muy utilizados en telecomunicaciones son:
+• M/G/1: llegadas Poisson y servicios generales.
+• G/M/1: llegadas generales y servicios exponenciales.
+• D/G/1: llegadas deterministas y servicios generales.
+• G/D/1: servicios deterministas.
+Por ejemplo, en un router que procesa paquetes a velocidad casi constante, el modelo M/D/1 describe mejor
+el comportamiento que el M/M/1.
+El uso de modelos no exponenciales permite:
+• Dimensionar buffers con mayor precisión.
+• Estimar retardos reales en enlaces y routers.
+• Analizar efectos de tráfico multimedia y tráfico bursty.
+• Evaluar impacto de protocolos que introducen variabilidad (retransmisiones, backoff, etc.).
+Javier Quintero Redes de colas 321 / 323
+Casos particulares relevantes II
+En muchos casos, ignorar la variabilidad conduce a subestimar los retardos y la congestión, lo que resulta crítico en
+aplicaciones sensibles al tiempo como VoIP, videoconferencia y servicios en tiempo real.
+Los modelos con distribuciones no exponenciales representan una herramienta esencial para analizar sistemas de
+telecomunicaciones modernos. Aunque su tratamiento matemático es más complejo, el uso de métricas como el
+coeficiente de variación y aproximaciones como la fórmula de Kingman permite obtener resultados prácticos y
+aplicables en el diseño y evaluación de redes reales.
+Javier Quintero Redes de colas 322 / 323
+Referencias I
+[Boyd and Vandenberghe, 2004] Boyd, S. and Vandenberghe, L. (2004).
+Convex Optimization.
+Cambridge University Press, Cambridge.
+https://web.stanford.edu/~boyd/cvxbook/.
+[Hillier and Lieberman, 2015] Hillier, F. S. and Lieberman, G. J. (2015).
+Introducción a la investigación de operaciones.
+McGraw-Hill.
+[Miranda, 2005] Miranda, M. (2005).
+Teoría de colas.
+Primera Edición, Educa.
+[Taha, 2012] Taha, H. A. (2012).
+Investigación de operaciones.
+Pearson Educación, México, 9 edition.
+Javier Quintero Redes de colas 323 / 323
+Investigación Operativa
+Grado En Ingeniería en Sistemas de Telecomunicación
+Grado en Ingeniería en Tecnologías de la Telecomunicación
+Grado en Ingeniería en Telemática
+Javier Quintero
+Slides – Material docente en abierto de la Universidad Rey Juan Carlos
+Repositorio Institucional de la Universidad Rey Juan Carlos (BURJC Digital)
+https://burjcdigital.urjc.es/home
+2025 – 2026 v1.02.02
+Este trabajo se distribuye bajo la licencia “Creative Commons Attribution – Share alike”
+diponible en https://creativecommons.org/licenses/by-sa/4.0/deed.es
