@@ -1,196 +1,191 @@
-function [bestTeam, bestFitness, history] = geneticAlgorithm(opts)
-% GENETICALGORITHM - Genetic Algorithm to optimize a team vector
+function [mejorEquipo, mejorAptitud, historial] = geneticAlgorithm(opciones)
+% ALGORITMO GENETICO - Optimiza el vector del equipo
 %
-% Inputs:
-%   opts - struct with optional fields:
-%     .popSize      - population size (default 100)
-%     .generations  - number of generations (default 200)
-%     .nRivals      - rivals per fitness evaluation (default 100)
-%     .nMatches     - matches per rival (default 20)
-%     .eliteRate    - fraction of elite preserved (default 0.1)
-%     .mutRate      - mutation probability per individual (default 0.3)
-%     .tournSize    - tournament selection size (default 3)
-%     .budget       - total budget (default 100)
-%     .verbose      - print progress (default true)
+% Parámetros de entrada:
+%   opciones - struct con campos opcionales:
+%     .tamPoblacion    - tamaño de la población (por defecto 100)
+%     .generaciones    - número de generaciones (por defecto 200)
+%     .numRivales      - rivales por evaluación (por defecto 100)
+%     .numPartidos     - partidos por rival (por defecto 20)
+%     .porcentajeElite - fracción de élite conservada (por defecto 0.1)
+%     .probMutacion    - probabilidad de mutación (por defecto 0.3)
+%     .tamTorneo       - tamaño del torneo de selección (por defecto 3)
+%     .presupuesto     - suma total del equipo (por defecto 100)
+%     .mostrarProgreso - imprimir avance por consola (por defecto true)
 %
-% Outputs:
-%   bestTeam    - best 1x10 team vector found
-%   bestFitness - win rate of best team
-%   history     - struct with convergence data
+% Salidas:
+%   mejorEquipo   - mejor vector 1x10 encontrado
+%   mejorAptitud  - tasa de victorias del mejor equipo
+%   historial     - struct con datos de convergencia
 
-    if nargin < 1, opts = struct(); end
-    popSize    = getOpt(opts, 'popSize', 100);
-    generations= getOpt(opts, 'generations', 200);
-    nRivals    = getOpt(opts, 'nRivals', 100);
-    nMatches   = getOpt(opts, 'nMatches', 20);
-    eliteRate  = getOpt(opts, 'eliteRate', 0.1);
-    mutRate    = getOpt(opts, 'mutRate', 0.3);
-    tournSize  = getOpt(opts, 'tournSize', 3);
-    budget     = getOpt(opts, 'budget', 100);
-    verbose    = getOpt(opts, 'verbose', true);
+    if nargin < 1, opciones = struct(); end
+    tamPoblacion    = obtenerOpcion(opciones, 'tamPoblacion',    100);
+    generaciones    = obtenerOpcion(opciones, 'generaciones',    200);
+    numRivales      = obtenerOpcion(opciones, 'numRivales',      100);
+    numPartidos     = obtenerOpcion(opciones, 'numPartidos',      20);
+    porcentajeElite = obtenerOpcion(opciones, 'porcentajeElite',  0.1);
+    probMutacion    = obtenerOpcion(opciones, 'probMutacion',     0.3);
+    tamTorneo       = obtenerOpcion(opciones, 'tamTorneo',          3);
+    presupuesto     = obtenerOpcion(opciones, 'presupuesto',      100);
+    mostrarProgreso = obtenerOpcion(opciones, 'mostrarProgreso',  true);
 
-    nElite = max(1, round(popSize * eliteRate));
+    numElite = max(1, round(tamPoblacion * porcentajeElite));
 
-    % --- Initialize population ---
-    pop = zeros(popSize, 10);
-    for i = 1:popSize
-        pop(i,:) = generateTeam(budget);
+    % --- Inicializar población ---
+    poblacion = zeros(tamPoblacion, 10);
+    for i = 1:tamPoblacion
+        poblacion(i,:) = generateTeam(presupuesto);
     end
 
-    % Seed with known good candidates
-    pop(1,:) = [8 8 8 8 8 8 8 8 16 20];     % high-tech baseline
-    pop(2,:) = [12 10 8 10 10 7 8 8 12 15];  % candidate from analysis
-    pop(3,:) = [10 8 8 8 8 8 8 8 14 20];     % variant
-    pop(4,:) = [8 8 10 8 8 6 8 8 16 18];     % variant 2
+    % Sembrar con candidatos conocidos
+    poblacion(1,:) = [8 8 8 8 8 8 8 8 16 20];
+    poblacion(2,:) = [12 10 8 10 10 7 8 8 12 15];
+    poblacion(3,:) = [10 8 8 8 8 8 8 8 14 20];
+    poblacion(4,:) = [8 8 10 8 8 6 8 8 16 18];
 
-    % --- Evaluate initial population ---
-    fitness = zeros(popSize, 1);
-    for i = 1:popSize
-        fitness(i) = evaluateTeam(pop(i,:), nRivals, nMatches);
+    % --- Evaluar población inicial ---
+    aptitud = zeros(tamPoblacion, 1);
+    for i = 1:tamPoblacion
+        aptitud(i) = evaluateTeam(poblacion(i,:), numRivales, numPartidos);
     end
 
-    [bestFitness, bestIdx] = max(fitness);
-    bestTeam = pop(bestIdx,:);
+    [mejorAptitud, mejorIndice] = max(aptitud);
+    mejorEquipo = poblacion(mejorIndice,:);
 
-    history.bestFit = zeros(generations, 1);
-    history.avgFit  = zeros(generations, 1);
-    history.bestTeam = zeros(generations, 10);
+    historial.mejorAptitud = zeros(generaciones, 1);
+    historial.aptitudMedia = zeros(generaciones, 1);
+    historial.mejorEquipo  = zeros(generaciones, 10);
 
-    if verbose
-        fprintf('Gen 0: Best=%.3f Avg=%.3f Team=[%s]\n', ...
-            bestFitness, mean(fitness), num2str(bestTeam));
+    if mostrarProgreso
+        fprintf('Gen 0: Mejor=%.3f Media=%.3f Equipo=[%s]\n', ...
+            mejorAptitud, mean(aptitud), num2str(mejorEquipo));
     end
 
-    % --- Evolution loop ---
-    for gen = 1:generations
-        % Sort by fitness
-        [fitness, sortIdx] = sort(fitness, 'descend');
-        pop = pop(sortIdx, :);
+    % --- Bucle evolutivo ---
+    for gen = 1:generaciones
+        % Ordenar por aptitud
+        [aptitud, ordenIdx] = sort(aptitud, 'descend');
+        poblacion = poblacion(ordenIdx, :);
 
-        newPop = zeros(popSize, 10);
+        nuevaPoblacion = zeros(tamPoblacion, 10);
 
-        % Elitism: keep top individuals
-        newPop(1:nElite, :) = pop(1:nElite, :);
+        % Elitismo: conservar los mejores individuos
+        nuevaPoblacion(1:numElite, :) = poblacion(1:numElite, :);
 
-        % Fill rest with crossover + mutation
-        for i = (nElite+1):popSize
-            % Tournament selection for two parents
-            p1 = tournamentSelect(pop, fitness, tournSize);
-            p2 = tournamentSelect(pop, fitness, tournSize);
-
-            % Crossover
-            child = crossover(pop(p1,:), pop(p2,:), budget);
-
-            % Mutation
-            if rand() < mutRate
-                child = mutate(child, budget);
+        % Rellenar el resto con cruce + mutación
+        for i = (numElite+1):tamPoblacion
+            p1   = seleccionTorneo(poblacion, aptitud, tamTorneo);
+            p2   = seleccionTorneo(poblacion, aptitud, tamTorneo);
+            hijo = cruce(poblacion(p1,:), poblacion(p2,:), presupuesto);
+            if rand() < probMutacion
+                hijo = mutar(hijo, presupuesto);
             end
-
-            newPop(i,:) = child;
+            nuevaPoblacion(i,:) = hijo;
         end
 
-        pop = newPop;
+        poblacion = nuevaPoblacion;
 
-        % Evaluate new population (skip elites to save time)
-        newFitness = zeros(popSize, 1);
-        newFitness(1:nElite) = fitness(1:nElite);
-        for i = (nElite+1):popSize
-            newFitness(i) = evaluateTeam(pop(i,:), nRivals, nMatches);
+        % Evaluar nueva población (saltar élites para ahorrar tiempo)
+        nuevaAptitud = zeros(tamPoblacion, 1);
+        nuevaAptitud(1:numElite) = aptitud(1:numElite);
+        for i = (numElite+1):tamPoblacion
+            nuevaAptitud(i) = evaluateTeam(poblacion(i,:), numRivales, numPartidos);
         end
-        fitness = newFitness;
+        aptitud = nuevaAptitud;
 
-        [genBest, genBestIdx] = max(fitness);
-        if genBest > bestFitness
-            bestFitness = genBest;
-            bestTeam = pop(genBestIdx,:);
+        [mejorGen, mejorGenIndice] = max(aptitud);
+        if mejorGen > mejorAptitud
+            mejorAptitud = mejorGen;
+            mejorEquipo  = poblacion(mejorGenIndice,:);
         end
 
-        history.bestFit(gen) = bestFitness;
-        history.avgFit(gen) = mean(fitness);
-        history.bestTeam(gen,:) = bestTeam;
+        historial.mejorAptitud(gen)  = mejorAptitud;
+        historial.aptitudMedia(gen)  = mean(aptitud);
+        historial.mejorEquipo(gen,:) = mejorEquipo;
 
-        if verbose && (mod(gen,10)==0 || gen==1)
-            fprintf('Gen %3d: Best=%.3f Avg=%.3f Team=[%s]\n', ...
-                gen, bestFitness, mean(fitness), num2str(bestTeam));
+        if mostrarProgreso && (mod(gen,10)==0 || gen==1)
+            fprintf('Gen %3d: Mejor=%.3f Media=%.3f Equipo=[%s]\n', ...
+                gen, mejorAptitud, mean(aptitud), num2str(mejorEquipo));
         end
     end
 
-    if verbose
-        fprintf('\n=== GA RESULT ===\n');
-        fprintf('Best team: [%s]\n', num2str(bestTeam));
-        fprintf('Win rate:  %.1f%%\n', 100*bestFitness);
-        fprintf('Sum: %d\n', sum(bestTeam));
+    if mostrarProgreso
+        fprintf('\n=== RESULTADO ALGORITMO GENÉTICO ===\n');
+        fprintf('Mejor equipo: [%s]\n', num2str(mejorEquipo));
+        fprintf('Tasa victorias: %.1f%%\n', 100*mejorAptitud);
+        fprintf('Suma: %d\n', sum(mejorEquipo));
     end
 end
 
-% --- Helper functions ---
+% --- Funciones auxiliares ---
 
-function val = getOpt(opts, field, default)
-    if isfield(opts, field)
-        val = opts.(field);
+function val = obtenerOpcion(opciones, campo, porDefecto)
+    if isfield(opciones, campo)
+        val = opciones.(campo);
     else
-        val = default;
+        val = porDefecto;
     end
 end
 
-function idx = tournamentSelect(pop, fitness, k)
-    candidates = randperm(size(pop,1), k);
-    [~, best] = max(fitness(candidates));
-    idx = candidates(best);
+function idx = seleccionTorneo(poblacion, aptitud, k)
+    candidatos = randperm(size(poblacion,1), k);
+    [~, mejor] = max(aptitud(candidatos));
+    idx = candidatos(mejor);
 end
 
-function child = crossover(p1, p2, budget)
-    % Uniform crossover with budget repair
-    mask = rand(1,10) > 0.5;
-    child = p1 .* mask + p2 .* (~mask);
-    child = round(child);
-    child = max(child, 0);
-    child = repairBudget(child, budget);
+function hijo = cruce(padre1, padre2, presupuesto)
+    % Cruce uniforme con reparación de presupuesto
+    mascara = rand(1,10) > 0.5;
+    hijo = padre1 .* mascara + padre2 .* (~mascara);
+    hijo = round(hijo);
+    hijo = max(hijo, 1);   % PDF: enteros positivos, cero prohibido
+    hijo = repararPresupuesto(hijo, presupuesto);
 end
 
-function team = mutate(team, budget)
-    % Multiple mutation types for diversity
+function equipo = mutar(equipo, presupuesto)
+    % Tres tipos de mutación para mantener diversidad.
+    % Siempre se preserva min(equipo) >= 1 (PDF: "entradas enteras positivas").
     r = rand();
     if r < 0.5
-        % Swap mutation: move points between two parameters
+        % Intercambio: mover puntos entre dos parámetros, nunca por debajo de 1
         i = randi(10);
         j = randi(10);
         while j == i, j = randi(10); end
-        amount = randi(3);
-        if team(i) >= amount
-            team(i) = team(i) - amount;
-            team(j) = team(j) + amount;
+        cantidad = randi(3);
+        if equipo(i) - cantidad >= 1
+            equipo(i) = equipo(i) - cantidad;
+            equipo(j) = equipo(j) + cantidad;
         end
     elseif r < 0.8
-        % Random reset of one parameter + repair
+        % Reinicio aleatorio de un parámetro + reparación (mínimo 1)
         idx = randi(10);
-        team(idx) = randi([0, 25]);
-        team = repairBudget(team, budget);
+        equipo(idx) = randi([1, 25]);
+        equipo = repararPresupuesto(equipo, presupuesto);
     else
-        % Scramble: shuffle a subset of parameters
+        % Barajar: mezclar un subconjunto de parámetros
         indices = randperm(10, 3);
-        vals = team(indices);
-        team(indices) = vals(randperm(3));
+        valores = equipo(indices);
+        equipo(indices) = valores(randperm(3));
     end
 end
 
-function team = repairBudget(team, budget)
-    % Ensure team sums to exactly budget with non-negative integers
-    team = max(round(team), 0);
-    diff = sum(team) - budget;
-    while diff ~= 0
-        if diff > 0
-            % Remove from a random non-zero parameter
-            nonzero = find(team > 0);
-            idx = nonzero(randi(length(nonzero)));
-            reduce = min(team(idx), diff);
-            team(idx) = team(idx) - reduce;
-            diff = diff - reduce;
+function equipo = repararPresupuesto(equipo, presupuesto)
+    % Asegura suma = presupuesto exacto con enteros >= 1.
+    equipo = max(round(equipo), 1);
+    diferencia = sum(equipo) - presupuesto;
+    while diferencia ~= 0
+        if diferencia > 0
+            % Reducir un parámetro que sea > 1 (mantener >= 1)
+            reducibles = find(equipo > 1);
+            if isempty(reducibles), break; end
+            idx      = reducibles(randi(length(reducibles)));
+            reduccion = min(equipo(idx) - 1, diferencia);
+            equipo(idx) = equipo(idx) - reduccion;
+            diferencia  = diferencia  - reduccion;
         else
-            % Add to a random parameter
             idx = randi(10);
-            team(idx) = team(idx) + 1;
-            diff = diff + 1;
+            equipo(idx) = equipo(idx) + 1;
+            diferencia  = diferencia  + 1;
         end
     end
 end

@@ -1,84 +1,82 @@
-function results = sensitivityAnalysis(baseTeam, nRivals, nMatches)
-% SENSITIVITYANALYSIS - Analyzes impact of each parameter on win rate
+function resultados = sensitivityAnalysis(equipoBase, numRivales, numPartidos)
+% ANALISIS DE SENSIBILIDAD - Mide el impacto de cada parámetro en la tasa de victorias
 %
-% Inputs:
-%   baseTeam  - 1x10 base team vector (default: balanced [10..10])
-%   nRivals   - rivals per evaluation (default 150)
-%   nMatches  - matches per rival (default 30)
+% Parámetros de entrada:
+%   equipoBase  - vector 1x10 base (por defecto: equilibrado [10..10])
+%   numRivales  - rivales por evaluación (por defecto 150)
+%   numPartidos - partidos por rival (por defecto 30)
 %
-% Outputs:
-%   results   - struct with analysis data and generates plots
+% Salidas:
+%   resultados - struct con datos del análisis y gráfica
 
-    if nargin < 1, baseTeam = 10*ones(1,10); end
-    if nargin < 2, nRivals = 150; end
-    if nargin < 3, nMatches = 30; end
+    if nargin < 1, equipoBase  = 10*ones(1,10); end
+    if nargin < 2, numRivales  = 150; end
+    if nargin < 3, numPartidos = 30;  end
 
-    paramNames = {'FI','GO','JD','MA','OR','PR','PO','TR','EF','TE'};
-    paramFull  = {'Finalizacion','Gen.Ofensiva','Juego Directo',...
-                  'Marcaje','Org.Defensiva','Presion',...
-                  'Posesion','Transicion','Eficacia','Tecnico'};
+    nombresCortos    = {'FI','GO','JD','MA','OR','PR','PO','TR','EF','TE'};
+    nombresCompletos = {'Finalizacion','Gen.Ofensiva','Juego Directo', ...
+                        'Marcaje','Org.Defensiva','Presion', ...
+                        'Posesion','Transicion','Eficacia','Tecnico'};
 
-    fprintf('=== SENSITIVITY ANALYSIS ===\n');
-    fprintf('Base team: [%s] sum=%d\n', num2str(baseTeam), sum(baseTeam));
+    fprintf('=== ANÁLISIS DE SENSIBILIDAD ===\n');
+    fprintf('Equipo base: [%s] suma=%d\n', num2str(equipoBase), sum(equipoBase));
 
-    % --- 1. One-at-a-time sensitivity ---
-    fprintf('\n--- One-at-a-time: vary each param +5/-5 from base ---\n');
-    fprintf('%-15s  Base%%  -5%%    +5%%    Delta\n', 'Parameter');
+    % --- 1. Sensibilidad uno a uno ---
+    fprintf('\n--- Uno a uno: variar cada parámetro +5/-5 desde la base ---\n');
+    fprintf('%-15s  Base%%  -5%%    +5%%    Delta\n', 'Parametro');
     fprintf('%s\n', repmat('-', 1, 55));
 
-    baseWR = evaluateTeam(baseTeam, nRivals, nMatches);
-    deltas = zeros(10, 1);
+    tasaBase = evaluateTeam(equipoBase, numRivales, numPartidos);
+    deltas   = zeros(10, 1);
 
     for p = 1:10
-        % -5 variant (redistribute to all others equally)
-        teamMinus = baseTeam;
-        reduction = min(5, teamMinus(p));
-        teamMinus(p) = teamMinus(p) - reduction;
-        % Add back to maintain budget
-        others = setdiff(1:10, p);
-        for k = 1:reduction
-            idx = others(randi(length(others)));
-            teamMinus(idx) = teamMinus(idx) + 1;
+        % Variante -5: quitar del parámetro p y redistribuir al resto
+        equipoMenos = equipoBase;
+        reduccion   = min(5, equipoMenos(p));
+        equipoMenos(p) = equipoMenos(p) - reduccion;
+        otros = setdiff(1:10, p);
+        for k = 1:reduccion
+            idx = otros(randi(length(otros)));
+            equipoMenos(idx) = equipoMenos(idx) + 1;
         end
 
-        % +5 variant (take from others)
-        teamPlus = baseTeam;
-        teamPlus(p) = teamPlus(p) + 5;
-        % Remove from others
+        % Variante +5: añadir al parámetro p, quitar del resto
+        equipoMas = equipoBase;
+        equipoMas(p) = equipoMas(p) + 5;
         for k = 1:5
-            nonzero_others = others(teamPlus(others) > 0);
-            if isempty(nonzero_others), break; end
-            idx = nonzero_others(randi(length(nonzero_others)));
-            teamPlus(idx) = teamPlus(idx) - 1;
+            otrosPositivos = otros(equipoMas(otros) > 0);
+            if isempty(otrosPositivos), break; end
+            idx = otrosPositivos(randi(length(otrosPositivos)));
+            equipoMas(idx) = equipoMas(idx) - 1;
         end
 
-        wrMinus = evaluateTeam(teamMinus, nRivals, nMatches);
-        wrPlus  = evaluateTeam(teamPlus, nRivals, nMatches);
-        deltas(p) = wrPlus - wrMinus;
+        tasaMenos = evaluateTeam(equipoMenos, numRivales, numPartidos);
+        tasaMas   = evaluateTeam(equipoMas,   numRivales, numPartidos);
+        deltas(p) = tasaMas - tasaMenos;
 
         fprintf('%-15s  %.1f   %.1f   %.1f   %+.1f\n', ...
-            paramFull{p}, 100*baseWR, 100*wrMinus, 100*wrPlus, 100*deltas(p));
+            nombresCompletos{p}, 100*tasaBase, 100*tasaMenos, 100*tasaMas, 100*deltas(p));
     end
 
-    % --- 2. Rank parameters by impact ---
-    fprintf('\n--- PARAMETER RANKING (by sensitivity delta) ---\n');
-    [sortedDeltas, sortIdx] = sort(deltas, 'descend');
+    % --- 2. Ranking por impacto ---
+    fprintf('\n--- RANKING DE PARÁMETROS (por delta de sensibilidad) ---\n');
+    [deltasOrdenados, ordenIndices] = sort(deltas, 'descend');
     for i = 1:10
-        fprintf('%2d. %-15s  delta=%+.1f%%\n', i, paramFull{sortIdx(i)}, 100*sortedDeltas(i));
+        fprintf('%2d. %-15s  delta=%+.1f%%\n', i, nombresCompletos{ordenIndices(i)}, 100*deltasOrdenados(i));
     end
 
-    % --- 3. Generate bar chart ---
-    figure('Name', 'Sensitivity Analysis', 'Position', [100 100 800 400]);
+    % --- 3. Gráfica de barras ---
+    figure('Name', 'Análisis de Sensibilidad', 'Position', [100 100 800 400]);
     bar(deltas * 100);
-    set(gca, 'XTickLabel', paramNames);
-    ylabel('Win Rate Change (%)');
-    title('Parameter Sensitivity: Effect of +5/-5 on Win Rate');
+    set(gca, 'XTickLabel', nombresCortos);
+    ylabel('Cambio en Tasa de Victorias (%)');
+    title('Sensibilidad de Parámetros: Efecto de +5/-5 en Tasa de Victorias');
     grid on;
 
-    results.paramNames = paramNames;
-    results.deltas = deltas;
-    results.baseWR = baseWR;
-    results.sortIdx = sortIdx;
+    resultados.nombresCortos  = nombresCortos;
+    resultados.deltas         = deltas;
+    resultados.tasaBase       = tasaBase;
+    resultados.ordenIndices   = ordenIndices;
 
-    fprintf('\nAnalysis complete.\n');
+    fprintf('\nAnálisis completado.\n');
 end

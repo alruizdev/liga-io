@@ -1,102 +1,130 @@
-%% MAIN - Liga IO 2026 - Team Optimization Pipeline
-% Run this script to execute the full optimization workflow.
-% Adjust parameters in each section as needed.
+%% MAIN - Liga IO 2026 - Pipeline de Optimización del Equipo
+% Ejecuta este script para correr el flujo completo de optimización.
+% Ajusta los parámetros en cada sección según necesites.
 
 clear; clc;
 fprintf('========================================\n');
-fprintf('  LIGA IO 2026 - Team Optimizer\n');
+fprintf('  LIGA IO 2026 - Optimizador de Equipo  \n');
 fprintf('========================================\n\n');
 
-%% 1. CONFIGURATION
-SERIAL_1 = '01';  % <-- CHANGE to your assigned serial
-SERIAL_2 = '02';  % <-- CHANGE to your second serial (optional)
-RUN_GA = true;
-RUN_SA = true;
-RUN_SENSITIVITY = false;  % set true for full analysis (slow)
-FINAL_EVAL_RIVALS = 500;
-FINAL_EVAL_MATCHES = 100;
+% ╔══════════════════════════════════════════════════════╗
+% ║  AL PROFESOR SE ENTREGA SOLO EL ARCHIVO .mat         ║
+% ║  Solo los 10 números. Nada de código. Nada de PDF.   ║
+% ║  Solo el archivo XY.mat (XY = tu serial asignado).   ║
+% ╚══════════════════════════════════════════════════════╝
 
-%% 2. GENETIC ALGORITHM
-if RUN_GA
-    fprintf('--- Phase 1: Genetic Algorithm ---\n');
-    gaOpts.popSize = 100;
-    gaOpts.generations = 80;
-    gaOpts.nRivals = 80;
-    gaOpts.nMatches = 20;
-    gaOpts.verbose = true;
+%% 1. CONFIGURACIÓN
+SERIAL_1 = '01';   % <-- CAMBIA a tu serial asignado
+SERIAL_2 = '02';   % <-- CAMBIA a tu segundo serial (opcional)
+EJECUTAR_AG           = true;
+EJECUTAR_SA           = true;
+EJECUTAR_SENSIBILIDAD = false;  % pon true para análisis completo (tarda varios minutos)
+RIVALES_EVAL_FINAL    = 500;
+PARTIDOS_EVAL_FINAL   = 100;
 
-    tic;
-    [gaTeam, gaFit, gaHistory] = geneticAlgorithm(gaOpts);
-    gaTime = toc;
-    fprintf('GA completed in %.1f seconds\n\n', gaTime);
-else
-    % Use previously known best
-    gaTeam = [9 4 10 10 12 0 11 0 27 17];
-    gaFit = 0;
-    fprintf('Skipped GA, using preset team\n\n');
-end
-
-%% 3. SIMULATED ANNEALING (refine GA result)
-if RUN_SA
-    fprintf('--- Phase 2: Simulated Annealing ---\n');
-    saOpts.maxIter = 2000;
-    saOpts.T0 = 3;
-    saOpts.alpha = 0.997;
-    saOpts.nRivals = 80;
-    saOpts.nMatches = 20;
-    saOpts.verbose = true;
+%% 2. ALGORITMO GENÉTICO
+if EJECUTAR_AG
+    fprintf('--- Fase 1: Algoritmo Genético ---\n');
+    opcionesAG.tamPoblacion    = 100;
+    opcionesAG.generaciones    = 80;
+    opcionesAG.numRivales      = 80;
+    opcionesAG.numPartidos     = 20;
+    opcionesAG.mostrarProgreso = true;
 
     tic;
-    [saTeam, saFit, saHistory] = simulatedAnnealing(gaTeam, saOpts);
-    saTime = toc;
-    fprintf('SA completed in %.1f seconds\n\n', saTime);
+    [equipoAG, aptitudAG, historialAG] = geneticAlgorithm(opcionesAG);
+    fprintf('AG completado en %.1f segundos\n\n', toc);
 else
-    saTeam = gaTeam;
-    saFit = gaFit;
+    % Usar el mejor conocido hasta ahora
+    equipoAG  = [6 9 9 11 10 1 6 6 24 18];
+    aptitudAG = 0;
+    fprintf('AG omitido, usando equipo precargado\n\n');
 end
 
-%% 4. FINAL EVALUATION
-fprintf('--- Phase 3: Final Evaluation ---\n');
-fprintf('Evaluating with %d rivals x %d matches...\n', ...
-    FINAL_EVAL_RIVALS, FINAL_EVAL_MATCHES);
+%% 3. RECOCIDO SIMULADO (refinar resultado del AG)
+if EJECUTAR_SA
+    fprintf('--- Fase 2: Recocido Simulado ---\n');
+    opcionesSA.maxIteraciones     = 2000;
+    opcionesSA.temperaturaInicial = 3;
+    opcionesSA.tasaEnfriamiento   = 0.997;
+    opcionesSA.numRivales         = 80;
+    opcionesSA.numPartidos        = 20;
+    opcionesSA.mostrarProgreso    = true;
 
-[wr1,dr1,lr1,gf1,ga1] = evaluateTeam(saTeam, FINAL_EVAL_RIVALS, FINAL_EVAL_MATCHES);
-fprintf('\nTEAM 1 (Liga): [%s]\n', num2str(saTeam));
-fprintf('  Sum: %d\n', sum(saTeam));
-fprintf('  Win: %.1f%%  Draw: %.1f%%  Loss: %.1f%%\n', 100*wr1, 100*dr1, 100*lr1);
-fprintf('  Goals For: %.2f  Goals Against: %.2f\n', gf1, ga1);
-
-%% 5. OPTIONAL: Second team for Copa
-fprintf('\n--- Copa Team (variant optimized for penalties) ---\n');
-% Copa priorities: high TE, FI, moral, low fatigue
-copaTeam = saTeam;
-% Boost TE and FI if possible
-fprintf('Copa team: [%s] sum=%d\n', num2str(copaTeam), sum(copaTeam));
-[wr2,dr2,lr2,gf2,ga2] = evaluateTeam(copaTeam, FINAL_EVAL_RIVALS, FINAL_EVAL_MATCHES);
-fprintf('  Win: %.1f%%  Draw: %.1f%%  Loss: %.1f%%\n', 100*wr2, 100*dr2, 100*lr2);
-
-%% 6. SENSITIVITY ANALYSIS (optional)
-if RUN_SENSITIVITY
-    fprintf('\n--- Phase 4: Sensitivity Analysis ---\n');
-    results = sensitivityAnalysis(saTeam, 100, 20);
+    tic;
+    [equipoSA, aptitudSA, historialSA] = simulatedAnnealing(equipoAG, opcionesSA);
+    fprintf('SA completado en %.1f segundos\n\n', toc);
+else
+    equipoSA  = equipoAG;
+    aptitudSA = aptitudAG;
 end
 
-%% 7. SAVE TEAMS
-fprintf('\n--- Phase 5: Saving Teams ---\n');
-fprintf('Team 1 (Liga):  [%s]\n', num2str(saTeam));
-createTeamFile(saTeam, SERIAL_1);
+%% 4. EVALUACIÓN FINAL
+fprintf('--- Fase 3: Evaluación Final ---\n');
+fprintf('Evaluando con %d rivales x %d partidos...\n', ...
+    RIVALES_EVAL_FINAL, PARTIDOS_EVAL_FINAL);
 
-% Uncomment to save second team:
-% createTeamFile(copaTeam, SERIAL_2);
+[tasaVic, tasaEmp, tasaDer, mediaGF, mediaGC] = evaluateTeam(equipoSA, RIVALES_EVAL_FINAL, PARTIDOS_EVAL_FINAL);
+fprintf('\nEQUIPO FINAL: [%s]\n', num2str(equipoSA));
+fprintf('  Suma: %d\n', sum(equipoSA));
+fprintf('  Victorias: %.1f%%  Empates: %.1f%%  Derrotas: %.1f%%\n', 100*tasaVic, 100*tasaEmp, 100*tasaDer);
+fprintf('  Goles a favor: %.2f  Goles en contra: %.2f\n', mediaGF, mediaGC);
 
-%% 8. SUMMARY
+% ╔══════════════════════════════════════════════════════════════════╗
+% ║  PARA EL ANALISTA — CÓMO PROBAR TU PROPIO VECTOR               ║
+% ║                                                                  ║
+% ║  ¿Quieres testear un equipo concreto que se te ocurra?           ║
+% ║  Copia el bloque de abajo en la ventana de comandos de MATLAB   ║
+% ║  (Command Window), cambia los 10 números y pulsa Enter.         ║
+% ║                                                                  ║
+% ║  POSICIONES: [FI  GO  JD  MA  OR  PR  PO  TR  EF  TE]          ║
+% ║    FI = Finalización      GO = Generación Ofensiva              ║
+% ║    JD = Juego Directo     MA = Marcaje                          ║
+% ║    OR = Organización Def. PR = Presión                          ║
+% ║    PO = Posesión          TR = Transición                       ║
+% ║    EF = Eficacia (clave!) TE = Técnico (clave!)                 ║
+% ║                                                                  ║
+% ║  REGLAS:                                                         ║
+% ║    - Exactamente 10 números                                      ║
+% ║    - Todos >= 1  (¡cero PROHIBIDO, descalifica automáticamente!) ║
+% ║    - Suma entre 95 y 100                                         ║
+% ╚══════════════════════════════════════════════════════════════════╝
+%
+% --- PEGA ESTO EN LA COMMAND WINDOW ---
+%
+%   miEquipo = [6 9 9 11 10 1 6 6 24 18];  % <-- cambia estos números
+%   [valido, msg] = validateTeam(miEquipo);
+%   if valido
+%       [v, e, d, gf, gc] = evaluateTeam(miEquipo, 200, 30);
+%       fprintf('Victorias: %.1f%%, Empates: %.1f%%, Derrotas: %.1f%%\n', 100*v, 100*e, 100*d);
+%       fprintf('Goles a favor: %.2f, Goles en contra: %.2f\n', gf, gc);
+%   else
+%       fprintf('Equipo invalido: %s\n', msg);
+%   end
+%
+% --- FIN DEL BLOQUE PARA ANALISTA ---
+
+%% 5. ANÁLISIS DE SENSIBILIDAD (opcional)
+if EJECUTAR_SENSIBILIDAD
+    fprintf('\n--- Fase 4: Análisis de Sensibilidad ---\n');
+    resultados = sensitivityAnalysis(equipoSA, 100, 20);
+end
+
+%% 6. GUARDAR EQUIPO FINAL
+fprintf('\n--- Fase 5: Guardar Equipo ---\n');
+fprintf('Equipo final: [%s]\n', num2str(equipoSA));
+createTeamFile(equipoSA, SERIAL_1);
+
+% Descomenta para guardar segundo equipo:
+% createTeamFile(equipoSA, SERIAL_2);
+
+%% 7. RESUMEN FINAL
 fprintf('\n========================================\n');
-fprintf('  OPTIMIZATION COMPLETE\n');
+fprintf('  OPTIMIZACIÓN COMPLETADA               \n');
 fprintf('========================================\n');
-fprintf('Team 1: [%s] | Win=%.1f%%\n', num2str(saTeam), 100*wr1);
-fprintf('File: %s.mat\n', SERIAL_1);
-fprintf('\nRemember:\n');
-fprintf('  - Verify .mat with lector.m before submitting\n');
-fprintf('  - Only the designated person uploads\n');
-fprintf('  - Upload ONCE - no re-uploads allowed\n');
+fprintf('Equipo: [%s] | Victorias=%.1f%%\n', num2str(equipoSA), 100*tasaVic);
+fprintf('Archivo generado: %s.mat\n', SERIAL_1);
+fprintf('\n  RECUERDA: al profesor solo se entrega el .mat\n');
+fprintf('  No entregar codigo, no entregar PDF.\n');
+fprintf('  Solo el archivo XY.mat (XY = serial asignado).\n');
 fprintf('========================================\n');

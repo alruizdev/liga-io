@@ -1,48 +1,51 @@
-function [winRate, drawRate, lossRate, avgGF, avgGA] = evaluateTeam(team, nRivals, nMatches)
-% EVALUATETEAM - Evaluates a team's performance via Monte Carlo simulation
+function [tasaVictorias, tasaEmpates, tasaDerrotas, mediaGF, mediaGC] = evaluateTeam(equipo, numRivales, numPartidos)
+% EVALUAR EQUIPO - Mide el rendimiento de un equipo por simulación Monte Carlo
 %
-% Inputs:
-%   team     - 1x10 team vector
-%   nRivals  - number of random rival teams to test against (default 200)
-%   nMatches - number of matches per rival (default 30)
+% Simula el equipo contra muchos rivales aleatorios y devuelve la tasa de victorias.
+% Cuanto mayor sea tasaVictorias, mejor es el equipo.
 %
-% Outputs:
-%   winRate  - fraction of matches won [0,1]
-%   drawRate - fraction of matches drawn [0,1]
-%   lossRate - fraction of matches lost [0,1]
-%   avgGF    - average goals scored per match
-%   avgGA    - average goals conceded per match
+% PARÁMETROS:
+%   equipo      - vector 1x10 del equipo a evaluar
+%   numRivales  - cuántos rivales distintos generar (por defecto 200)
+%   numPartidos - partidos contra cada rival (por defecto 30)
+%
+% SALIDAS:
+%   tasaVictorias - fracción de partidos ganados [0,1]  → la más importante
+%   tasaEmpates   - fracción de empates [0,1]
+%   tasaDerrotas  - fracción de partidos perdidos [0,1]
+%   mediaGF       - media de goles a favor por partido
+%   mediaGC       - media de goles en contra por partido
 
-    if nargin < 2, nRivals = 200; end
-    if nargin < 3, nMatches = 30; end
+    if nargin < 2, numRivales  = 200; end
+    if nargin < 3, numPartidos = 30;  end
 
-    totalWins = 0;
-    totalDraws = 0;
-    totalLosses = 0;
-    totalGF = 0;
-    totalGA = 0;
-    totalGames = 0;
+    victoriasTotal = 0;
+    empatesTotal   = 0;
+    derrotasTotal  = 0;
+    golesAFavor    = 0;
+    golesEnContra  = 0;
+    partidosTotal  = 0;
 
-    for r = 1:nRivals
-        rival = generateTeam(100);
-        for m = 1:nMatches
-            [gA, gB] = playMatchOpen(team, rival);
-            totalGF = totalGF + gA;
-            totalGA = totalGA + gB;
-            if gA > gB
-                totalWins = totalWins + 1;
-            elseif gB > gA
-                totalLosses = totalLosses + 1;
+    for r = 1:numRivales
+        rival = generateTeam(100);           % rival aleatorio válido
+        for p = 1:numPartidos
+            [gf, gc] = playMatchOpen(equipo, rival);
+            golesAFavor   = golesAFavor   + gf;
+            golesEnContra = golesEnContra + gc;
+            if gf > gc
+                victoriasTotal = victoriasTotal + 1;
+            elseif gc > gf
+                derrotasTotal  = derrotasTotal  + 1;
             else
-                totalDraws = totalDraws + 1;
+                empatesTotal   = empatesTotal   + 1;
             end
-            totalGames = totalGames + 1;
+            partidosTotal = partidosTotal + 1;
         end
     end
 
-    winRate  = totalWins / totalGames;
-    drawRate = totalDraws / totalGames;
-    lossRate = totalLosses / totalGames;
-    avgGF    = totalGF / totalGames;
-    avgGA    = totalGA / totalGames;
+    tasaVictorias = victoriasTotal / partidosTotal;
+    tasaEmpates   = empatesTotal   / partidosTotal;
+    tasaDerrotas  = derrotasTotal  / partidosTotal;
+    mediaGF       = golesAFavor    / partidosTotal;
+    mediaGC       = golesEnContra  / partidosTotal;
 end

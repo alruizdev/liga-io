@@ -1,144 +1,150 @@
-function [bestTeam, bestFitness, history] = simulatedAnnealing(initialTeam, opts)
-% SIMULATEDANNEALING - Refines a team vector using Simulated Annealing
+function [mejorEquipo, mejorAptitud, historial] = simulatedAnnealing(equipoInicial, opciones)
+% RECOCIDO SIMULADO - Refina un vector de equipo usando Simulated Annealing
 %
-% Inputs:
-%   initialTeam - 1x10 starting team vector (e.g. from GA)
-%   opts - struct with optional fields:
-%     .maxIter    - max iterations (default 5000)
-%     .T0         - initial temperature (default 5)
-%     .Tmin       - minimum temperature (default 0.01)
-%     .alpha      - cooling rate (default 0.995)
-%     .nRivals    - rivals per evaluation (default 100)
-%     .nMatches   - matches per rival (default 20)
-%     .budget     - total budget (default 100)
-%     .verbose    - print progress (default true)
+% Parámetros de entrada:
+%   equipoInicial - vector 1x10 de partida (ej. resultado del AG)
+%   opciones - struct con campos opcionales:
+%     .maxIteraciones     - iteraciones máximas (por defecto 5000)
+%     .temperaturaInicial - temperatura de inicio (por defecto 5)
+%     .temperaturaMinima  - temperatura mínima (por defecto 0.01)
+%     .tasaEnfriamiento   - factor de enfriamiento (por defecto 0.995)
+%     .numRivales         - rivales por evaluación (por defecto 100)
+%     .numPartidos        - partidos por rival (por defecto 20)
+%     .presupuesto        - suma total (por defecto 100)
+%     .mostrarProgreso    - imprimir avance (por defecto true)
 %
-% Outputs:
-%   bestTeam    - best team found
-%   bestFitness - win rate of best team
-%   history     - convergence data
+% Salidas:
+%   mejorEquipo   - mejor equipo encontrado
+%   mejorAptitud  - tasa de victorias del mejor equipo
+%   historial     - datos de convergencia
 
-    if nargin < 2, opts = struct(); end
-    maxIter  = getOpt(opts, 'maxIter', 5000);
-    T0       = getOpt(opts, 'T0', 5);
-    Tmin     = getOpt(opts, 'Tmin', 0.01);
-    coolRate = getOpt(opts, 'alpha', 0.995);
-    nRivals  = getOpt(opts, 'nRivals', 100);
-    nMatches = getOpt(opts, 'nMatches', 20);
-    budget   = getOpt(opts, 'budget', 100);
-    verbose  = getOpt(opts, 'verbose', true);
+    if nargin < 2, opciones = struct(); end
+    maxIteraciones     = obtenerOpcion(opciones, 'maxIteraciones',     5000);
+    temperaturaInicial = obtenerOpcion(opciones, 'temperaturaInicial',    5);
+    temperaturaMinima  = obtenerOpcion(opciones, 'temperaturaMinima',  0.01);
+    tasaEnfriamiento   = obtenerOpcion(opciones, 'tasaEnfriamiento',  0.995);
+    numRivales         = obtenerOpcion(opciones, 'numRivales',          100);
+    numPartidos        = obtenerOpcion(opciones, 'numPartidos',          20);
+    presupuesto        = obtenerOpcion(opciones, 'presupuesto',         100);
+    mostrarProgreso    = obtenerOpcion(opciones, 'mostrarProgreso',     true);
 
-    % Initialize
-    current = initialTeam;
-    currentFit = evaluateTeam(current, nRivals, nMatches);
-    bestTeam = current;
-    bestFitness = currentFit;
-    T = T0;
+    % Inicializar
+    actual        = equipoInicial;
+    aptitudActual = evaluateTeam(actual, numRivales, numPartidos);
+    mejorEquipo   = actual;
+    mejorAptitud  = aptitudActual;
+    temperatura   = temperaturaInicial;
 
-    history.fitness = zeros(maxIter, 1);
-    history.bestFit = zeros(maxIter, 1);
-    history.temp    = zeros(maxIter, 1);
+    historial.aptitud      = zeros(maxIteraciones, 1);
+    historial.mejorAptitud = zeros(maxIteraciones, 1);
+    historial.temperatura  = zeros(maxIteraciones, 1);
 
-    if verbose
-        fprintf('SA Start: Fit=%.3f Team=[%s]\n', currentFit, num2str(current));
+    if mostrarProgreso
+        fprintf('SA Inicio: Aptitud=%.3f Equipo=[%s]\n', aptitudActual, num2str(actual));
     end
 
-    for iter = 1:maxIter
-        % Generate neighbor
-        neighbor = generateNeighbor(current, budget);
+    for iteracion = 1:maxIteraciones
+        % Generar vecino
+        vecino = generarVecino(actual, presupuesto);
 
-        % Evaluate neighbor
-        neighborFit = evaluateTeam(neighbor, nRivals, nMatches);
+        % Evaluar vecino
+        aptitudVecino = evaluateTeam(vecino, numRivales, numPartidos);
 
-        % Acceptance criterion
-        deltaF = neighborFit - currentFit;
-        if deltaF > 0 || rand() < exp(deltaF / T)
-            current = neighbor;
-            currentFit = neighborFit;
+        % Criterio de aceptación de Metropolis
+        cambioAptitud = aptitudVecino - aptitudActual;
+        if cambioAptitud > 0 || rand() < exp(cambioAptitud / temperatura)
+            actual        = vecino;
+            aptitudActual = aptitudVecino;
         end
 
-        % Update best
-        if currentFit > bestFitness
-            bestTeam = current;
-            bestFitness = currentFit;
+        % Actualizar mejor
+        if aptitudActual > mejorAptitud
+            mejorEquipo  = actual;
+            mejorAptitud = aptitudActual;
         end
 
-        % Cool down
-        T = T * coolRate;
-        if T < Tmin
-            T = Tmin;
+        % Enfriar temperatura
+        temperatura = temperatura * tasaEnfriamiento;
+        if temperatura < temperaturaMinima
+            temperatura = temperaturaMinima;
         end
 
-        history.fitness(iter) = currentFit;
-        history.bestFit(iter) = bestFitness;
-        history.temp(iter) = T;
+        historial.aptitud(iteracion)      = aptitudActual;
+        historial.mejorAptitud(iteracion) = mejorAptitud;
+        historial.temperatura(iteracion)  = temperatura;
 
-        if verbose && mod(iter, 200) == 0
-            fprintf('SA Iter %4d: T=%.4f Current=%.3f Best=%.3f Team=[%s]\n', ...
-                iter, T, currentFit, bestFitness, num2str(bestTeam));
+        if mostrarProgreso && mod(iteracion, 200) == 0
+            fprintf('SA Iter %4d: T=%.4f Actual=%.3f Mejor=%.3f Equipo=[%s]\n', ...
+                iteracion, temperatura, aptitudActual, mejorAptitud, num2str(mejorEquipo));
         end
     end
 
-    if verbose
-        fprintf('\n=== SA RESULT ===\n');
-        fprintf('Best team: [%s]\n', num2str(bestTeam));
-        fprintf('Win rate:  %.1f%%\n', 100*bestFitness);
+    if mostrarProgreso
+        fprintf('\n=== RESULTADO RECOCIDO SIMULADO ===\n');
+        fprintf('Mejor equipo: [%s]\n', num2str(mejorEquipo));
+        fprintf('Tasa victorias: %.1f%%\n', 100*mejorAptitud);
     end
 end
 
-function val = getOpt(opts, field, default)
-    if isfield(opts, field)
-        val = opts.(field);
+function val = obtenerOpcion(opciones, campo, porDefecto)
+    if isfield(opciones, campo)
+        val = opciones.(campo);
     else
-        val = default;
+        val = porDefecto;
     end
 end
 
-function neighbor = generateNeighbor(team, budget)
-    neighbor = team;
+function vecino = generarVecino(equipo, presupuesto)
+    % Todos los movimientos preservan min(vecino) >= 1 (PDF: entradas positivas).
+    vecino = equipo;
     r = rand();
     if r < 0.6
-        % Swap: move 1-3 units between two parameters
+        % Intercambio: mover 1-3 unidades, la fuente siempre queda >= 1
         i = randi(10); j = randi(10);
         while j == i, j = randi(10); end
-        amount = randi(min(3, max(1, neighbor(i))));
-        if neighbor(i) >= amount
-            neighbor(i) = neighbor(i) - amount;
-            neighbor(j) = neighbor(j) + amount;
+        maxMovimiento = min(3, vecino(i) - 1);
+        if maxMovimiento >= 1
+            cantidad   = randi(maxMovimiento);
+            vecino(i)  = vecino(i) - cantidad;
+            vecino(j)  = vecino(j) + cantidad;
         end
     elseif r < 0.85
-        % Double swap: two simultaneous moves
+        % Doble intercambio: dos movimientos simultáneos, respetando >= 1
         indices = randperm(10, 4);
-        amt1 = randi(min(2, max(1, neighbor(indices(1)))));
-        amt2 = randi(min(2, max(1, neighbor(indices(3)))));
-        if neighbor(indices(1)) >= amt1 && neighbor(indices(3)) >= amt2
-            neighbor(indices(1)) = neighbor(indices(1)) - amt1;
-            neighbor(indices(2)) = neighbor(indices(2)) + amt1;
-            neighbor(indices(3)) = neighbor(indices(3)) - amt2;
-            neighbor(indices(4)) = neighbor(indices(4)) + amt2;
+        maxMov1 = min(2, vecino(indices(1)) - 1);
+        maxMov2 = min(2, vecino(indices(3)) - 1);
+        if maxMov1 >= 1 && maxMov2 >= 1
+            cant1 = randi(maxMov1);
+            cant2 = randi(maxMov2);
+            vecino(indices(1)) = vecino(indices(1)) - cant1;
+            vecino(indices(2)) = vecino(indices(2)) + cant1;
+            vecino(indices(3)) = vecino(indices(3)) - cant2;
+            vecino(indices(4)) = vecino(indices(4)) + cant2;
         end
     else
-        % Random perturbation + repair
+        % Perturbación aleatoria + reparación (mínimo 1)
         idx = randi(10);
-        neighbor(idx) = randi([0, 30]);
-        neighbor = repairBudget(neighbor, budget);
+        vecino(idx) = randi([1, 30]);
+        vecino = repararPresupuesto(vecino, presupuesto);
     end
 end
 
-function team = repairBudget(team, budget)
-    team = max(round(team), 0);
-    diff = sum(team) - budget;
-    while diff ~= 0
-        if diff > 0
-            nonzero = find(team > 0);
-            idx = nonzero(randi(length(nonzero)));
-            reduce = min(team(idx), diff);
-            team(idx) = team(idx) - reduce;
-            diff = diff - reduce;
+function equipo = repararPresupuesto(equipo, presupuesto)
+    % Asegura suma = presupuesto exacto con enteros >= 1.
+    equipo = max(round(equipo), 1);
+    diferencia = sum(equipo) - presupuesto;
+    while diferencia ~= 0
+        if diferencia > 0
+            reducibles = find(equipo > 1);
+            if isempty(reducibles), break; end
+            idx       = reducibles(randi(length(reducibles)));
+            reduccion  = min(equipo(idx) - 1, diferencia);
+            equipo(idx) = equipo(idx) - reduccion;
+            diferencia  = diferencia  - reduccion;
         else
             idx = randi(10);
-            team(idx) = team(idx) + 1;
-            diff = diff + 1;
+            equipo(idx) = equipo(idx) + 1;
+            diferencia  = diferencia  + 1;
         end
     end
 end

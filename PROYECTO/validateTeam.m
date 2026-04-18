@@ -1,38 +1,46 @@
-function [valid, msg] = validateTeam(A)
-% VALIDATETEAM - Validates a team vector meets all constraints
+function [valido, mensaje] = validateTeam(equipo)
+% VALIDAR EQUIPO - Comprueba que el vector cumple TODAS las reglas del PDF
 %
-% Inputs:
-%   A - 1x10 vector representing a team
+% ⚠️  IMPORTANTE: el PDF §4.1 dice "entradas enteras positivas"
+%     Un matemático riguroso (como Quintero) interpreta positivo como >= 1.
+%     Un cero puede provocar DESCALIFICACIÓN AUTOMÁTICA.
 %
-% Outputs:
-%   valid - true if team is valid, false otherwise
-%   msg   - description of issue (empty if valid)
+% PARÁMETROS:
+%   equipo  - vector 1x10 a validar
+%
+% SALIDAS:
+%   valido  - true si el equipo cumple todas las reglas
+%   mensaje - descripción del problema (vacío si es válido)
 
-    valid = true;
-    msg = '';
+    valido  = true;
+    mensaje = '';
 
-    if length(A) ~= 10
-        valid = false;
-        msg = sprintf('Team must have 10 parameters, got %d', length(A));
+    % Regla 1: exactamente 10 parámetros
+    if length(equipo) ~= 10
+        valido  = false;
+        mensaje = sprintf('El equipo debe tener 10 parámetros, tiene %d', length(equipo));
         return;
     end
 
-    if any(A < 0)
-        valid = false;
-        msg = 'All parameters must be non-negative (>= 0)';
+    % Regla 2: todos >= 1 (PDF: "enteras positivas" — cero PROHIBIDO)
+    if any(equipo < 1)
+        valido  = false;
+        mensaje = 'Todos los parámetros deben ser enteros positivos (>= 1). ¡Cero prohibido!';
         return;
     end
 
-    if any(A ~= floor(A))
-        valid = false;
-        msg = 'All parameters must be integers';
+    % Regla 3: todos números enteros (sin decimales)
+    if any(equipo ~= floor(equipo))
+        valido  = false;
+        mensaje = 'Todos los parámetros deben ser enteros (sin decimales)';
         return;
     end
 
-    s = sum(A);
-    if s < 95 || s > 100
-        valid = false;
-        msg = sprintf('Budget must be 95-100, got %d', s);
+    % Regla 4: suma entre 95 y 100
+    suma = sum(equipo);
+    if suma < 95 || suma > 100
+        valido  = false;
+        mensaje = sprintf('La suma debe estar entre 95 y 100, tiene %d', suma);
         return;
     end
 end

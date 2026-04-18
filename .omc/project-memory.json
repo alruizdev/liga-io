@@ -1,0 +1,184 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1776526047267,
+  "projectRoot": "c:\\Users\\angee\\Downloads\\IO - PREPARACION MAYO\\PROYECTO LIGA IO\\liga-io",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "PROYECTO": {
+      "path": "PROYECTO",
+      "purpose": null,
+      "fileCount": 18,
+      "lastAccessed": 1776526046245,
+      "keyFiles": [
+        "createTeamFile.m",
+        "ESPECIFICACIONES.md",
+        "evaluateTeam.m",
+        "generateTeam.m",
+        "geneticAlgorithm.m"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "PROYECTO\\geneticAlgorithm.m",
+      "accessCount": 7,
+      "lastAccessed": 1776533368186,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO\\crashingBaseline.m",
+      "accessCount": 7,
+      "lastAccessed": 1776533416971,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO\\simulatedAnnealing.m",
+      "accessCount": 5,
+      "lastAccessed": 1776533386323,
+      "type": "file"
+    },
+    {
+      "path": "CLAUDE.md",
+      "accessCount": 4,
+      "lastAccessed": 1776529976655,
+      "type": "file"
+    },
+    {
+      "path": "RESULTADOS_DIA1.md",
+      "accessCount": 4,
+      "lastAccessed": 1776530696760,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 4,
+      "lastAccessed": 1776531170279,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO\\validateTeam.m",
+      "accessCount": 4,
+      "lastAccessed": 1776533026437,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO\\generateTeam.m",
+      "accessCount": 4,
+      "lastAccessed": 1776533031617,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO\\generateFinalTeams.m",
+      "accessCount": 4,
+      "lastAccessed": 1776533457184,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO\\main.m",
+      "accessCount": 4,
+      "lastAccessed": 1776533485736,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO\\playMatchOpen.m",
+      "accessCount": 3,
+      "lastAccessed": 1776533009381,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO\\evaluateTeam.m",
+      "accessCount": 3,
+      "lastAccessed": 1776533019013,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO\\sensitivityAnalysis.m",
+      "accessCount": 3,
+      "lastAccessed": 1776533433082,
+      "type": "file"
+    },
+    {
+      "path": "GUIA_EQUIPO.md",
+      "accessCount": 2,
+      "lastAccessed": 1776530657495,
+      "type": "file"
+    },
+    {
+      "path": "TRAMPAS_DETECTADAS.md",
+      "accessCount": 2,
+      "lastAccessed": 1776530726730,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO\\createTeamFile.m",
+      "accessCount": 2,
+      "lastAccessed": 1776533042685,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO\\PROMPT.md",
+      "accessCount": 1,
+      "lastAccessed": 1776526435888,
+      "type": "file"
+    },
+    {
+      "path": ".claude\\settings.local.json",
+      "accessCount": 1,
+      "lastAccessed": 1776528001142,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO\\JAVIER QUINTERO.md",
+      "accessCount": 1,
+      "lastAccessed": 1776529062748,
+      "type": "file"
+    },
+    {
+      "path": "PROYECTO",
+      "accessCount": 1,
+      "lastAccessed": 1776529270611,
+      "type": "directory"
+    },
+    {
+      "path": "AUDITORIA_HONESTA.md",
+      "accessCount": 1,
+      "lastAccessed": 1776529963740,
+      "type": "file"
+    },
+    {
+      "path": "EMPEZAR_AQUI.md",
+      "accessCount": 1,
+      "lastAccessed": 1776531154613,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
