@@ -1,0 +1,93 @@
+function [GA, GB] = mi_playMatch(A, B)
+    % Implementación basada en la Sección 5 del enunciado Liga IO
+    
+    % 5.1 Parámetros globales
+    gamma1 = 0.4; gamma2 = 0.4; gamma3 = 0.4;
+    alfa = 0.5; beta = 0.5; sigma_moral = 1.5;
+    
+    % 5.2 Moral
+    sigma_A = sum(abs(A - 10)) / 10;
+    sigma_B = sum(abs(B - 10)) / 10;
+    
+    MO_A = max(0, 10 - alfa*sigma_A + beta*(A(10)/10) + sigma_moral*max(1, 100-sum(A))*randn());
+    MO_B = max(0, 10 - alfa*sigma_B + beta*(B(10)/10) + sigma_moral*max(1, 100-sum(B))*randn());
+    
+    % 5.3 Cansancio
+    CA = max(0, (0.4*A(6) + 0.3*A(7) + 0.3*A(8) - 0.5*A(3))/10 * (1 - MO_A/12));
+    CB = max(0, (0.4*B(6) + 0.3*B(7) + 0.3*B(8) - 0.5*B(3))/10 * (1 - MO_B/12));
+    
+    % 5.4 Parámetros base
+    % Ataque
+    AT_A = max(0.01, 0.35*A(1) + 0.35*A(2) + 0.3*A(3));
+    AT_B = max(0.01, 0.35*B(1) + 0.35*B(2) + 0.3*B(3));
+    
+    % Defensa
+    DF_A = max(0.05, 0.4*A(4) + 0.4*A(5) + 0.2*A(6));
+    DF_B = max(0.05, 0.4*B(4) + 0.4*B(5) + 0.2*B(6));
+    
+    % Control Táctico
+    CT_A = max(0.01, 0.4*A(7) + 0.4*A(8) + 0.2*A(9));
+    CT_B = max(0.01, 0.4*B(7) + 0.4*B(8) + 0.2*B(9));
+    
+    % 5.5 Factores
+    % Factor moral
+    F_mor_A = 0.85 + MO_A/20;      F_mor_B = 0.85 + MO_B/20;
+    % Factor técnico
+    F_tec_A = 0.9 + A(10)/50;      F_tec_B = 0.9 + B(10)/50;
+    % Factor de fatiga
+    F_fat_A = max(0.1, 1 - 0.6*CA); F_fat_B = max(0.1, 1 - 0.6*CB);
+    
+    % 5.6 Control efectivo
+    CT_star_A = CT_A * F_mor_A * F_tec_A * F_fat_A;
+    CT_star_B = CT_B * F_mor_B * F_tec_B * F_fat_B;
+    
+    % 5.7 Posesión
+    Pos_A = CT_star_A / (CT_star_A + CT_star_B);
+    Pos_B = 1 - Pos_A;
+    
+    % 5.8 Interacción táctica
+    T1A = 1 + gamma1*(A(6) - B(7))/100;
+    T2A = 1 + gamma2*(A(3) - B(5))/100;
+    T3A = 1 + gamma3*(A(8) - B(6))/100;
+    TA = T1A * T2A * T3A;
+    
+    T1B = 1 + gamma1*(B(6) - A(7))/100;
+    T2B = 1 + gamma2*(B(3) - A(5))/100;
+    T3B = 1 + gamma3*(B(8) - A(6))/100;
+    TB = T1B * T2B * T3B;
+    
+    % 5.9 Ataque relativo
+    AT_star_A = (AT_A * F_mor_A * F_tec_A * F_fat_A * TA) / (DF_B * F_tec_B);
+    AT_star_B = (AT_B * F_mor_B * F_tec_B * F_fat_B * TB) / (DF_A * F_tec_A);
+    
+    % 5.10 Ocasiones
+    O_tot = 12 * (0.75 + 0.5*rand());
+    O_A = O_tot * Pos_A;
+    O_B = O_tot * Pos_B;
+    
+    % 5.11 Probabilidad de ocasión clara
+    P_d_A = AT_star_A / (AT_star_A + AT_star_B);
+    P_d_B = 1 - P_d_A;
+    
+    % 5.12 Ocasiones claras
+    OC_A = calcular_binomial(floor(O_A), P_d_A);
+    OC_B = calcular_binomial(floor(O_B), P_d_B);
+    
+    % 5.13 Probabilidad de gol
+    P_g_A = min(0.9, max(0, 0.15 + 0.20*(A(9)/10) + 0.10*(AT_star_A/DF_B) + 0.05*Pos_A));
+    P_g_B = min(0.9, max(0, 0.15 + 0.20*(B(9)/10) + 0.10*(AT_star_B/DF_A) + 0.05*Pos_B));
+    
+    % 5.14 Goles
+    GA = calcular_binomial(OC_A, P_g_A);
+    GB = calcular_binomial(OC_B, P_g_B);
+end
+
+% Función auxiliar para reemplazar "binornd" sin requerir toolboxes extra
+function exitos = calcular_binomial(intentos, probabilidad)
+    if intentos <= 0
+        exitos = 0;
+    else
+        % Sumamos cuántos números aleatorios caen por debajo de la probabilidad
+        exitos = sum(rand(1, intentos) < probabilidad);
+    end
+end

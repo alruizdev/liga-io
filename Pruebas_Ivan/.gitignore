@@ -1,0 +1,9 @@
+# Ignorar todos los archivos de datos de MATLAB
+*.mat
+*.asv
+
+# PERO permitir nuestros archivos definitivos y de base
+!01.mat
+!02.mat
+!campeon_torneo.mat
+!sensitivity_baseline.mat
