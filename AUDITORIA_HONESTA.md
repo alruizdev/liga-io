@@ -1,3 +1,7 @@
+> **⚠️ DOCUMENTO HISTÓRICO — Día 1**
+> El documento de referencia oficial sobre los vectores y la decisión final es **[VECTOR_FINAL_AUDIT_CERRADO.md](VECTOR_FINAL_AUDIT_CERRADO.md)**.
+> Este archivo se mantiene como contexto histórico de la primera auditoría (Día 1).
+
 # Auditoría honesta — qué sé, qué supongo, qué ignoro
 
 **Equipo**: Interóptimo de Lagrange. Logo profesional ya listo.

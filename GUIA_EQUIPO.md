@@ -1,3 +1,7 @@
+> **⚠️ DOCUMENTO HISTÓRICO — Plan de 9 días previo al cierre**
+> Para el procedimiento real de entrega ver **[CHECKLIST_ENTREGA.md](CHECKLIST_ENTREGA.md)**.
+> Para la decisión final sobre los vectores ver **[VECTOR_FINAL_AUDIT_CERRADO.md](VECTOR_FINAL_AUDIT_CERRADO.md)**.
+
 # GUÍA DEL EQUIPO — Interóptimo de Lagrange
 
 **Entrega**: miércoles 27 de abril 2026.

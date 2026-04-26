@@ -1,3 +1,7 @@
+> **⚠️ DOCUMENTO HISTÓRICO — Día 1**
+> El documento de referencia oficial es **[VECTOR_FINAL_AUDIT_CERRADO.md](VECTOR_FINAL_AUDIT_CERRADO.md)**.
+> Las trampas listadas aquí ya están parcheadas en el código actual; se conservan como histórico.
+
 # Auditoría forense — trampas y reglas ocultas
 
 Verificado contra: [PROYECTO/Proyecto_Liga_IO_2026.pdf](PROYECTO/Proyecto_Liga_IO_2026.pdf) (fuente oficial), [PROYECTO/ESPECIFICACIONES.md](PROYECTO/ESPECIFICACIONES.md) (transcripción oral), [PROYECTO/JAVIER QUINTERO.md](PROYECTO/JAVIER%20QUINTERO.md) (perfil profesor), y [PROYECTO/playMatchOpen.m](PROYECTO/playMatchOpen.m) (ecuaciones).

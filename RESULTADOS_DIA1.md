@@ -1,3 +1,7 @@
+> **⚠️ DOCUMENTO HISTÓRICO — Día 1**
+> Los resultados oficiales y la decisión final están en **[VECTOR_FINAL_AUDIT_CERRADO.md](VECTOR_FINAL_AUDIT_CERRADO.md)**.
+> Este archivo se conserva como histórico del primer día de trabajo.
+
 # RESULTADOS — Día 1 (2026-04-18) · v3
 
 **Equipo**: Interóptimo de Lagrange ✅. Logo profesional ✅.

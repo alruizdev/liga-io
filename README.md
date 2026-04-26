@@ -3,6 +3,19 @@
 Proyecto de Investigación Operativa (Universidad Rey Juan Carlos, Prof. Dr. Javier Quintero).
 **Entrega**: 27 de abril de 2026. **Grupo de 4 personas**.
 
+---
+
+## 📌 Documentos de referencia (orden de lectura)
+
+1. **[VECTOR_FINAL_AUDIT_CERRADO.md](VECTOR_FINAL_AUDIT_CERRADO.md)** — auditoría de cierre, vectores finales, decisión congelada.
+2. **[CHECKLIST_ENTREGA.md](CHECKLIST_ENTREGA.md)** — qué hacer el día de la subida.
+3. **[PRESENTACION_PARTE_VECTOR.md](PRESENTACION_PARTE_VECTOR.md)** + **[SLIDES_PARTE_VECTOR.md](SLIDES_PARTE_VECTOR.md)** — guion y slides para la defensa oral.
+4. Carpetas: **[ENTREGA_FINAL_CERRADA/](ENTREGA_FINAL_CERRADA/)** (vectores `01_final.mat`, `02_final.mat`) y **[SUBIDA_SERIAL/](SUBIDA_SERIAL/)** (vacía hasta serial real).
+
+Documentos antiguos (Día 1) marcados como **históricos** al inicio del archivo: `VECTOR_FINAL_AUDIT.md`, `AUDITORIA_HONESTA.md`, `TRAMPAS_DETECTADAS.md`, `RESULTADOS_DIA1.md`, `GUIA_EQUIPO.md`.
+
+---
+
 ## Qué es este repo
 
 Diseñamos un vector de 10 enteros positivos con suma ∈ [95, 100] que representa un equipo de fútbol. El profesor simula partidos con su script ofuscado `playMatch.p` contra los equipos de los otros grupos (y contra su "All-Stars"). Nuestro objetivo: maximizar la tasa de victoria esperada.

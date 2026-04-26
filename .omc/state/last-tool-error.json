@@ -1,0 +1,7 @@
+{
+  "tool_name": "mcp__matlab__evaluate_matlab_code",
+  "tool_input_preview": "{\"code\":\"\\nRAIZ = 'c:\\\\Users\\\\angee\\\\Downloads\\\\IO - PREPARACION MAYO\\\\PROYECTO LIGA IO\\\\liga-io';\\nPROYECTO = fullfile(RAIZ,'PROYECTO');\\nIVAN     = fullfile(RAIZ,'Pruebas_Ivan');\\naddpath(PROYECTO);...",
+  "error": "matlab error: Error using <a href=\"matlab:matlab.lang.internal.introspective.errorDocCallback('validateTeam')\" style=\"font-weight:bold\">validateTeam</a>\nToo many input arguments.",
+  "timestamp": "2026-04-26T17:34:38.528Z",
+  "retry_count": 1
+}

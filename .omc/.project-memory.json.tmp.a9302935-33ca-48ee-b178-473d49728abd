@@ -72,21 +72,21 @@
       "type": "file"
     },
     {
-      "path": "README.md",
-      "accessCount": 5,
-      "lastAccessed": 1777223592498,
+      "path": "CLAUDE.md",
+      "accessCount": 4,
+      "lastAccessed": 1776529976655,
       "type": "file"
     },
     {
       "path": "RESULTADOS_DIA1.md",
-      "accessCount": 5,
-      "lastAccessed": 1777223635680,
+      "accessCount": 4,
+      "lastAccessed": 1776530696760,
       "type": "file"
     },
     {
-      "path": "CLAUDE.md",
+      "path": "README.md",
       "accessCount": 4,
-      "lastAccessed": 1776529976655,
+      "lastAccessed": 1776531170279,
       "type": "file"
     },
     {
@@ -114,12 +114,6 @@
       "type": "file"
     },
     {
-      "path": "TRAMPAS_DETECTADAS.md",
-      "accessCount": 4,
-      "lastAccessed": 1777223536066,
-      "type": "file"
-    },
-    {
       "path": "PROYECTO\\playMatchOpen.m",
       "accessCount": 3,
       "lastAccessed": 1776533009381,
@@ -138,21 +132,15 @@
       "type": "file"
     },
     {
-      "path": "AUDITORIA_HONESTA.md",
+      "path": "TRAMPAS_DETECTADAS.md",
       "accessCount": 3,
-      "lastAccessed": 1777223512620,
+      "lastAccessed": 1777220629650,
       "type": "file"
     },
     {
       "path": "GUIA_EQUIPO.md",
-      "accessCount": 3,
-      "lastAccessed": 1777223610523,
-      "type": "file"
-    },
-    {
-      "path": "VECTOR_FINAL_AUDIT_CERRADO.md",
-      "accessCount": 3,
-      "lastAccessed": 1777224914173,
+      "accessCount": 2,
+      "lastAccessed": 1776530657495,
       "type": "file"
     },
     {
@@ -162,40 +150,16 @@
       "type": "file"
     },
     {
+      "path": "AUDITORIA_HONESTA.md",
+      "accessCount": 2,
+      "lastAccessed": 1777220630131,
+      "type": "file"
+    },
+    {
       "path": "Pruebas_Ivan\\Busqueda_equip_Perfecto.m",
       "accessCount": 2,
       "lastAccessed": 1777220737174,
       "type": "file"
-    },
-    {
-      "path": "VECTOR_FINAL_AUDIT.md",
-      "accessCount": 2,
-      "lastAccessed": 1777223498255,
-      "type": "file"
-    },
-    {
-      "path": "PRESENTACION_PARTE_VECTOR.md",
-      "accessCount": 2,
-      "lastAccessed": 1777224801482,
-      "type": "file"
-    },
-    {
-      "path": "CHECKLIST_ENTREGA.md",
-      "accessCount": 2,
-      "lastAccessed": 1777224837234,
-      "type": "file"
-    },
-    {
-      "path": "SUBIDA_SERIAL\\README.md",
-      "accessCount": 2,
-      "lastAccessed": 1777224844292,
-      "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 2,
-      "lastAccessed": 1777224859454,
-      "type": "directory"
     },
     {
       "path": "PROYECTO\\PROMPT.md",
@@ -228,6 +192,12 @@
       "type": "file"
     },
     {
+      "path": "",
+      "accessCount": 1,
+      "lastAccessed": 1777220620254,
+      "type": "directory"
+    },
+    {
       "path": "PROYECTO\\evaluateTeamOfficial.m",
       "accessCount": 1,
       "lastAccessed": 1777220722003,
@@ -240,15 +210,33 @@
       "type": "file"
     },
     {
+      "path": "VECTOR_FINAL_AUDIT.md",
+      "accessCount": 1,
+      "lastAccessed": 1777221183645,
+      "type": "file"
+    },
+    {
       "path": "PROYECTO\\auditoriaCierre.m",
       "accessCount": 1,
       "lastAccessed": 1777222843565,
       "type": "file"
     },
     {
+      "path": "SUBIDA_SERIAL\\README.md",
+      "accessCount": 1,
+      "lastAccessed": 1777223247444,
+      "type": "file"
+    },
+    {
+      "path": "PRESENTACION_PARTE_VECTOR.md",
+      "accessCount": 1,
+      "lastAccessed": 1777223298657,
+      "type": "file"
+    },
+    {
       "path": "SLIDES_PARTE_VECTOR.md",
       "accessCount": 1,
-      "lastAccessed": 1777224760728,
+      "lastAccessed": 1777223327639,
       "type": "file"
     }
   ],

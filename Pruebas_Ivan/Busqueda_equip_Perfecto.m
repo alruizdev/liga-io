@@ -4,21 +4,25 @@
 clear; clc;
 
 % --- CONFIGURACIÓN DE RUTAS ---
-% Añadimos tu carpeta de proyecto para asegurar que encuentre los scripts
+% Añadimos la carpeta del proyecto y la propia (donde vive playMatch.p)
 rutaProyecto = '..\PROYECTO';
 addpath(genpath(rutaProyecto));
+addpath(pwd);
 
 % --- PARÁMETROS DE ALTA INTENSIDAD (GA + SA) ---
-% Ajustados según la recomendación 'Overnight' del proyecto 
 fprintf('Iniciando búsqueda intensiva con el simulador OFICIAL del profesor...\n');
 rng(2026); % Semilla fija para reproducibilidad
 
 % 1. Fase de Algoritmo Genético (Exploración global)
-gaOpts.popSize = 300;       % Población más grande para mayor diversidad
-gaOpts.generations = 300;   % Más generaciones para converger mejor
-gaOpts.numRivales = 150;    % Más rivales para una evaluación más robusta
-gaOpts.numPartidos = 30;    % Más partidos para reducir la varianza (suerte)
-gaOpts.verbose = true;
+gaOpts.tamPoblacion    = 300;
+gaOpts.generaciones    = 300;
+gaOpts.numRivales      = 150;
+gaOpts.numPartidos     = 30;
+gaOpts.porcentajeElite = 0.10;
+gaOpts.probMutacion    = 0.30;
+gaOpts.tamTorneo       = 3;
+gaOpts.presupuesto     = 100;
+gaOpts.mostrarProgreso = true;
 
 fprintf('\n--- Fase 1: Evolución del equipo (GA) ---\n');
 tic;
@@ -26,12 +30,14 @@ tic;
 t_ga = toc;
 
 % 2. Fase de Recocido Simulado (Refinamiento local del mejor candidato)
-saOpts.maxIter = 20000;     % 20.000 iteraciones para pulir el vector
-saOpts.T0 = 4;              % Temperatura inicial
-saOpts.alpha = 0.9995;      % Enfriamiento muy lento
-saOpts.numRivales = 150;
-saOpts.numPartidos = 30;
-saOpts.verbose = true;
+saOpts.maxIteraciones     = 20000;
+saOpts.temperaturaInicial = 4;
+saOpts.temperaturaMinima  = 0.01;
+saOpts.tasaEnfriamiento   = 0.9995;
+saOpts.numRivales         = 150;
+saOpts.numPartidos        = 30;
+saOpts.presupuesto        = 100;
+saOpts.mostrarProgreso    = true;
 
 fprintf('\n--- Fase 2: Refinamiento táctico (SA) ---\n');
 tic;
@@ -44,7 +50,7 @@ fprintf('\n--- Fase 3: Validación final (Monte Carlo 500x100) ---\n');
 
 % --- RESULTADOS ---
 fprintf('\n======================================================\n');
-fprintf('⭐ EQUIPO PERFECTO ENCONTRADO ⭐\n');
+fprintf('EQUIPO PERFECTO ENCONTRADO\n');
 fprintf('Vector: [%s]\n', num2str(equipoPerfecto));
 fprintf('Win-Rate Final: %.1f%%\n', 100*wr);
 fprintf('Media Goles Favor: %.2f | Contra: %.2f\n', gf, gc);
